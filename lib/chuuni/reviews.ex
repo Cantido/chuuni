@@ -21,6 +21,17 @@ defmodule Chuuni.Reviews do
     Repo.all(Rating)
   end
 
+  def top_rated do
+    top_rated_query =
+      from r in Rating,
+      group_by: :item_rated,
+      select: %{item_rated: r.item_rated, value: avg(r.value), count: count()},
+      order_by: [desc: avg(r.value)],
+      limit: 10
+
+    Repo.all(top_rated_query)
+  end
+
   @doc """
   Gets a single rating.
 

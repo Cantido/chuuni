@@ -23,6 +23,31 @@ defmodule Chuuni.ReviewsTest do
       assert rating.id == actual_rating.id
     end
 
+    test "top_rated/0 returns best rated" do
+      [
+        %{value: "1", item_rated: "worse show", author_id: user_fixture().id},
+        %{value: "2", item_rated: "worse show", author_id: user_fixture().id},
+        %{value: "3", item_rated: "better show", author_id: user_fixture().id},
+        %{value: "4", item_rated: "better show", author_id: user_fixture().id},
+      ]
+      |> Enum.each(fn attrs ->
+        {:ok, _rating} = Reviews.create_rating(attrs)
+      end)
+
+      top_rated = Reviews.top_rated()
+
+      assert Enum.count(top_rated) == 2
+
+      [first, second] = top_rated
+
+      assert first[:item_rated] == "better show"
+      assert first[:value] == Decimal.new("3.5000000000000000")
+      assert first[:count] == 2
+      assert second[:item_rated] == "worse show"
+      assert second[:value] == Decimal.new("1.5000000000000000")
+      assert second[:count] == 2
+    end
+
     test "get_rating!/1 returns the rating with given id" do
       rating = rating_fixture()
       assert Reviews.get_rating!(rating.id).id == rating.id
