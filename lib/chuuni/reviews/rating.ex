@@ -7,6 +7,7 @@ defmodule Chuuni.Reviews.Rating do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "ratings" do
+    field :item_rated, :string
     field :value, :decimal
     field :value_worst, :decimal
     field :value_best, :decimal
@@ -18,9 +19,10 @@ defmodule Chuuni.Reviews.Rating do
   @doc false
   def changeset(rating, attrs) do
     rating
-    |> cast(attrs, [:value, :author_id])
+    |> cast(attrs, [:value, :item_rated, :author_id])
     |> assoc_constraint(:author)
-    |> validate_required([:value, :value_worst, :value_best])
+    |> unique_constraint([:author_id, :item_rated])
+    |> validate_required([:value, :value_worst, :value_best, :item_rated])
     |> check_constraint(:value_best, name: :best_greater_than_worst, message: "must be higher than the worst possible value")
     |> check_constraint(:value, name: :value_greater_than_worst, message: "must be higher than the worst possible value")
     |> check_constraint(:value, name: :value_less_than_best, message: "must be less than the best possible value")

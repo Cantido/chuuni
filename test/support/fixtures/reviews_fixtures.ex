@@ -14,6 +14,7 @@ defmodule Chuuni.ReviewsFixtures do
       attrs
       |> Enum.into(%{
         value: "5",
+        item_rated: "some item_rated",
         author_id: user_fixture().id
       })
       |> Chuuni.Reviews.create_rating()

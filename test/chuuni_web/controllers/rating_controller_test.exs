@@ -3,7 +3,7 @@ defmodule ChuuniWeb.RatingControllerTest do
 
   import Chuuni.ReviewsFixtures
 
-  @create_attrs %{value: "5"}
+  @create_attrs %{value: "5", item_rated: "some item_rated"}
   @update_attrs %{value: "7"}
   @invalid_attrs %{value: "11"}
 

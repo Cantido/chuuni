@@ -1,5 +1,5 @@
 <.header>
-  <%= @rating.author.name %>'s rating
+  <%= @rating.author.name %>'s rating of <%= @rating.item_rated %>
   <:subtitle><%= @rating.updated_at %></:subtitle>
   <:actions>
     <.link href={~p"/ratings/#{@rating}/edit"}>

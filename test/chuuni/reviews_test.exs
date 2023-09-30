@@ -29,7 +29,7 @@ defmodule Chuuni.ReviewsTest do
     end
 
     test "create_rating/1 with valid data creates a rating", %{author: author} do
-      valid_attrs = %{value: "5", author_id: author.id}
+      valid_attrs = %{value: "5", item_rated: "some item_rated", author_id: author.id}
 
       assert {:ok, %Rating{} = rating} = Reviews.create_rating(valid_attrs)
       assert rating.value == Decimal.new("5")
