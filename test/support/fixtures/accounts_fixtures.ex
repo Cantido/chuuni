@@ -4,11 +4,13 @@ defmodule Chuuni.AccountsFixtures do
   entities via the `Chuuni.Accounts` context.
   """
 
+  def unique_user_name, do: "name #{System.unique_integer()}"
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def valid_user_password, do: "hello world!"
 
   def valid_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
+      name: unique_user_name(),
       email: unique_user_email(),
       password: valid_user_password()
     })

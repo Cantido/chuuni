@@ -18,7 +18,7 @@ defmodule Chuuni.Reviews.Rating do
   @doc false
   def changeset(rating, attrs) do
     rating
-    |> cast(attrs, [:value, :value_worst, :value_best, :author_id])
+    |> cast(attrs, [:value, :author_id])
     |> assoc_constraint(:author)
     |> validate_required([:value, :value_worst, :value_best])
     |> check_constraint(:value_best, name: :best_greater_than_worst, message: "must be higher than the worst possible value")

@@ -1,6 +1,6 @@
 <.header>
-  Rating <%= @rating.id %>
-  <:subtitle>This is a rating record from your database.</:subtitle>
+  <%= @rating.author.name %>'s rating
+  <:subtitle><%= @rating.updated_at %></:subtitle>
   <:actions>
     <.link href={~p"/ratings/#{@rating}/edit"}>
       <.button>Edit rating</.button>
@@ -8,10 +8,7 @@
   </:actions>
 </.header>
 
-<.list>
-  <:item title="Value"><%= @rating.value %></:item>
-  <:item title="Value worst"><%= @rating.value_worst %></:item>
-  <:item title="Value best"><%= @rating.value_best %></:item>
-</.list>
+
+<p class="text-2xl"><%= @rating.value %></p>
 
 <.back navigate={~p"/ratings"}>Back to ratings</.back>

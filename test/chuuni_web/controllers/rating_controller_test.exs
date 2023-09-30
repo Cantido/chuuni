@@ -3,9 +3,9 @@ defmodule ChuuniWeb.RatingControllerTest do
 
   import Chuuni.ReviewsFixtures
 
-  @create_attrs %{value: "120.5", value_worst: "120.5", value_best: "120.5"}
-  @update_attrs %{value: "456.7", value_worst: "456.7", value_best: "456.7"}
-  @invalid_attrs %{value: nil, value_worst: nil, value_best: nil}
+  @create_attrs %{value: "5"}
+  @update_attrs %{value: "7"}
+  @invalid_attrs %{value: "11"}
 
   setup :register_and_log_in_user
 
@@ -31,7 +31,7 @@ defmodule ChuuniWeb.RatingControllerTest do
       assert redirected_to(conn) == ~p"/ratings/#{id}"
 
       conn = get(conn, ~p"/ratings/#{id}")
-      assert html_response(conn, 200) =~ "Rating #{id}"
+      assert html_response(conn, 200) =~ @create_attrs[:value]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

@@ -31,7 +31,7 @@ defmodule ChuuniWeb.ReviewControllerTest do
       assert redirected_to(conn) == ~p"/reviews/#{id}"
 
       conn = get(conn, ~p"/reviews/#{id}")
-      assert html_response(conn, 200) =~ "Review #{id}"
+      assert html_response(conn, 200) =~ @create_attrs[:body]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

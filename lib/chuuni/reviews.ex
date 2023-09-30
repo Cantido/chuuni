@@ -35,7 +35,10 @@ defmodule Chuuni.Reviews do
       ** (Ecto.NoResultsError)
 
   """
-  def get_rating!(id), do: Repo.get!(Rating, id)
+  def get_rating!(id) do
+    Repo.get!(Rating, id)
+    |> Repo.preload(:author)
+  end
 
   @doc """
   Creates a rating.
@@ -50,7 +53,10 @@ defmodule Chuuni.Reviews do
 
   """
   def create_rating(attrs \\ %{}) do
-    %Rating{}
+    %Rating{
+      value_best: Decimal.new("10"),
+      value_worst: Decimal.new("1")
+    }
     |> Rating.changeset(attrs)
     |> Repo.insert()
   end
@@ -131,7 +137,10 @@ defmodule Chuuni.Reviews do
       ** (Ecto.NoResultsError)
 
   """
-  def get_review!(id), do: Repo.get!(Review, id)
+  def get_review!(id) do
+    Repo.get!(Review, id)
+    |> Repo.preload(:author)
+  end
 
   @doc """
   Creates a review.

@@ -4,6 +4,7 @@ defmodule Chuuni.Accounts.User do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "users" do
+    field :name, :string
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
@@ -37,9 +38,11 @@ defmodule Chuuni.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :name])
     |> validate_email(opts)
     |> validate_password(opts)
+    |> check_constraint(:name, name: :name_must_be_long, message: "must be at least three characters long")
+    |> unique_constraint(:name)
   end
 
   defp validate_email(changeset, opts) do
