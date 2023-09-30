@@ -23,6 +23,13 @@ defmodule ChuuniWeb.Router do
     get "/", PageController, :home
   end
 
+  scope "/", ChuuniWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    resources "/reviews", ReviewController
+    resources "/ratings", RatingController
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", ChuuniWeb do
   #   pipe_through :api

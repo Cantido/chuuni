@@ -1,0 +1,11 @@
+<.simple_form :let={f} for={@changeset} action={@action}>
+  <.error :if={@changeset.action}>
+    Oops, something went wrong! Please check the errors below.
+  </.error>
+  <.input field={f[:value]} type="number" label="Value" step="any" />
+  <.input field={f[:value_worst]} type="number" label="Value worst" step="any" />
+  <.input field={f[:value_best]} type="number" label="Value best" step="any" />
+  <:actions>
+    <.button>Save Rating</.button>
+  </:actions>
+</.simple_form>

@@ -1,0 +1,8 @@
+<.header>
+  Edit Rating <%= @rating.id %>
+  <:subtitle>Use this form to manage rating records in your database.</:subtitle>
+</.header>
+
+<.rating_form changeset={@changeset} action={~p"/ratings/#{@rating}"} />
+
+<.back navigate={~p"/ratings"}>Back to ratings</.back>

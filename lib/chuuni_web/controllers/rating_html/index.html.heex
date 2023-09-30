@@ -1,0 +1,25 @@
+<.header>
+  Listing Ratings
+  <:actions>
+    <.link href={~p"/ratings/new"}>
+      <.button>New Rating</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="ratings" rows={@ratings} row_click={&JS.navigate(~p"/ratings/#{&1}")}>
+  <:col :let={rating} label="Value"><%= rating.value %></:col>
+  <:col :let={rating} label="Value worst"><%= rating.value_worst %></:col>
+  <:col :let={rating} label="Value best"><%= rating.value_best %></:col>
+  <:action :let={rating}>
+    <div class="sr-only">
+      <.link navigate={~p"/ratings/#{rating}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/ratings/#{rating}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={rating}>
+    <.link href={~p"/ratings/#{rating}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
