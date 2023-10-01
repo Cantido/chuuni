@@ -26,10 +26,61 @@ defmodule Chuuni.Reviews do
       from r in Rating,
       group_by: :item_rated,
       select: %{item_rated: r.item_rated, value: avg(r.value), count: count()},
-      order_by: [desc: avg(r.value)],
+      order_by: [desc: avg(r.value), desc: count(), asc: r.item_rated],
       limit: 10
 
     Repo.all(top_rated_query)
+    |> with_rank()
+    |> Enum.map(fn {item, rank} ->
+      Neuron.Config.set(url: "https://graphql.anilist.co")
+
+      Neuron.query("""
+        query ($id: Int) {
+          Media (id: $id, type: ANIME) {
+            title {
+              english
+            }
+            coverImage {
+              large
+            }
+          }
+        }
+        """,
+        %{id: item.item_rated}
+      )
+      |> case do
+        {:ok, resp} ->
+          data = resp.body["data"]["Media"]
+
+          item
+          |> Map.put(:has_data, true)
+          |> Map.put(:title, data["title"]["english"])
+          |> Map.put(:poster, data["coverImage"]["large"])
+        _ ->
+          item
+          |> Map.put(:has_data, false)
+          |> Map.put(:title, nil)
+          |> Map.put(:poster, nil)
+      end
+      |> Map.put(:rank, rank)
+    end)
+  end
+
+  defp with_rank(enumerable) do
+    {_, _, _, ranks} =
+    Enum.reduce(enumerable, {1, 0, nil, []}, fn elem, {current_rank, ranked_count, last_rating, ranks} ->
+      current_rating = elem.value
+
+      if is_nil(last_rating) or Decimal.eq?(current_rating, last_rating) do
+        # we have a tie, they will share the same ranking
+        {current_rank, ranked_count + 1, current_rating, [current_rank | ranks]}
+      else
+        next_rank = ranked_count + 1
+        {next_rank, ranked_count + 1, current_rating, [next_rank | ranks]}
+      end
+    end)
+
+    Enum.zip(enumerable, Enum.reverse(ranks))
   end
 
   @doc """
