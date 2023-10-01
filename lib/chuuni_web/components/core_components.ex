@@ -129,15 +129,26 @@ defmodule ChuuniWeb.CoreComponents do
 
   def flash(assigns) do
     ~H"""
-      <div
-        :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
-        id={@id}
-        phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
-        role="alert"
-        {@rest}
-      >
-        <p><%= msg %></p>
-      </div>
+    <div
+      :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
+      id={@id}
+      phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
+      role="alert"
+      class={[
+        "notification",
+        @kind == :info && "is-primary",
+        @kind == :error && "is-danger"
+      ]}
+      {@rest}
+    >
+      <button class="delete" aria-label={gettext("close")} />
+      <p :if={@title}>
+        <.icon :if={@kind == :info} name="hero-information-circle-mini" />
+        <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" />
+        <%= @title %>
+      </p>
+      <p><%= msg %></p>
+    </div>
     """
   end
 
@@ -152,8 +163,8 @@ defmodule ChuuniWeb.CoreComponents do
 
   def flash_group(assigns) do
     ~H"""
-    <.flash kind={:info} title="Success!" flash={@flash} />
-    <.flash kind={:error} title="Error!" flash={@flash} />
+    <.flash kind={:info} flash={@flash} />
+    <.flash kind={:error} flash={@flash} />
     <.flash
       id="client-error"
       kind={:error}
@@ -308,8 +319,8 @@ defmodule ChuuniWeb.CoreComponents do
       assign_new(assigns, :checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", value) end)
 
     ~H"""
-    <div phx-feedback-for={@name}>
-      <label>
+    <div phx-feedback-for={@name} class="field">
+      <label class="checkbox">
         <input type="hidden" name={@name} value="false" />
         <input
           type="checkbox"
@@ -351,12 +362,14 @@ defmodule ChuuniWeb.CoreComponents do
     ~H"""
     <div phx-feedback-for={@name} class="field">
       <.label for={@id}><%= @label %></.label>
-      <textarea
-        id={@id}
-        name={@name}
-        class="textarea"
-        {@rest}
-      ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
+      <div class="control">
+        <textarea
+          id={@id}
+          name={@name}
+          class="textarea"
+          {@rest}
+        ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
+      </div>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """
@@ -376,8 +389,8 @@ defmodule ChuuniWeb.CoreComponents do
           class="input"
           {@rest}
         />
-        <.error :for={msg <- @errors}><%= msg %></.error>
       </div>
+      <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """
   end
