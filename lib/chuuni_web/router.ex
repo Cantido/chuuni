@@ -21,6 +21,8 @@ defmodule ChuuniWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    resources "/anime", AnimeController, only: [:show]
   end
 
   scope "/", ChuuniWeb do

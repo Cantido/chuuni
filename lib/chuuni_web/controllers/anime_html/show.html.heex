@@ -1,0 +1,116 @@
+<div class="columns">
+  <div class="column is-one-quarter">
+    <div class="image is-2by3 block">
+      <img src={@anime["coverImage"]["extraLarge"]} />
+    </div>
+
+    <div class="panel">
+      <div class="panel-block">
+        <p class="content"><%= raw @anime["description"] %></p>
+      </div>
+      <div class="panel-block">
+        <p class="content"><strong>Type:</strong> TV</p>
+      </div>
+      <div class="panel-block">
+        <p class="content"><strong>Episodes:</strong> <%= @anime["episodes"] %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="column">
+    <.header>
+      <%= @anime["title"]["english"] %>
+      <:subtitle>
+      <%= @anime["title"]["romaji"] %>
+      </:subtitle>
+    </.header>
+
+
+    <div class="columns">
+      <div class="column">
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title is-centered">
+              Rating
+            </p>
+          </header>
+          <div class="card-content has-text-centered">
+            <%= if @rating_summary.count == 0 do %>
+              <p class="is-size-3">?<small class="is-size-5">/10</small></p>
+            <% else %>
+              <p class="is-size-3"><%= Decimal.round(@rating_summary.avg, 2) %><small class="is-size-5">/10</small></p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title is-centered">
+              Ranking
+            </p>
+          </header>
+          <div class="card-content has-text-centered">
+            <%= if is_nil(@rating_rank) do %>
+              <p class="is-size-3">#?</p>
+            <% else %>
+              <p class="is-size-3">#<%= @rating_rank %></p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title is-centered">
+              Popularity
+            </p>
+          </header>
+          <div class="card-content has-text-centered">
+            <%= if is_nil(@popularity_rank) do %>
+              <p class="is-size-3">#?</p>
+            <% else %>
+              <p class="is-size-3">#<%= @popularity_rank %></p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title is-centered">
+              Users
+            </p>
+          </header>
+          <div class="card-content has-text-centered">
+            <p class="is-size-3"><%= @rating_summary.count %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%= if @current_user do %>
+      <div class="block">
+        <p class="title is-4">Your review</p>
+
+        <ChuuniWeb.ReviewHTML.review_card review={@user_review} />
+      </div>
+    <% end %>
+
+    <div class="block">
+      <p class="title is-4">Reviews</p>
+
+      <%= if Enum.count(@reviews) == 0 do %>
+        <p>This anime has not been reviewed yet.</p>
+      <% end %>
+
+      <div :for={review <- @reviews}>
+        <ChuuniWeb.ReviewHTML.review_card review={review} />
+      </div>
+    </div>
+
+  </div>
+</div>

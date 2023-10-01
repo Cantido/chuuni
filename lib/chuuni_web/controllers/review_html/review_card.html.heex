@@ -1,0 +1,27 @@
+<div class="card">
+  <div class="card-content">
+    <article class="media">
+      <figure class="media-left">
+        <p class="image is-64x64">
+          <.gravatar email={@review.author.email} size="128" />
+        </p>
+      </figure>
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <strong>Display Name</strong> <small>@<%= @review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small> <small><%= @review.inserted_at %></small>
+            <br>
+            <%= raw Earmark.as_html!(@review.body) %>
+          </p>
+        </div>
+      </div>
+    </article>
+  </div>
+  <footer class="card-footer">
+    <.link navigate={~p"/reviews/#{@review}"} class="card-footer-item">Show</.link>
+    <.link navigate={~p"/reviews/#{@review}/edit"} class="card-footer-item">Edit</.link>
+    <.link href={~p"/reviews/#{@review}"} method="delete" data-confirm="Are you sure?" class="card-footer-item">
+      Delete
+    </.link>
+  </footer>
+</div>

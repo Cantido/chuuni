@@ -51,6 +51,38 @@ defmodule Chuuni.Reviews do
     |> Repo.preload(:author)
   end
 
+  def get_rating_summary(rated_id) do
+    Repo.one(
+      from r in Rating,
+      where: [item_rated: ^rated_id],
+      select: %{item_rated: ^rated_id, count: count(), avg: avg(r.value)}
+    )
+  end
+
+  def get_rating_rank(rated_id) do
+    summary = get_rating_summary(rated_id)
+
+    higher_ranks =
+      from r in Rating,
+      group_by: :item_rated,
+      having: avg(r.value) >= ^summary.avg,
+      select: [:item_rated]
+
+    Enum.count(Repo.all(higher_ranks)) + 1
+  end
+
+  def get_popularity_rank(rated_id) do
+    summary = get_rating_summary(rated_id)
+
+    higher_ranks =
+      from r in Rating,
+      group_by: :item_rated,
+      having: count(r.author_id, :distinct) >= ^summary.count,
+      select: [:item_rated]
+
+    Enum.count(Repo.all(higher_ranks)) + 1
+  end
+
   @doc """
   Creates a rating.
 
@@ -143,6 +175,16 @@ defmodule Chuuni.Reviews do
     )
   end
 
+  def latest_reviews_for_item(itemid) do
+    Repo.all(
+      from r in Review,
+      where: [item_reviewed: ^itemid],
+      order_by: [desc: :inserted_at],
+      limit: 10,
+      preload: :author
+    )
+  end
+
   @doc """
   Gets a single review.
 
@@ -159,6 +201,11 @@ defmodule Chuuni.Reviews do
   """
   def get_review!(id) do
     Repo.get!(Review, id)
+    |> Repo.preload(:author)
+  end
+
+  def get_review_by_user(item_reviewed, author_id) do
+    Repo.get_by(Review, item_reviewed: item_reviewed, author_id: author_id)
     |> Repo.preload(:author)
   end
 

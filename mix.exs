@@ -32,6 +32,7 @@ defmodule Chuuni.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:neuron, "~> 5.1.0"},
       {:earmark, "~> 1.4"},
       {:argon2_elixir, "~> 3.0"},
       {:phoenix, "~> 1.7.7"},

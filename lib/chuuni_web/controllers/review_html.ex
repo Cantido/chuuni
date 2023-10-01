@@ -10,4 +10,8 @@ defmodule ChuuniWeb.ReviewHTML do
   attr :action, :string, required: true
 
   def review_form(assigns)
+
+  attr :review, Chuuni.Reviews.Review, required: true
+
+  def review_card(assigns)
 end
