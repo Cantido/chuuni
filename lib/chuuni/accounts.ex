@@ -26,6 +26,10 @@ defmodule Chuuni.Accounts do
     Repo.get_by(User, email: email)
   end
 
+  def get_user_by_name(name) when is_binary(name) do
+    Repo.get_by(User, name: name)
+  end
+
   @doc """
   Gets a user by email and password.
 

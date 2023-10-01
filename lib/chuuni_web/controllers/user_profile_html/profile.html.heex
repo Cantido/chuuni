@@ -1,0 +1,20 @@
+<h1 class="title">User Profile</h1>
+
+<section class="section">
+  <div class="media">
+    <div class="media-left">
+      <figure class="image">
+        <.gravatar email={@user.email} size="120" />
+      </figure>
+    </div>
+    <div class="media-content">
+      <p class="title is-4">Display Name</p>
+      <p class="subtitle is-6"><%= @user.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></p>
+      <p>Joined on <time datetime={@user.inserted_at}><%= @user.inserted_at %></time></p>
+      <p>0 followers, 0 following</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+</section>

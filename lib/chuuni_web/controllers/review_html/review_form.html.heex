@@ -2,9 +2,11 @@
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>
-  <.input field={f[:item_reviewed]} type="text" label="Item reviewed" />
-  <.input field={f[:body]} type="text" label="Body" />
+
+
+  <.input field={f[:item_reviewed]} type="text" label="TheTVDB Series ID" placeholder="354198"/>
+  <.input field={f[:body]} type="textarea" label="Your review" placeholder="I thought it was..." />
   <:actions>
-    <.button>Save Review</.button>
+    <.button class="is-primary">Save Review</.button>
   </:actions>
 </.simple_form>

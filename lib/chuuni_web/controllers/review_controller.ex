@@ -5,7 +5,7 @@ defmodule ChuuniWeb.ReviewController do
   alias Chuuni.Reviews.Review
 
   def index(conn, _params) do
-    reviews = Reviews.list_reviews()
+    reviews = Reviews.latest_reviews()
     render(conn, :index, reviews: reviews)
   end
 

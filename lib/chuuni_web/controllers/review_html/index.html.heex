@@ -1,5 +1,5 @@
 <.header>
-  Listing Reviews
+  Recent Reviews
   <:actions>
     <.link href={~p"/reviews/new"}>
       <.button>New Review</.button>
@@ -7,18 +7,36 @@
   </:actions>
 </.header>
 
-<.table id="reviews" rows={@reviews} row_click={&JS.navigate(~p"/reviews/#{&1}")}>
-  <:col :let={review} label="Item reviewed"><%= review.item_reviewed %></:col>
-  <:col :let={review} label="Body"><%= review.body %></:col>
-  <:action :let={review}>
-    <div class="sr-only">
-      <.link navigate={~p"/reviews/#{review}"}>Show</.link>
-    </div>
-    <.link navigate={~p"/reviews/#{review}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={review}>
-    <.link href={~p"/reviews/#{review}"} method="delete" data-confirm="Are you sure?">
+<div class="card" :for={review <- @reviews}>
+  <div class="card-header">
+    <p class="card-header-title">
+      <%= review.item_reviewed %>
+    </p>
+  </div>
+  <div class="card-content">
+    <article class="media">
+      <figure class="media-left">
+        <p class="image is-64x64">
+          <.gravatar email={review.author.email} size="128" />
+        </p>
+      </figure>
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <strong>Display Name</strong> <small>@<%= review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small> <small><%= review.inserted_at %></small>
+            <br>
+            <%= raw Earmark.as_html!(review.body) %>
+          </p>
+        </div>
+      </div>
+    </article>
+  </div>
+  <footer class="card-footer">
+    <.link navigate={~p"/reviews/#{review}"} class="card-footer-item">Show</.link>
+    <.link navigate={~p"/reviews/#{review}/edit"} class="card-footer-item">Edit</.link>
+    <.link href={~p"/reviews/#{review}"} method="delete" data-confirm="Are you sure?" class="card-footer-item">
       Delete
     </.link>
-  </:action>
-</.table>
+  </footer>
+</div>
+

@@ -134,6 +134,15 @@ defmodule Chuuni.Reviews do
     Repo.all(Review)
   end
 
+  def latest_reviews do
+    Repo.all(
+      from r in Review,
+      order_by: [desc: :inserted_at],
+      limit: 10,
+      preload: :author
+    )
+  end
+
   @doc """
   Gets a single review.
 

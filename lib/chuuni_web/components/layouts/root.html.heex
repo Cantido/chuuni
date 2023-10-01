@@ -1,58 +1,60 @@
 <!DOCTYPE html>
-<html lang="en" class="[scrollbar-gutter:stable]">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <.live_title suffix=" · Phoenix Framework">
+    <.live_title suffix=" · Chuuni">
       <%= assigns[:page_title] || "Chuuni" %>
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/darkly/bulmaswatch.min.css">
   </head>
-  <body class="bg-white antialiased">
-    <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
-      <%= if @current_user do %>
-        <li class="text-[0.8125rem] leading-6 text-zinc-900">
-          <%= @current_user.email %>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/settings"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Settings
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_out"}
-            method="delete"
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Log out
-          </.link>
-        </li>
-      <% else %>
-        <li>
-          <.link
-            href={~p"/users/register"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Register
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_in"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Log in
-          </.link>
-        </li>
-      <% end %>
-    </ul>
+  <body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a href="/" class="navbar-item"><strong>Chuuni</strong></a>
+      </div>
+
+      <div class="navbar-menu">
+        <a href="/reviews" class="navbar-item">Reviews</a>
+        <a href="/ratings" class="navbar-item">Ratings</a>
+      </div>
+
+      <div class="navbar-end">
+        <%= if @current_user do %>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <div class="navbar-link media">
+              <figure class="media-left">
+                <.gravatar email={@current_user.email} />
+              </figure>
+              <div class="media-content">
+                <p class="title is-5">Display Name</p>
+                <p class="subtitle is-7"><%= @current_user.name %></p>
+              </div>
+            </div>
+            <div class="navbar-dropdown">
+              <a href={~p"/users/settings"} class="navbar-item">Settings</a>
+              <a href={~p"/users/log_out"} class="navbar-item">Log out</a>
+            </div>
+          </div>
+        <% else %>
+          <a href={~p"/users/register"} class="navbar-item">Register</a>
+          <a href={~p"/users/log_in"} class="navbar-item">Log in</a>
+        <% end %>
+      </div>
+    </nav>
+
     <%= @inner_content %>
+
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>Chuuni's source code is freely available. You can contribute or report issues on <a href="https://github.com/Cantido/chuuni">GitHub</a>.</p>
+      </div>
+    </footer>
   </body>
 </html>

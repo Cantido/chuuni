@@ -1,13 +1,32 @@
-<.header>
-  <%= @review.author.name %>'s review of <%= @review.item_reviewed %>
-  <:subtitle><%= @review.updated_at %></:subtitle>
-  <:actions>
-    <.link href={~p"/reviews/#{@review}/edit"}>
-      <.button>Edit review</.button>
+<div class="card">
+  <div class="card-header">
+    <p class="card-header-title">
+      <%= @review.item_reviewed %>
+    </p>
+  </div>
+  <div class="card-content">
+    <article class="media">
+      <figure class="media-left">
+        <p class="image is-64x64">
+          <.gravatar email={@review.author.email} size="128" />
+        </p>
+      </figure>
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <strong>Display Name</strong> <small>@<%= @review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small> <small><%= @review.inserted_at %></small>
+            <br>
+            <%= raw Earmark.as_html!(@review.body) %>
+          </p>
+        </div>
+      </div>
+    </article>
+  </div>
+  <footer class="card-footer">
+    <.link navigate={~p"/reviews/#{@review}"} class="card-footer-item">Show</.link>
+    <.link navigate={~p"/reviews/#{@review}/edit"} class="card-footer-item">Edit</.link>
+    <.link href={~p"/reviews/#{@review}"} method="delete" data-confirm="Are you sure?" class="card-footer-item">
+      Delete
     </.link>
-  </:actions>
-</.header>
-
-<p><%= @review.body %></p>
-
-<.back navigate={~p"/reviews"}>Back to reviews</.back>
+  </footer>
+</div>

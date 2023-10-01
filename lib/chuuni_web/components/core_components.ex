@@ -20,6 +20,28 @@ defmodule ChuuniWeb.CoreComponents do
   import ChuuniWeb.Gettext
 
   @doc """
+  Renders a Gravatar for an email address.
+  """
+
+  attr :email, :string, required: true
+  attr :size, :integer, default: 80
+
+  def gravatar(assigns) do
+    email =
+      assigns[:email]
+      |> String.trim()
+      |> String.downcase()
+
+    md5 =
+     :crypto.hash(:md5, email)
+     |> Base.encode16(case: :lower)
+
+    ~H"""
+      <img src={"https://gravatar.com/avatar/#{md5}?s=#{@size}&d=identicon"} style="object-fit: contain;" />
+    """
+  end
+
+  @doc """
   Renders a modal.
 
   ## Examples
@@ -107,28 +129,15 @@ defmodule ChuuniWeb.CoreComponents do
 
   def flash(assigns) do
     ~H"""
-    <div
-      :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
-      id={@id}
-      phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
-      role="alert"
-      class={[
-        "fixed top-2 right-2 w-80 sm:w-96 z-50 rounded-lg p-3 ring-1",
-        @kind == :info && "bg-emerald-50 text-emerald-800 ring-emerald-500 fill-cyan-900",
-        @kind == :error && "bg-rose-50 text-rose-900 shadow-md ring-rose-500 fill-rose-900"
-      ]}
-      {@rest}
-    >
-      <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
-        <.icon :if={@kind == :info} name="hero-information-circle-mini" class="h-4 w-4" />
-        <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
-        <%= @title %>
-      </p>
-      <p class="mt-2 text-sm leading-5"><%= msg %></p>
-      <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
-        <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
-      </button>
-    </div>
+      <div
+        :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
+        id={@id}
+        phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
+        role="alert"
+        {@rest}
+      >
+        <p><%= msg %></p>
+      </div>
     """
   end
 
@@ -196,9 +205,9 @@ defmodule ChuuniWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="mt-10 space-y-8 bg-white">
-        <%= render_slot(@inner_block, f) %>
-        <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
+      <%= render_slot(@inner_block, f) %>
+      <div class="field is-grouped">
+        <div :for={action <- @actions} class="control">
           <%= render_slot(action, f) %>
         </div>
       </div>
@@ -225,8 +234,7 @@ defmodule ChuuniWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
+        "button",
         @class
       ]}
       {@rest}
@@ -301,7 +309,7 @@ defmodule ChuuniWeb.CoreComponents do
 
     ~H"""
     <div phx-feedback-for={@name}>
-      <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
+      <label>
         <input type="hidden" name={@name} value="false" />
         <input
           type="checkbox"
@@ -309,7 +317,6 @@ defmodule ChuuniWeb.CoreComponents do
           name={@name}
           value="true"
           checked={@checked}
-          class="rounded border-zinc-300 text-zinc-900 focus:ring-0"
           {@rest}
         />
         <%= @label %>
@@ -321,18 +328,20 @@ defmodule ChuuniWeb.CoreComponents do
 
   def input(%{type: "select"} = assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div phx-feedback-for={@name} class="field">
       <.label for={@id}><%= @label %></.label>
-      <select
-        id={@id}
-        name={@name}
-        class="mt-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm"
-        multiple={@multiple}
-        {@rest}
-      >
-        <option :if={@prompt} value=""><%= @prompt %></option>
-        <%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
-      </select>
+
+      <div class="control select">
+        <select
+          id={@id}
+          name={@name}
+          multiple={@multiple}
+          {@rest}
+        >
+          <option :if={@prompt} value=""><%= @prompt %></option>
+          <%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
+        </select>
+      </div>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """
@@ -340,17 +349,12 @@ defmodule ChuuniWeb.CoreComponents do
 
   def input(%{type: "textarea"} = assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div phx-feedback-for={@name} class="field">
       <.label for={@id}><%= @label %></.label>
       <textarea
         id={@id}
         name={@name}
-        class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
-          "min-h-[6rem] phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
-          @errors == [] && "border-zinc-300 focus:border-zinc-400",
-          @errors != [] && "border-rose-400 focus:border-rose-400"
-        ]}
+        class="textarea"
         {@rest}
       ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
       <.error :for={msg <- @errors}><%= msg %></.error>
@@ -361,22 +365,19 @@ defmodule ChuuniWeb.CoreComponents do
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div phx-feedback-for={@name} class="field">
       <.label for={@id}><%= @label %></.label>
-      <input
-        type={@type}
-        name={@name}
-        id={@id}
-        value={Phoenix.HTML.Form.normalize_value(@type, @value)}
-        class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
-          "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
-          @errors == [] && "border-zinc-300 focus:border-zinc-400",
-          @errors != [] && "border-rose-400 focus:border-rose-400"
-        ]}
-        {@rest}
-      />
-      <.error :for={msg <- @errors}><%= msg %></.error>
+      <div class="control">
+        <input
+          type={@type}
+          name={@name}
+          id={@id}
+          value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+          class="input"
+          {@rest}
+        />
+        <.error :for={msg <- @errors}><%= msg %></.error>
+      </div>
     </div>
     """
   end
@@ -389,7 +390,7 @@ defmodule ChuuniWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
+    <label for={@for} class="label">
       <%= render_slot(@inner_block) %>
     </label>
     """
@@ -402,8 +403,7 @@ defmodule ChuuniWeb.CoreComponents do
 
   def error(assigns) do
     ~H"""
-    <p class="mt-3 flex gap-3 text-sm leading-6 text-rose-600 phx-no-feedback:hidden">
-      <.icon name="hero-exclamation-circle-mini" class="mt-0.5 h-5 w-5 flex-none" />
+    <p class="help is-danger">
       <%= render_slot(@inner_block) %>
     </p>
     """
@@ -420,16 +420,18 @@ defmodule ChuuniWeb.CoreComponents do
 
   def header(assigns) do
     ~H"""
-    <header class={[@actions != [] && "flex items-center justify-between gap-6", @class]}>
-      <div>
-        <h1 class="text-lg font-semibold leading-8 text-zinc-800">
+    <header class="level">
+      <div class="level-left">
+        <div>
+        <h1 class="title">
           <%= render_slot(@inner_block) %>
         </h1>
-        <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-600">
+        <p :if={@subtitle != []} class="subtitle">
           <%= render_slot(@subtitle) %>
         </p>
+        </div>
       </div>
-      <div class="flex-none"><%= render_slot(@actions) %></div>
+      <div class="level-right"><%= render_slot(@actions) %></div>
     </header>
     """
   end
@@ -471,7 +473,7 @@ defmodule ChuuniWeb.CoreComponents do
         <thead class="text-sm text-left leading-6 text-zinc-500">
           <tr>
             <th :for={col <- @col} class="p-0 pr-6 pb-4 font-normal"><%= col[:label] %></th>
-            <th class="relative p-0 pb-4"><span class="sr-only"><%= gettext("Actions") %></span></th>
+            <th class="relative p-0 pb-4"><span class="is-sr-only"><%= gettext("Actions") %></span></th>
           </tr>
         </thead>
         <tbody
@@ -584,7 +586,9 @@ defmodule ChuuniWeb.CoreComponents do
 
   def icon(%{name: "hero-" <> _} = assigns) do
     ~H"""
-    <span class={[@name, @class]} />
+    <span class={["icon", @class]}>
+      <span class={@name} />
+    </span>
     """
   end
 

@@ -89,4 +89,11 @@ defmodule ChuuniWeb.Router do
       live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
   end
+
+  scope "/", ChuuniWeb do
+    pipe_through :browser
+
+    # must go after the other /users paths
+    get "/users/:username", UserProfileController, :profile
+  end
 end
