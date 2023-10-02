@@ -39,7 +39,8 @@
               </div>
             </div>
             <div class="navbar-dropdown">
-              <a href={~p"/users/settings"} class="navbar-item">Settings</a>
+              <.link href={~p"/users/#{@current_user.name}"} class="navbar-item">Profile</.link>
+              <.link href={~p"/users/settings"} class="navbar-item">Settings</.link>
               <.link href={~p"/users/log_out"} method="delete" class="navbar-item">Log out</.link>
             </div>
           </div>
