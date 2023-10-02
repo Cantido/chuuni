@@ -1,0 +1,23 @@
+<div class="panel" id="search">
+  <p class="panel-heading">
+    Find anime to review
+  </p>
+  <div class="panel-block">
+    <div class="control has-icons-left">
+      <input
+        class="input"
+        type="text"
+        name="query"
+        placeholder="Search"
+        hx-get="/anime/search"
+        hx-trigger="keyup changed delay:500ms"
+        hx-target="#search-results"
+        hx-swap="innerHTML"
+      />
+      <span class="icon is-left">
+        <.icon name="hero-magnifying-glass" />
+      </span>
+    </div>
+  </div>
+  <div id="search-results"></div>
+</div>

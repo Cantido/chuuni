@@ -11,6 +11,11 @@ defmodule ChuuniWeb.ReviewHTML do
 
   def review_form(assigns)
 
+  attr :changeset, Ecto.Changeset, required: true
+  attr :action, :string, required: true
+
+  def review_form_card(assigns)
+
   attr :review, Chuuni.Reviews.Review, required: true
 
   def review_card(assigns)

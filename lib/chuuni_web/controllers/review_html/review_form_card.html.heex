@@ -1,0 +1,28 @@
+<.form :let={f} for={@changeset} action={@action}>
+  <.input field={f[:item_reviewed]} type="hidden" />
+
+  <div class="card">
+    <div class="card-content">
+      <article class="media">
+        <figure class="media-left">
+          <p class="image is-64x64">
+            <.gravatar email={@author.email} size="128" />
+          </p>
+        </figure>
+        <div class="media-content">
+          <div class="content">
+            <p>
+              <strong>Display Name</strong> <small>@<%= @author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small>
+              <br>
+
+              <.input field={f[:body]} type="textarea" placeholder="I thought it was..." />
+            </p>
+          </div>
+        </div>
+      </article>
+    </div>
+    <footer class="card-footer">
+      <.button class="is-primary card-footer-item" type="submit">Post Review</.button>
+    </footer>
+  </div>
+</.form>

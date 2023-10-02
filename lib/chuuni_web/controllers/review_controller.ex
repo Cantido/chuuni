@@ -9,9 +9,11 @@ defmodule ChuuniWeb.ReviewController do
     render(conn, :index, reviews: reviews)
   end
 
-  def new(conn, _params) do
-    changeset = Reviews.change_review(%Review{})
-    render(conn, :new, changeset: changeset)
+  def new(conn, params) do
+    anime_id = Map.get(params, "anime_id")
+
+    changeset = Reviews.change_review(%Review{item_reviewed: anime_id})
+    render(conn, :new, changeset: changeset, anime: anime_id)
   end
 
   def create(conn, %{"review" => review_params}) do

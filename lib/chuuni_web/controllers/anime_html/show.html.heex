@@ -93,11 +93,20 @@
     </div>
 
     <%= if @current_user do %>
-      <div class="block">
-        <p class="title is-4">Your review</p>
+      <%= if @user_review do %>
+        <div class="block">
+          <p class="title is-4">Your review</p>
 
-        <ChuuniWeb.ReviewHTML.review_card review={@user_review} />
-      </div>
+          <ChuuniWeb.ReviewHTML.review_card review={@user_review} />
+        </div>
+      <% else %>
+        <div class="block">
+          <p class="title is-4">Your review</p>
+
+
+          <ChuuniWeb.ReviewHTML.review_form_card author={@current_user} changeset={@review_changeset} action={~p"/anime/#{@anime["id"]}/reviews"} />
+        </div>
+      <% end %>
     <% end %>
 
     <div class="block">

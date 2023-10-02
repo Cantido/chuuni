@@ -21,7 +21,9 @@ defmodule ChuuniWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/search", PageController, :search
 
+    get "/anime/search", AnimeController, :search
     resources "/anime", AnimeController, only: [:show]
   end
 
@@ -30,6 +32,12 @@ defmodule ChuuniWeb.Router do
 
     resources "/reviews", ReviewController
     resources "/ratings", RatingController
+
+    scope "/anime/:anime_id" do
+      get "/summary_card", AnimeController, :summary_card
+
+      resources "/reviews", ReviewController, only: [:new, :create]
+    end
   end
 
   # Other scopes may use custom stacks.

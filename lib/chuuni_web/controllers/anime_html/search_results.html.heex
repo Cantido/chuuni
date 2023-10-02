@@ -1,0 +1,14 @@
+<div>
+  <a :for={result <- @results} class="panel-block" href={~p"/anime/#{result["id"]}"}>
+    <div class="media">
+      <figure class="media-left">
+        <p class="image is-64x64 is-2by3">
+          <img src={result["coverImage"]["medium"]} />
+        </p>
+      </figure>
+      <div class="media-content">
+        <strong><%= result["title"]["romaji"] %></strong>
+      </div>
+    </div>
+  </a>
+</div>

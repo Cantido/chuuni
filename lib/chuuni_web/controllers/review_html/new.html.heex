@@ -1,8 +1,13 @@
 <.header>
-  New Review
+  Write a review
   <:subtitle>Share your opinion.</:subtitle>
 </.header>
 
-<section class="section">
-<.review_form changeset={@changeset} action={~p"/reviews"} />
-</section>
+<div class="columns">
+  <div class="column is-4">
+    <div :if={not is_nil(@anime)} hx-get={~p"/anime/#{@anime}/summary_card"} hx-trigger="load" hx-target="this"></div>
+  </div>
+  <div class="column">
+    <.review_form changeset={@changeset} action={~p"/reviews"} />
+  </div>
+</div>
