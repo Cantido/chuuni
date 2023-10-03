@@ -26,9 +26,21 @@ defmodule Chuuni.Reviews do
           Media (id: $id, type: ANIME) {
             title {
               english
+              romaji
             }
             coverImage {
               large
+            }
+            startDate {
+              year
+            }
+            endDate {
+              year
+            }
+            studios(sort: NAME) {
+              nodes {
+                name
+              }
             }
           }
         }
@@ -41,6 +53,7 @@ defmodule Chuuni.Reviews do
 
           item
           |> Map.put(:has_data, true)
+          |> Map.put(:anime, data)
           |> Map.put(:title, data["title"]["english"])
           |> Map.put(:poster, data["coverImage"]["large"])
         _ ->
@@ -58,7 +71,7 @@ defmodule Chuuni.Reviews do
     Enum.reduce(enumerable, {1, 0, nil, []}, fn elem, {current_rank, ranked_count, last_rating, ranks} ->
       current_rating = elem.rating
 
-      if is_nil(last_rating) or Decimal.eq?(current_rating, last_rating) do
+      if is_nil(last_rating) or current_rating == last_rating do
         # we have a tie, they will share the same ranking
         {current_rank, ranked_count + 1, current_rating, [current_rank | ranks]}
       else
@@ -84,8 +97,6 @@ defmodule Chuuni.Reviews do
       raise "This shouldn't happen"
     end
 
-    Logger.info(inspect summary)
-
     summary
   end
 
@@ -98,7 +109,7 @@ defmodule Chuuni.Reviews do
       higher_ranks =
         from r in Review,
         group_by: :item_reviewed,
-        having: avg(r.rating) >= coalesce(^summary.avg, 0),
+        having: avg(r.rating) >= ^summary.avg,
         select: [:item_reviewed]
 
       Enum.count(Repo.all(higher_ranks)) + 1

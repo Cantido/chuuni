@@ -6,9 +6,6 @@
 
     <div class="panel">
       <div class="panel-block">
-        <p class="content"><%= raw @anime["description"] %></p>
-      </div>
-      <div class="panel-block">
         <p class="content"><strong>Type:</strong> TV</p>
       </div>
       <div class="panel-block">
@@ -24,6 +21,7 @@
       <%= @anime["title"]["romaji"] %>
       </:subtitle>
     </.header>
+
 
 
     <div class="columns">
@@ -90,6 +88,10 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="box content">
+      <%= raw @anime["description"] %>
     </div>
 
     <%= if @current_user do %>

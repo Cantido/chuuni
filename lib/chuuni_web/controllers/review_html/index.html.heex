@@ -20,11 +20,16 @@
             </p>
           </div>
           <div class="column">
-            <p class="is-size-5"><%= review.title %></p>
+            <p class="title"><%= review.title %></p>
+            <p class="subtitle"><%= review.anime["title"]["romaji"] %></p>
+            <p><%= review.anime["startDate"]["year"] %> &ndash; <%= review.anime["endDate"]["year"] %></p>
+            <p>
+              <%= review.anime["studios"]["nodes"] |> Enum.map_join(", ", fn node -> node["name"] end) %>
+            </p>
           </div>
         </div>
       </a>
     </div>
-    <div class="column is-2"><p class="is-size-3"><%= review.rating %></p></div>
+    <div class="column is-2"><p class="is-size-3"><%= Decimal.round(review.rating, 2) %></p></div>
   </div>
 </div>
