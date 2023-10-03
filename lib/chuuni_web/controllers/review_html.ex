@@ -11,6 +11,7 @@ defmodule ChuuniWeb.ReviewHTML do
 
   def review_form(assigns)
 
+  attr :author, Chuuni.Accounts.User, required: true
   attr :changeset, Ecto.Changeset, required: true
   attr :action, :string, required: true
 

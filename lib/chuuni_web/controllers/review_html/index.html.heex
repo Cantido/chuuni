@@ -1,42 +1,30 @@
 <.header>
-  Recent Reviews
-  <:actions>
-    <.link href={~p"/reviews/new"}>
-      <.button>New Review</.button>
-    </.link>
-  </:actions>
+  Top Anime
 </.header>
 
-<div class="card" :for={review <- @reviews}>
-  <div class="card-header">
-    <p class="card-header-title">
-      <%= review.item_reviewed %>
-    </p>
-  </div>
-  <div class="card-content">
-    <article class="media">
-      <figure class="media-left">
-        <p class="image is-64x64">
-          <.gravatar email={review.author.email} size="128" />
-        </p>
-      </figure>
-      <div class="media-content">
-        <div class="content">
-          <p>
-            <strong>Display Name</strong> <small>@<%= review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small> <small><%= review.inserted_at %></small>
-            <br>
-            <%= raw Earmark.as_html!(review.body) %>
-          </p>
-        </div>
-      </div>
-    </article>
-  </div>
-  <footer class="card-footer">
-    <.link navigate={~p"/reviews/#{review}"} class="card-footer-item">Show</.link>
-    <.link navigate={~p"/reviews/#{review}/edit"} class="card-footer-item">Edit</.link>
-    <.link href={~p"/reviews/#{review}"} method="delete" data-confirm="Are you sure?" class="card-footer-item">
-      Delete
-    </.link>
-  </footer>
+<div class="columns is-size-5">
+  <div class="column is-1">Rank</div>
+  <div class="column is-9">Title</div>
+  <div class="column is-2">Rating</div>
 </div>
 
+<div class="box" :for={review <- @reviews}>
+  <div class="columns">
+    <div class="column is-1"><p class="is-size-3"><%= review.rank %></p></div>
+    <div class="column is-9">
+      <a href={~p"/anime/#{review.item_reviewed}"}>
+        <div class="columns">
+          <div class="column is-2">
+            <p class="image is-2by3">
+              <img src={review.poster} />
+            </p>
+          </div>
+          <div class="column">
+            <p class="is-size-5"><%= review.title %></p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="column is-2"><p class="is-size-3"><%= review.rating %></p></div>
+  </div>
+</div>

@@ -27,18 +27,19 @@ defmodule ChuuniWeb.CoreComponents do
   attr :size, :integer, default: 80
 
   def gravatar(assigns) do
-    email =
-      assigns[:email]
+    ~H"""
+      <img src={"https://gravatar.com/avatar/#{md5(@email)}?s=#{@size}&d=identicon"} style="object-fit: contain;" />
+    """
+  end
+
+  defp md5(email) do
+    trimmed =
+      email
       |> String.trim()
       |> String.downcase()
 
-    md5 =
-     :crypto.hash(:md5, email)
-     |> Base.encode16(case: :lower)
-
-    ~H"""
-      <img src={"https://gravatar.com/avatar/#{md5}?s=#{@size}&d=identicon"} style="object-fit: contain;" />
-    """
+   :crypto.hash(:md5, trimmed)
+   |> Base.encode16(case: :lower)
   end
 
   @doc """

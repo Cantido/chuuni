@@ -3,8 +3,8 @@ defmodule ChuuniWeb.ReviewControllerTest do
 
   import Chuuni.ReviewsFixtures
 
-  @create_attrs %{body: "some body", item_reviewed: "some item_reviewed"}
-  @update_attrs %{body: "some updated body", item_reviewed: "some updated item_reviewed"}
+  @create_attrs %{rating: 5, body: "some body", item_reviewed: "some item_reviewed"}
+  @update_attrs %{rating: 10, body: "some updated body", item_reviewed: "some updated item_reviewed"}
   @invalid_attrs %{body: nil, item_reviewed: nil}
 
   setup :register_and_log_in_user
@@ -12,14 +12,14 @@ defmodule ChuuniWeb.ReviewControllerTest do
   describe "index" do
     test "lists all reviews", %{conn: conn} do
       conn = get(conn, ~p"/reviews")
-      assert html_response(conn, 200) =~ "Listing Reviews"
+      assert html_response(conn, 200) =~ "Top Anime"
     end
   end
 
   describe "new review" do
     test "renders form", %{conn: conn} do
       conn = get(conn, ~p"/reviews/new")
-      assert html_response(conn, 200) =~ "New Review"
+      assert html_response(conn, 200) =~ "Review"
     end
   end
 

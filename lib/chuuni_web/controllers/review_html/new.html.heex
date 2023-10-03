@@ -5,7 +5,7 @@
 
 <div class="columns">
   <div class="column is-4">
-    <div :if={not is_nil(@anime)} hx-get={~p"/anime/#{@anime}/summary_card"} hx-trigger="load" hx-target="this"></div>
+      <div :if={@anime} hx-get={~p"/anime/#{@anime}/summary_card"} hx-trigger="load" hx-target="this"></div>
   </div>
   <div class="column">
     <.review_form changeset={@changeset} action={~p"/reviews"} />

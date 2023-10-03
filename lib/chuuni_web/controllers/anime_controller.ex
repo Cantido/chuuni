@@ -1,8 +1,6 @@
 defmodule ChuuniWeb.AnimeController do
   use ChuuniWeb, :controller
 
-  alias Chuuni.Media
-  alias Chuuni.Media.Anime
   alias Chuuni.Reviews
 
   def search(conn, %{"query" => query}) do

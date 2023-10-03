@@ -6,7 +6,7 @@
       <article class="media">
         <figure class="media-left">
           <p class="image is-64x64">
-            <.gravatar email={@author.email} size="128" />
+            <.gravatar email={@author.email} size={128} />
           </p>
         </figure>
         <div class="media-content">
@@ -14,7 +14,7 @@
             <p>
               <strong>Display Name</strong> <small>@<%= @author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small>
               <br>
-
+              <.input field={f[:rating]} type="select" prompt="Select your rating" options={10..1} required="true" />
               <.input field={f[:body]} type="textarea" placeholder="I thought it was..." />
             </p>
           </div>

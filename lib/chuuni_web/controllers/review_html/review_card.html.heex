@@ -3,16 +3,16 @@
     <article class="media">
       <figure class="media-left">
         <p class="image is-64x64">
-          <.gravatar email={@review.author.email} size="128" />
+          <.gravatar email={@review.author.email} size={128} />
         </p>
       </figure>
       <div class="media-content">
         <div class="content">
-          <p>
-            <strong>Display Name</strong> <small>@<%= @review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small> <small><%= @review.inserted_at %></small>
-            <br>
+          <p><strong>Display Name</strong> <small>@<%= @review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small> <small><%= @review.inserted_at %></small></p>
+          <p>Rating: <span class="is-size-5"><%= @review.rating %><small>/10</small></span></p>
+          <%= if @review.body do %>
             <%= raw Earmark.as_html!(@review.body) %>
-          </p>
+          <% end %>
         </div>
       </div>
     </article>

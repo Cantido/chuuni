@@ -1,8 +1,15 @@
 <.header>
-  Edit Review <%= @review.id %>
-  <:subtitle>Use this form to manage review records in your database.</:subtitle>
+  Edit Review
+  <:subtitle>Last updated <%= @review.updated_at %></:subtitle>
 </.header>
 
-<.review_form changeset={@changeset} action={~p"/reviews/#{@review}"} />
+<div class="columns">
+  <div class="column is-3">
+    <div hx-get={~p"/anime/#{@review.item_reviewed}/summary_card"} hx-trigger="load" hx-target="this"></div>
+  </div>
+  <div class="column">
+    <.review_form_card author={@review.author} changeset={@changeset} action={~p"/reviews/#{@review}"} />
+  </div>
+</div>
 
 <.back navigate={~p"/reviews"}>Back to reviews</.back>

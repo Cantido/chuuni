@@ -31,7 +31,6 @@ defmodule ChuuniWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     resources "/reviews", ReviewController
-    resources "/ratings", RatingController
 
     scope "/anime/:anime_id" do
       get "/summary_card", AnimeController, :summary_card

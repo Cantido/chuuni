@@ -6,27 +6,14 @@ defmodule Chuuni.Reviews do
   import Ecto.Query, warn: false
   alias Chuuni.Repo
 
-  alias Chuuni.Reviews.Rating
-
-  @doc """
-  Returns the list of ratings.
-
-  ## Examples
-
-      iex> list_ratings()
-      [%Rating{}, ...]
-
-  """
-  def list_ratings do
-    Repo.all(Rating)
-  end
+  alias Chuuni.Reviews.Review
 
   def top_rated do
     top_rated_query =
-      from r in Rating,
-      group_by: :item_rated,
-      select: %{item_rated: r.item_rated, value: avg(r.value), count: count()},
-      order_by: [desc: avg(r.value), desc: count(), asc: r.item_rated],
+      from r in Review,
+      group_by: :item_reviewed,
+      select: %{item_reviewed: r.item_reviewed, rating: avg(r.rating), count: count()},
+      order_by: [desc: avg(r.rating), desc: count(), asc: r.item_reviewed],
       limit: 10
 
     Repo.all(top_rated_query)
@@ -46,7 +33,7 @@ defmodule Chuuni.Reviews do
           }
         }
         """,
-        %{id: item.item_rated}
+        %{id: item.item_reviewed}
       )
       |> case do
         {:ok, resp} ->
@@ -69,7 +56,7 @@ defmodule Chuuni.Reviews do
   defp with_rank(enumerable) do
     {_, _, _, ranks} =
     Enum.reduce(enumerable, {1, 0, nil, []}, fn elem, {current_rank, ranked_count, last_rating, ranks} ->
-      current_rating = elem.value
+      current_rating = elem.rating
 
       if is_nil(last_rating) or Decimal.eq?(current_rating, last_rating) do
         # we have a tie, they will share the same ranking
@@ -83,126 +70,56 @@ defmodule Chuuni.Reviews do
     Enum.zip(enumerable, Enum.reverse(ranks))
   end
 
-  @doc """
-  Gets a single rating.
-
-  Raises `Ecto.NoResultsError` if the Rating does not exist.
-
-  ## Examples
-
-      iex> get_rating!(123)
-      %Rating{}
-
-      iex> get_rating!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_rating!(id) do
-    Repo.get!(Rating, id)
-    |> Repo.preload(:author)
-  end
+  require Logger
 
   def get_rating_summary(rated_id) do
-    Repo.one(
-      from r in Rating,
-      where: [item_rated: ^rated_id],
-      select: %{item_rated: ^rated_id, count: count(), avg: avg(r.value)}
+    summary = Repo.one(
+      from r in Review,
+      where: [item_reviewed: ^rated_id],
+      where: not is_nil(r.rating),
+      select: %{item_reviewed: ^rated_id, count: count(r.author_id, :distinct), avg: avg(r.rating)}
     )
+
+    if is_nil(summary.avg) && summary.count != 0 do
+      raise "This shouldn't happen"
+    end
+
+    Logger.info(inspect summary)
+
+    summary
   end
 
   def get_rating_rank(rated_id) do
     summary = get_rating_summary(rated_id)
 
-    higher_ranks =
-      from r in Rating,
-      group_by: :item_rated,
-      having: avg(r.value) >= ^summary.avg,
-      select: [:item_rated]
+    if summary.count == 0 do
+      nil
+    else
+      higher_ranks =
+        from r in Review,
+        group_by: :item_reviewed,
+        having: avg(r.rating) >= coalesce(^summary.avg, 0),
+        select: [:item_reviewed]
 
-    Enum.count(Repo.all(higher_ranks)) + 1
+      Enum.count(Repo.all(higher_ranks)) + 1
+    end
   end
 
   def get_popularity_rank(rated_id) do
     summary = get_rating_summary(rated_id)
 
-    higher_ranks =
-      from r in Rating,
-      group_by: :item_rated,
-      having: count(r.author_id, :distinct) >= ^summary.count,
-      select: [:item_rated]
+    if summary.count == 0 do
+      nil
+    else
+      higher_ranks =
+        from r in Review,
+        group_by: :item_reviewed,
+        having: count(r.author_id, :distinct) >= ^summary.count,
+        select: [:item_reviewed]
 
-    Enum.count(Repo.all(higher_ranks)) + 1
+      Enum.count(Repo.all(higher_ranks)) + 1
+    end
   end
-
-  @doc """
-  Creates a rating.
-
-  ## Examples
-
-      iex> create_rating(%{field: value})
-      {:ok, %Rating{}}
-
-      iex> create_rating(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_rating(attrs \\ %{}) do
-    %Rating{
-      value_best: Decimal.new("10"),
-      value_worst: Decimal.new("1")
-    }
-    |> Rating.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a rating.
-
-  ## Examples
-
-      iex> update_rating(rating, %{field: new_value})
-      {:ok, %Rating{}}
-
-      iex> update_rating(rating, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_rating(%Rating{} = rating, attrs) do
-    rating
-    |> Rating.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a rating.
-
-  ## Examples
-
-      iex> delete_rating(rating)
-      {:ok, %Rating{}}
-
-      iex> delete_rating(rating)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_rating(%Rating{} = rating) do
-    Repo.delete(rating)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking rating changes.
-
-  ## Examples
-
-      iex> change_rating(rating)
-      %Ecto.Changeset{data: %Rating{}}
-
-  """
-  def change_rating(%Rating{} = rating, attrs \\ %{}) do
-    Rating.changeset(rating, attrs)
-  end
-
-  alias Chuuni.Reviews.Review
 
   @doc """
   Returns the list of reviews.
