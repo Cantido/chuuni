@@ -100,7 +100,7 @@ defmodule ChuuniWeb do
       use Phoenix.VerifiedRoutes,
         endpoint: ChuuniWeb.Endpoint,
         router: ChuuniWeb.Router,
-        statics: ChuuniWeb.static_paths()
+        statics: ChuuniWeb.static_paths() ++ ~w(artwork/anime)
     end
   end
 

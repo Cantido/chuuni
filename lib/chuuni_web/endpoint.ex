@@ -25,7 +25,8 @@ defmodule ChuuniWeb.Endpoint do
 
   plug Plug.Static,
     at: "/artwork",
-    from: {Chuuni.Media, :artwork_path, []}
+    from: {Chuuni.Media, :artwork_path, []},
+    only: ~w(anime)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

@@ -25,7 +25,7 @@
       stop_date={result["endDate"]["year"]}
       studios={result["studios"]["nodes"] |> Enum.map_join(", ", fn node -> node["name"] end)}>
       <:actions>
-          <.form action={~p"/anime/import"} method="post">
+          <.form for={%{}} action={~p"/anime/import"} method="post">
             <.input type="hidden" name="provider" value="anilist" />
             <.input type="hidden" name="id" value={result["id"]} />
 
