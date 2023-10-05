@@ -7,9 +7,7 @@ defmodule Chuuni.Application do
 
   @impl true
   def start(_type, _args) do
-    test_file_path = Path.join(Chuuni.Media.artwork_path(), to_string(System.unique_integer()))
-    :ok = File.touch(test_file_path)
-    :ok = File.rm(test_file_path)
+    test_artwork_path()
 
     children = [
       # Start the Telemetry supervisor
@@ -30,6 +28,28 @@ defmodule Chuuni.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Chuuni.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  defp test_artwork_path do
+    artwork_path = Chuuni.Media.artwork_path()
+
+    unless File.exists?(artwork_path) do
+      raise "expected $CHUUNI_ARTWORK_PATH (#{inspect artwork_path}) to point to a directory, but there is nothing there."
+    end
+
+    stat = File.stat!(artwork_path)
+
+    unless stat.type == :directory do
+      raise "expected $CHUUNI_ARTWORK_PATH (#{inspect artwork_path}) to point to a directory, but it points to a #{stat.type}."
+    end
+
+    test_file_path = Path.join(artwork_path, ".tmp." <> to_string(System.unique_integer()))
+    case File.touch(test_file_path) do
+      :ok ->
+        File.rm!(test_file_path)
+      {:error, err} ->
+        raise "expected $CHUUNI_ARTWORK_PATH (#{inspect artwork_path}) to be writeable but got error: #{err}"
+    end
   end
 
   # Tell Phoenix to update the endpoint configuration
