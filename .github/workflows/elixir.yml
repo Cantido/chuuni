@@ -9,12 +9,13 @@ on:
 permissions:
   contents: read
 
+env:
+  CHUUNI_ARTWORK_PATH: ${{ runner.temp }}
+
 jobs:
   build:
     name: Build and test
     runs-on: ubuntu-latest
-    env:
-      CHUUNI_ARTWORK_PATH: ${{ runner.temp }}
     services:
       postgres:
         image: postgres:11
