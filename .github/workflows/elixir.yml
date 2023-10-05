@@ -14,7 +14,7 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
     env:
-      CHUUNI_ARTWORK_PATH: ${{ vars.RUNNER_TEMP }}
+      CHUUNI_ARTWORK_PATH: ${{ env.RUNNER_TEMP }}
     services:
       postgres:
         image: postgres:11
