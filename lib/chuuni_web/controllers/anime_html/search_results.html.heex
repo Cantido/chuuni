@@ -1,14 +1,38 @@
 <div>
-  <a :for={result <- @results} class="panel-block" href={~p"/anime/#{result["id"]}"}>
-    <div class="media">
-      <figure class="media-left">
-        <p class="image is-64x64 is-2by3">
-          <img src={result["coverImage"]["medium"]} />
-        </p>
-      </figure>
-      <div class="media-content">
-        <strong><%= result["title"]["romaji"] %></strong>
-      </div>
-    </div>
-  </a>
+  <div class="title" :if={@local_results != []}>Results</div>
+
+  <div :for={result <- @local_results} class="box">
+    <.search_result
+      image={~p"/artwork/anime/#{result}/cover.png"}
+      href={~p"/anime/#{result}"}
+      title={result.title.romaji}
+      subtitle={result.title.english}
+      start_date="unknown"
+      stop_date="unknown"
+      studios="unknown">
+
+    </.search_result>
+  </div>
+
+  <div class="title" :if={@anilist_results != []}>Results from AniList</div>
+  <div :for={result <- @anilist_results} class="box">
+    <.search_result
+      image={result["coverImage"]["large"]}
+      href={"https://anilist.co/anime/#{result["id"]}"}
+      title={result["title"]["romaji"]}
+      subtitle={result["title"]["english"]}
+      start_date={result["startDate"]["year"]}
+      stop_date={result["endDate"]["year"]}
+      studios={result["studios"]["nodes"] |> Enum.map_join(", ", fn node -> node["name"] end)}>
+      <:actions>
+          <.form action={~p"/anime/import"} method="post">
+            <.input type="hidden" name="provider" value="anilist" />
+            <.input type="hidden" name="id" value={result["id"]} />
+
+
+            <.button type="submit" class="is-primary">Import anime</.button>
+          </.form>
+      </:actions>
+    </.search_result>
+  </div>
 </div>

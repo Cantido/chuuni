@@ -1,0 +1,46 @@
+<.simple_form :let={f} for={@changeset} action={@action} multipart>
+  <.error :if={@changeset.action}>
+    Oops, something went wrong! Please check the errors below.
+  </.error>
+
+  <div class="columns">
+    <div class="column">
+      <div class="box">
+        <.inputs_for :let={title} field={f[:title]}>
+          <.input field={title[:english]} type="text" label="English" />
+          <.input field={title[:romaji]} type="text" label="Romaji" />
+          <.input field={title[:native]} type="text" label="Native" />
+        </.inputs_for>
+      </div>
+
+      <div class="box">
+        <.input field={f[:description]} type="textarea" label="Description" />
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="box">
+        <div class="media">
+          <figure class="media-left">
+            <p class="image is-128x128 is-2by3">
+              <img src={~p"/artwork/anime/#{@changeset.data.id}/cover.png"} />
+            </p>
+          </figure>
+          <div class="media-content">
+            <.input field={f[:cover]} label="Cover" type="file" accept=".png,.jpg" value="cover.png">
+              <span class="file-icon">
+                <.icon name="hero-arrow-up-tray" />
+              </span>
+              <span class="file-label">
+                Upload cover...
+              </span>
+            </.input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <:actions>
+    <.button class="is-primary" type="submit">Save Anime</.button>
+  </:actions>
+</.simple_form>

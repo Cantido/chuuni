@@ -7,62 +7,27 @@ defmodule Chuuni.Reviews do
   alias Chuuni.Repo
 
   alias Chuuni.Reviews.Review
+  alias Chuuni.Media.Anime
 
   def top_rated do
     top_rated_query =
       from r in Review,
-      group_by: :item_reviewed,
-      select: %{item_reviewed: r.item_reviewed, rating: avg(r.rating), count: count()},
-      order_by: [desc: avg(r.rating), desc: count(), asc: r.item_reviewed],
+      group_by: :anime_id,
+      select: %{anime_id: r.anime_id, rating: avg(r.rating), count: count()},
+      order_by: [desc: avg(r.rating), desc: count(), asc: r.anime_id],
       limit: 10
 
-    Repo.all(top_rated_query)
+    top_rated_with_metadata =
+      from a in Anime,
+      join: r in subquery(top_rated_query),
+      on: [anime_id: a.id],
+      select: %{anime: a, rating: r.rating, count: r.count},
+      order_by: [desc: r.rating, desc: r.count, desc: a.id]
+
+    Repo.all(top_rated_with_metadata)
     |> with_rank()
     |> Enum.map(fn {item, rank} ->
-      Neuron.Config.set(url: "https://graphql.anilist.co")
-
-      Neuron.query("""
-        query ($id: Int) {
-          Media (id: $id, type: ANIME) {
-            title {
-              english
-              romaji
-            }
-            coverImage {
-              large
-            }
-            startDate {
-              year
-            }
-            endDate {
-              year
-            }
-            studios(sort: NAME) {
-              nodes {
-                name
-              }
-            }
-          }
-        }
-        """,
-        %{id: item.item_reviewed}
-      )
-      |> case do
-        {:ok, resp} ->
-          data = resp.body["data"]["Media"]
-
-          item
-          |> Map.put(:has_data, true)
-          |> Map.put(:anime, data)
-          |> Map.put(:title, data["title"]["english"])
-          |> Map.put(:poster, data["coverImage"]["large"])
-        _ ->
-          item
-          |> Map.put(:has_data, false)
-          |> Map.put(:title, nil)
-          |> Map.put(:poster, nil)
-      end
-      |> Map.put(:rank, rank)
+      Map.put(item, :rank, rank)
     end)
   end
 
@@ -88,9 +53,9 @@ defmodule Chuuni.Reviews do
   def get_rating_summary(rated_id) do
     summary = Repo.one(
       from r in Review,
-      where: [item_reviewed: ^rated_id],
+      where: [anime_id: ^rated_id],
       where: not is_nil(r.rating),
-      select: %{item_reviewed: ^rated_id, count: count(r.author_id, :distinct), avg: avg(r.rating)}
+      select: %{anime_id: ^rated_id, count: count(r.author_id, :distinct), avg: avg(r.rating)}
     )
 
     if is_nil(summary.avg) && summary.count != 0 do
@@ -108,9 +73,9 @@ defmodule Chuuni.Reviews do
     else
       higher_ranks =
         from r in Review,
-        group_by: :item_reviewed,
+        group_by: :anime_id,
         having: avg(r.rating) >= ^summary.avg,
-        select: [:item_reviewed]
+        select: [:anime_id]
 
       Enum.count(Repo.all(higher_ranks)) + 1
     end
@@ -124,9 +89,9 @@ defmodule Chuuni.Reviews do
     else
       higher_ranks =
         from r in Review,
-        group_by: :item_reviewed,
+        group_by: :anime_id,
         having: count(r.author_id, :distinct) >= ^summary.count,
-        select: [:item_reviewed]
+        select: [:anime_id]
 
       Enum.count(Repo.all(higher_ranks)) + 1
     end
@@ -157,7 +122,7 @@ defmodule Chuuni.Reviews do
   def latest_reviews_for_item(itemid) do
     Repo.all(
       from r in Review,
-      where: [item_reviewed: ^itemid],
+      where: [anime_id: ^itemid],
       order_by: [desc: :inserted_at],
       limit: 10,
       preload: :author
@@ -180,12 +145,12 @@ defmodule Chuuni.Reviews do
   """
   def get_review!(id) do
     Repo.get!(Review, id)
-    |> Repo.preload(:author)
+    |> Repo.preload([:author, :anime])
   end
 
-  def get_review_by_user(item_reviewed, author_id) do
-    Repo.get_by(Review, item_reviewed: item_reviewed, author_id: author_id)
-    |> Repo.preload(:author)
+  def get_review_by_user(anime_id, author_id) do
+    Repo.get_by(Review, anime_id: anime_id, author_id: author_id)
+    |> Repo.preload([:author, :anime])
   end
 
   @doc """

@@ -8,20 +8,24 @@ defmodule Chuuni.ReviewsTest do
 
     import Chuuni.AccountsFixtures
     import Chuuni.ReviewsFixtures
+    import Chuuni.MediaFixtures
 
-    @invalid_attrs %{body: nil, item_reviewed: nil}
+    @invalid_attrs %{rating: 12}
 
     setup do
       author = user_fixture()
-      %{author: author}
+      anime = anime_fixture()
+      %{author: author, anime: anime}
     end
 
     test "top_rated/0 returns best rated" do
+      worse_show = anime_fixture()
+      better_show = anime_fixture()
       [
-        %{rating: "1", item_reviewed: "worse show", author_id: user_fixture().id},
-        %{rating: "2", item_reviewed: "worse show", author_id: user_fixture().id},
-        %{rating: "3", item_reviewed: "better show", author_id: user_fixture().id},
-        %{rating: "4", item_reviewed: "better show", author_id: user_fixture().id},
+        %{rating: "1", anime_id: worse_show.id, author_id: user_fixture().id},
+        %{rating: "2", anime_id: worse_show.id, author_id: user_fixture().id},
+        %{rating: "3", anime_id: better_show.id, author_id: user_fixture().id},
+        %{rating: "4", anime_id: better_show.id, author_id: user_fixture().id},
       ]
       |> Enum.each(fn attrs ->
         {:ok, _rating} = Reviews.create_review(attrs)
@@ -33,11 +37,11 @@ defmodule Chuuni.ReviewsTest do
 
       [first, second] = top_rated
 
-      assert first[:item_reviewed] == "better show"
-      assert first[:rating] == 3.5
+      assert first.anime.id == better_show.id
+      assert first[:rating] == Decimal.new("3.5000000000000000")
       assert first[:count] == 2
-      assert second[:item_reviewed] == "worse show"
-      assert second[:value] == 1.5
+      assert second.anime.id == worse_show.id
+      assert second[:rating] == Decimal.new("1.5000000000000000")
       assert second[:count] == 2
     end
 
@@ -51,13 +55,12 @@ defmodule Chuuni.ReviewsTest do
       assert Reviews.get_review!(review.id).id == review.id
     end
 
-    test "create_review/1 with valid data creates a review" do
-      author = user_fixture()
-      valid_attrs = %{rating: 5, body: "some body", item_reviewed: "some item_reviewed", author_id: author.id}
+    test "create_review/1 with valid data creates a review", %{author: author, anime: anime} do
+      valid_attrs = %{rating: 5, body: "some body", author_id: author.id, anime_id: anime.id}
 
       assert {:ok, %Review{} = review} = Reviews.create_review(valid_attrs)
       assert review.body == "some body"
-      assert review.item_reviewed == "some item_reviewed"
+      assert review.anime_id == anime.id
     end
 
     test "create_review/1 with invalid data returns error changeset" do
@@ -66,11 +69,11 @@ defmodule Chuuni.ReviewsTest do
 
     test "update_review/2 with valid data updates the review" do
       review = review_fixture()
-      update_attrs = %{rating: 5, body: "some updated body", item_reviewed: "some updated item_reviewed"}
+      update_attrs = %{rating: 9, body: "some updated body"}
 
       assert {:ok, %Review{} = review} = Reviews.update_review(review, update_attrs)
+      assert review.rating == 9
       assert review.body == "some updated body"
-      assert review.item_reviewed == "some updated item_reviewed"
     end
 
     test "update_review/2 with invalid data returns error changeset" do

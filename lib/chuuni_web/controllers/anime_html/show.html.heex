@@ -1,28 +1,33 @@
 <div class="columns">
   <div class="column is-one-quarter">
-    <div class="image is-2by3 block">
-      <img src={@anime["coverImage"]["extraLarge"]} />
+    <div class="image is-256x256 is-2by3 block">
+      <%!-- <img src={@anime["coverImage"]["extraLarge"]} /> --%>
+      <img src={~p"/artwork/anime/#{@anime}/cover.png"} />
     </div>
 
     <div class="panel">
       <div class="panel-block">
-        <p class="content"><strong>Type:</strong> TV</p>
+        <p><strong>Type:</strong> TV</p>
       </div>
       <div class="panel-block">
-        <p class="content"><strong>Episodes:</strong> <%= @anime["episodes"] %></p>
+        <p><strong>Episodes:</strong> some</p>
+      </div>
+      <div class="panel-block">
+        <p><strong>AniList ID:</strong> <.link href={"https://anilist.co/anime/#{@anime.external_ids.anilist}"}><%= @anime.external_ids.anilist %></.link></p>
       </div>
     </div>
   </div>
 
   <div class="column">
     <.header>
-      <%= @anime["title"]["english"] %>
+      <%= @anime.title.english %>
       <:subtitle>
-      <%= @anime["title"]["romaji"] %>
+      <%= @anime.title.romaji %>
       </:subtitle>
+      <:actions>
+        <.link href={~p"/anime/#{@anime}/edit"} class="button">Edit</.link>
+      </:actions>
     </.header>
-
-
 
     <div class="columns">
       <div class="column">
@@ -91,7 +96,7 @@
     </div>
 
     <div class="box content">
-      <%= raw @anime["description"] %>
+      <%= raw @anime.description %>
     </div>
 
     <%= if @current_user do %>
@@ -106,7 +111,7 @@
           <p class="title is-4">Your review</p>
 
 
-          <ChuuniWeb.ReviewHTML.review_form_card author={@current_user} changeset={@review_changeset} action={~p"/anime/#{@anime["id"]}/reviews"} />
+          <ChuuniWeb.ReviewHTML.review_form_card author={@current_user} changeset={@review_changeset} action={~p"/anime/#{@anime}/reviews"} />
         </div>
       <% end %>
     <% end %>

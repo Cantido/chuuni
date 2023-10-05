@@ -5,6 +5,7 @@ defmodule Chuuni.ReviewsFixtures do
   """
 
   import Chuuni.AccountsFixtures
+  import Chuuni.MediaFixtures
 
   @doc """
   Generate a review.
@@ -16,7 +17,8 @@ defmodule Chuuni.ReviewsFixtures do
         rating: 5,
         body: "some body",
         item_reviewed: "some item_reviewed",
-        author_id: user_fixture().id
+        author_id: user_fixture().id,
+        anime_id: anime_fixture().id
       })
       |> Chuuni.Reviews.create_review()
 

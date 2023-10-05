@@ -376,6 +376,32 @@ defmodule ChuuniWeb.CoreComponents do
     """
   end
 
+  def input(%{type: "file"} = assigns) do
+    ~H"""
+    <div phx-feedback-for={@name} class="field file has-name">
+      <label for={@id} class="file-label">
+        <input id={@id} name={@name} class="file-input" type="file" {@rest} />
+        <span class="file-cta">
+          <%= render_slot(@inner_block) %>
+        </span>
+        <span class="file-name">
+          <%= @value %>
+        </span>
+      </label>
+      <.error :for={msg <- @errors}><%= msg %></.error>
+    </div>
+    <script>
+      const fileInput = document.querySelector('#<%= @id %>');
+      fileInput.onchange = () => {
+        if (fileInput.files.length > 0) {
+          const fileName = document.querySelector('#<%= @id %> ~ .file-name');
+          fileName.textContent = fileInput.files[0].name;
+        }
+      }
+    </script>
+    """
+  end
+
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""

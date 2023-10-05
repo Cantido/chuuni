@@ -10,10 +10,9 @@ defmodule ChuuniWeb.ReviewController do
   end
 
   def new(conn, params) do
-    # anime_id = Map.get(params, "anime_id")
-    anime_id = "anime_id"
+    anime_id = Map.get(params, "anime_id")
 
-    changeset = Reviews.change_review(%Review{item_reviewed: anime_id})
+    changeset = Reviews.change_review(%Review{anime_id: anime_id})
     render(conn, :new, changeset: changeset, anime: anime_id)
   end
 
@@ -26,7 +25,7 @@ defmodule ChuuniWeb.ReviewController do
         |> redirect(to: ~p"/reviews/#{review}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :new, changeset: changeset, anime: Ecto.Changeset.get_field(changeset, :item_reviewed))
+        render(conn, :new, changeset: changeset, anime: Ecto.Changeset.get_field(changeset, :anime_id))
     end
   end
 

@@ -12,20 +12,16 @@
   <div class="columns">
     <div class="column is-1"><p class="is-size-3"><%= review.rank %></p></div>
     <div class="column is-9">
-      <a href={~p"/anime/#{review.item_reviewed}"}>
+      <a href={~p"/anime/#{review.anime}"}>
         <div class="columns">
           <div class="column is-2">
             <p class="image is-2by3">
-              <img src={review.poster} />
+              <img src={~p"/artwork/anime/#{review.anime}/cover.png"} />
             </p>
           </div>
           <div class="column">
-            <p class="title"><%= review.title %></p>
-            <p class="subtitle"><%= review.anime["title"]["romaji"] %></p>
-            <p><%= review.anime["startDate"]["year"] %> &ndash; <%= review.anime["endDate"]["year"] %></p>
-            <p>
-              <%= review.anime["studios"]["nodes"] |> Enum.map_join(", ", fn node -> node["name"] end) %>
-            </p>
+            <p class="title"><%= review.anime.title.romaji %></p>
+            <p class="subtitle"><%= review.anime.title.english %></p>
           </div>
         </div>
       </a>

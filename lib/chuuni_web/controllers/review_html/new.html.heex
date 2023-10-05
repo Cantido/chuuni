@@ -4,8 +4,8 @@
 </.header>
 
 <div class="columns">
-  <div class="column is-4">
-      <div :if={@anime} hx-get={~p"/anime/#{@anime}/summary_card"} hx-trigger="load" hx-target="this"></div>
+  <div :if={@anime} class="column is-4">
+    <ChuuniWeb.AnimeHTML.summary_card anime={@anime} />
   </div>
   <div class="column">
     <.review_form changeset={@changeset} action={~p"/reviews"} />

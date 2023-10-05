@@ -5,7 +5,7 @@
 
 <div class="columns">
   <div class="column is-3">
-    <div hx-get={~p"/anime/#{@review.item_reviewed}/summary_card"} hx-trigger="load" hx-target="this"></div>
+    <ChuuniWeb.AnimeHTML.summary_card anime={@review.anime} />
   </div>
   <div class="column">
     <.review_form_card author={@review.author} changeset={@changeset} action={~p"/reviews/#{@review}"} />

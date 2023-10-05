@@ -1,17 +1,17 @@
 <div class="card">
   <div class="card-header">
     <p class="card-header-title">
-      <%= @anime["title"]["romaji"] %>
+      <%= @anime.title.romaji %>
     </p>
   </div>
   <div class="card-image">
     <figure class="image is-2by3">
-      <img src={@anime["coverImage"]["extraLarge"]} />
+      <img src={~p"/artwork/anime/#{@anime}/cover.png"} />
     </figure>
   </div>
   <div class="card-content">
     <div class="content">
-      <%= raw @anime["description"] %>
+      <%= raw @anime.description %>
     </div>
   </div>
 </div>

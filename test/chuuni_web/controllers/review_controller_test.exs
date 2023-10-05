@@ -2,12 +2,20 @@ defmodule ChuuniWeb.ReviewControllerTest do
   use ChuuniWeb.ConnCase
 
   import Chuuni.ReviewsFixtures
+  import Chuuni.MediaFixtures
 
-  @create_attrs %{rating: 5, body: "some body", item_reviewed: "some item_reviewed"}
-  @update_attrs %{rating: 10, body: "some updated body", item_reviewed: "some updated item_reviewed"}
-  @invalid_attrs %{body: nil, item_reviewed: nil}
+  @update_attrs %{rating: 10, body: "some updated body"}
+  @invalid_attrs %{rating: 12}
 
   setup :register_and_log_in_user
+
+  setup do
+    anime = anime_fixture()
+    %{
+      create_attrs: %{rating: 5, body: "some body", anime_id: anime.id},
+      anime: anime
+    }
+  end
 
   describe "index" do
     test "lists all reviews", %{conn: conn} do
@@ -24,19 +32,19 @@ defmodule ChuuniWeb.ReviewControllerTest do
   end
 
   describe "create review" do
-    test "redirects to show when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/reviews", review: @create_attrs)
+    test "redirects to show when data is valid", %{conn: conn, create_attrs: create_attrs} do
+      conn = post(conn, ~p"/reviews", review: create_attrs)
 
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == ~p"/reviews/#{id}"
 
       conn = get(conn, ~p"/reviews/#{id}")
-      assert html_response(conn, 200) =~ @create_attrs[:body]
+      assert html_response(conn, 200) =~ create_attrs[:body]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, ~p"/reviews", review: @invalid_attrs)
-      assert html_response(conn, 200) =~ "New Review"
+      assert html_response(conn, 200) =~ "Write a review"
     end
   end
 

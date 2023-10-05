@@ -24,19 +24,28 @@ defmodule ChuuniWeb.Router do
     get "/search", PageController, :search
 
     get "/anime/search", AnimeController, :search
-    resources "/anime", AnimeController, only: [:show]
   end
 
   scope "/", ChuuniWeb do
     pipe_through [:browser, :require_authenticated_user]
 
     resources "/reviews", ReviewController
+    get "/anime/new", AnimeController, :new
+    post "/anime/import", AnimeController, :import
 
     scope "/anime/:anime_id" do
       get "/summary_card", AnimeController, :summary_card
+      get "/edit", AnimeController, :edit
+      put "/", AnimeController, :update
 
       resources "/reviews", ReviewController, only: [:new, :create]
     end
+  end
+
+  scope "/", ChuuniWeb do
+    pipe_through :browser
+
+    resources "/anime", AnimeController, only: [:show]
   end
 
   # Other scopes may use custom stacks.

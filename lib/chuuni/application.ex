@@ -7,6 +7,10 @@ defmodule Chuuni.Application do
 
   @impl true
   def start(_type, _args) do
+    test_file_path = Path.join(Chuuni.Media.artwork_path(), to_string(System.unique_integer()))
+    :ok = File.touch(test_file_path)
+    :ok = File.rm(test_file_path)
+
     children = [
       # Start the Telemetry supervisor
       ChuuniWeb.Telemetry,

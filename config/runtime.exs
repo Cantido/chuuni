@@ -7,6 +7,13 @@ import Config
 # any compile-time configuration in here, as it won't be applied.
 # The block below contains prod specific runtime configuration.
 
+config :chuuni,
+  artwork_path: System.get_env("CHUUNI_ARTWORK_PATH") ||
+    raise """
+    environment variable CHUUNI_ARTWORK_PATH is missing.
+    For example: /path/to/directory
+    """
+
 # ## Using releases
 #
 # If you use `mix release`, you need to explicitly enable the server
