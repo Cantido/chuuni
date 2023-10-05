@@ -11,10 +11,20 @@ defmodule ChuuniWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+    plug ChuuniWeb.HTMXPlug
+    plug :htmx_bare_layout
   end
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  def htmx_bare_layout(conn, _opts) do
+    if conn.assigns[:htmx] do
+      put_root_layout(conn, html: false)
+    else
+      conn
+    end
   end
 
   scope "/", ChuuniWeb do

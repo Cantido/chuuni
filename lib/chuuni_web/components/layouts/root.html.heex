@@ -16,47 +16,6 @@
     <script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>
   </head>
   <body>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <a href="/" class="navbar-item"><strong>Chuuni</strong></a>
-      </div>
-
-      <div class="navbar-menu">
-        <a href="/search" class="navbar-item">Search</a>
-        <a href="/reviews" class="navbar-item">Top Anime</a>
-      </div>
-
-      <div class="navbar-end">
-        <%= if @current_user do %>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <div class="navbar-link media">
-              <figure class="media-left">
-                <.gravatar email={@current_user.email} />
-              </figure>
-              <div class="media-content">
-                <p class="title is-5">Display Name</p>
-                <p class="subtitle is-7"><%= @current_user.name %></p>
-              </div>
-            </div>
-            <div class="navbar-dropdown">
-              <.link href={~p"/users/#{@current_user.name}"} class="navbar-item">Profile</.link>
-              <.link href={~p"/users/settings"} class="navbar-item">Settings</.link>
-              <.link href={~p"/users/log_out"} method="delete" class="navbar-item">Log out</.link>
-            </div>
-          </div>
-        <% else %>
-          <a href={~p"/users/register"} class="navbar-item">Register</a>
-          <a href={~p"/users/log_in"} class="navbar-item">Log in</a>
-        <% end %>
-      </div>
-    </nav>
-
     <%= @inner_content %>
-
-    <footer class="footer">
-      <div class="content has-text-centered">
-        <p>Chuuni's source code is freely available. You can contribute or report issues on <a href="https://github.com/Cantido/chuuni">GitHub</a>.</p>
-      </div>
-    </footer>
   </body>
 </html>

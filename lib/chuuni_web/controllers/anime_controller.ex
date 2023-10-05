@@ -48,8 +48,7 @@ defmodule ChuuniWeb.AnimeController do
     )
 
     conn
-    |> put_layout(html: :bare)
-    |> put_root_layout(html: :bare)
+    |> put_layout(html: false)
     |> render(:search_results, local_results: local_results, anilist_results: resp.body["data"]["Page"]["media"])
   end
 
