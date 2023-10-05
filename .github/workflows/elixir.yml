@@ -13,6 +13,8 @@ jobs:
   build:
     name: Build and test
     runs-on: ubuntu-latest
+    env:
+      CHUUNI_ARTWORK_PATH: $RUNNER_TEMP
     services:
       postgres:
         image: postgres:11
@@ -38,6 +40,4 @@ jobs:
     - name: Install dependencies, init assets, init database
       run: mix setup
     - name: Run tests
-      env:
-        CHUUNI_ARTWORK_PATH: $RUNNER_TEMP
       run: mix test
