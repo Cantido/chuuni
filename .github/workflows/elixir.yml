@@ -14,11 +14,16 @@ on:
 permissions:
   contents: read
 
+env:
+  CHUUNI_ARTWORK_PATH: $RUNNER_TEMP
+
 jobs:
   build:
 
     name: Build and test
     runs-on: ubuntu-latest
+
+
 
     services:
       postgres:
