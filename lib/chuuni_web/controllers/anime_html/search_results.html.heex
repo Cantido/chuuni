@@ -1,37 +1,45 @@
-<div id="search-results">
-  <div class="title" :if={@local_results != []}>Results</div>
-
-  <.search_result
-    :for={result <- @local_results}
-    class="box"
-    image={~p"/artwork/anime/#{result}/cover.png"}
-    href={~p"/anime/#{result}"}
-    title={result.title.romaji}
-    subtitle={result.title.english}
-    start_date="unknown"
-    stop_date="unknown"
-    studios="unknown" />
-
-  <div class="title" :if={@anilist_results != []}>Results from AniList</div>
-  <div :for={result <- @anilist_results} class="box">
-    <.search_result
-      image={result["coverImage"]["large"]}
-      href={"https://anilist.co/anime/#{result["id"]}"}
-      target="_blank"
-      title={result["title"]["romaji"]}
-      subtitle={result["title"]["english"]}
-      start_date={result["startDate"]["year"]}
-      stop_date={result["endDate"]["year"]}
-      studios={result["studios"]["nodes"] |> Enum.map_join(", ", fn node -> node["name"] end)}>
-      <:actions>
-          <.form for={%{}} action={~p"/anime/import"} method="post">
-            <.input type="hidden" name="provider" value="anilist" />
-            <.input type="hidden" name="id" value={result["id"]} />
+<div id="search-results" class="block">
+  <div id="local-search-results" class="block">
+    <div id="local-search-title" class="block" :if={@local_results != []}>
+      <em><%= ChuuniWeb.Gettext.ngettext "1 local result", "%{count} local results", Enum.count(@local_results) %></em>
+    </div>
 
 
-            <.button type="submit" class="is-primary">Import anime</.button>
-          </.form>
-      </:actions>
-    </.search_result>
+    <div id={"local-search-result-#{result.id}"} :for={result <- @local_results} class="box">
+      <.search_result
+        class="box"
+        image={~p"/artwork/anime/#{result}/cover.png"}
+        href={~p"/anime/#{result}"}
+        title={result.title.romaji}
+        subtitle={result.title.english}
+        start_date="unknown"
+        stop_date="unknown"
+        studios="unknown" />
+    </div>
+  </div>
+
+  <div id="anilist-search-results" class="block">
+    <div id="anilist-search-title" class="title" :if={@anilist_results != []}>Results from AniList</div>
+    <div id={"anilist-search-result-#{result["id"]}"} :for={result <- @anilist_results} class="box">
+      <.search_result
+        image={result["coverImage"]["large"]}
+        href={"https://anilist.co/anime/#{result["id"]}"}
+        target="_blank"
+        title={result["title"]["romaji"]}
+        subtitle={result["title"]["english"]}
+        start_date={result["startDate"]["year"]}
+        stop_date={result["endDate"]["year"]}
+        studios={result["studios"]["nodes"] |> Enum.map_join(", ", fn node -> node["name"] end)}>
+        <:actions>
+            <.form for={%{}} action={~p"/anime/import"} method="post">
+              <.input type="hidden" name="provider" value="anilist" />
+              <.input type="hidden" name="id" value={result["id"]} />
+
+
+              <.button type="submit" class="is-primary">Import anime</.button>
+            </.form>
+        </:actions>
+      </.search_result>
+    </div>
   </div>
 </div>

@@ -48,8 +48,6 @@ defmodule Chuuni.Reviews do
     Enum.zip(enumerable, Enum.reverse(ranks))
   end
 
-  require Logger
-
   def get_rating_summary(rated_id) do
     summary = Repo.one(
       from r in Review,

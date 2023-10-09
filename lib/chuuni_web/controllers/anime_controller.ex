@@ -11,6 +11,11 @@ defmodule ChuuniWeb.AnimeController do
     render(conn, :search_controls)
   end
 
+  def search(conn, %{"query" => ""}) do
+    conn
+    |> render(:search_results, local_results: [], anilist_results: [])
+  end
+
   def search(conn, %{"query" => query}) do
     local_results = Media.search_anime(query)
 
@@ -52,7 +57,6 @@ defmodule ChuuniWeb.AnimeController do
     )
 
     conn
-    |> put_layout(html: false)
     |> render(:search_results, local_results: local_results, anilist_results: resp.body["data"]["Page"]["media"])
   end
 

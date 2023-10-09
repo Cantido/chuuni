@@ -1,4 +1,4 @@
-<div id="search-controls">
+<div id="search-controls" class="block">
   <.header>
     Find anime to review
   </.header>
@@ -10,11 +10,13 @@
       placeholder="Search"
       hx-get="/anime/search"
       hx-trigger="keyup changed delay:500ms"
-      hx-target="#search-controls"
-      hx-swap="afterend"
+      hx-target="#search-results"
+      hx-swap="outerHTML"
     />
     <span class="icon is-left">
       <.icon name="hero-magnifying-glass" />
     </span>
   </div>
 </div>
+
+<div id="search-results" class="block"></div>
