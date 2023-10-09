@@ -35,7 +35,7 @@ defmodule Chuuni.MixProject do
       {:httpoison, "~> 2.1"},
       {:neuron, "~> 5.1.0"},
       {:earmark, "~> 1.4"},
-      {:argon2_elixir, "~> 3.0"},
+      {:argon2_elixir, "~> 4.0"},
       {:phoenix, "~> 1.7.7"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.10"},
