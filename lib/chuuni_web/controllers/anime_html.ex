@@ -4,18 +4,20 @@ defmodule ChuuniWeb.AnimeHTML do
   embed_templates "anime_html/*"
 
   attr :href, :string, required: true
+  attr :target, :string, default: ""
   attr :image, :string, required: true
   attr :title, :string, required: true
   attr :subtitle, :string, required: true
   attr :start_date, :string
   attr :stop_date, :string
   attr :studios, :string, required: true
+  attr :rest, :global
 
   slot :actions
 
   def search_result(assigns) do
     ~H"""
-    <div class="media">
+    <div class="media" {@rest}>
       <figure class="media-left">
         <p class="image is-128x128 is-2by3">
           <img src={@image} />
@@ -23,7 +25,7 @@ defmodule ChuuniWeb.AnimeHTML do
       </figure>
       <div class="media-content">
         <div class="block">
-          <div class="title is-5"><.link href={@href} target="_blank" rel="nofollow noopener noreferrer"><%= (@title) %></.link></div>
+          <div class="title is-5"><.link href={@href} target={@target} rel="nofollow noopener noreferrer"><%= (@title) %></.link></div>
           <div class="subtitle is-7"><%= (@subtitle) %></div>
         </div>
 

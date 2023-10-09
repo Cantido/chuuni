@@ -1,0 +1,15 @@
+<div>
+  <.header>Confirm Account</.header>
+
+  <.simple_form
+    for={%{}}
+    as="user"
+    id="confirmation_form"
+    hx-post={~p"/users/confirm"}>
+    <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+    <input type="hidden" name="token" value={@token} />
+    <:actions>
+      <.button type="submit">Confirm my account</.button>
+    </:actions>
+  </.simple_form>
+</div>

@@ -1,0 +1,16 @@
+<div id="login-form">
+  <.simple_form :let={f} for={%{}} as="user" hx-post={~p"/users/log_in"} hx-swap="closest #login-form">
+    <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+    <.input field={f[:email]} type="email" label="Email" required />
+    <.input field={f[:password]} type="password" label="Password" required />
+    <.input field={f[:remember_me]} type="checkbox" label="Keep me logged in" />
+
+    <div class="field">
+      <div class="control">
+        <.button type="submit">
+          Sign in <span aria-hidden="true">→</span>
+        </.button>
+      </div>
+    </div>
+  </.simple_form>
+</div>

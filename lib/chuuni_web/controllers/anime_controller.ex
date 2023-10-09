@@ -7,6 +7,10 @@ defmodule ChuuniWeb.AnimeController do
 
   require Logger
 
+  def new_search(conn, _params) do
+    render(conn, :search_controls)
+  end
+
   def search(conn, %{"query" => query}) do
     local_results = Media.search_anime(query)
 

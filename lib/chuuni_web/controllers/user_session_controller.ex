@@ -4,39 +4,43 @@ defmodule ChuuniWeb.UserSessionController do
   alias Chuuni.Accounts
   alias ChuuniWeb.UserAuth
 
-  def create(conn, %{"_action" => "registered"} = params) do
-    create(conn, params, "Account created successfully!")
+  def new(conn, _params) do
+    render(conn, :new)
   end
 
-  def create(conn, %{"_action" => "password_updated"} = params) do
-    conn
-    |> put_session(:user_return_to, ~p"/users/settings")
-    |> create(params, "Password updated successfully!")
+  def form(conn, _params) do
+    render(conn, :log_in_form)
   end
 
-  def create(conn, params) do
-    create(conn, params, "Welcome back!")
+  def menu(conn, _params) do
+    render(conn, :nav_menu)
   end
 
-  defp create(conn, %{"user" => user_params}, info) do
+  def create(conn, %{"user" => user_params}) do
     %{"email" => email, "password" => password} = user_params
 
     if user = Accounts.get_user_by_email_and_password(email, password) do
+      user_return_to = get_session(conn, :user_return_to)
+
       conn
-      |> put_flash(:info, info)
+      |> put_resp_header("hx-trigger", "login")
+      |> put_resp_header("hx-location", user_return_to || ~p"/")
       |> UserAuth.log_in_user(user, user_params)
+      |> put_view(ChuuniWeb.UserSettingsHTML)
+      |> render(:success_message, message: "Welcome back!")
     else
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
       conn
-      |> put_flash(:error, "Invalid email or password")
-      |> put_flash(:email, String.slice(email, 0, 160))
-      |> redirect(to: ~p"/users/log_in")
+      |> put_view(ChuuniWeb.UserSettingsHTML)
+      |> render(:danger_message, message: "Invalid email or password", close_url: ~p"/users/log_in/form")
     end
   end
 
   def delete(conn, _params) do
     conn
-    |> put_flash(:info, "Logged out successfully.")
+    |> put_resp_header("hx-trigger", "logout")
+    |> put_resp_header("hx-location", ~p"/")
     |> UserAuth.log_out_user()
+    |> render(:success_message, message: "Logged out successfully")
   end
 end

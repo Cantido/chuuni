@@ -1,0 +1,19 @@
+<.simple_form
+  :let={f}
+  for={@email_changeset}
+  id="email_form"
+  hx-post={~p"/users/settings/email"}
+>
+  <.input name="_csrf_token" type="hidden" value={get_csrf_token()} />
+  <.input field={f[:email]} type="email" label="Email" required />
+  <.input
+    field={f[:current_password]}
+    id="current_password_for_email"
+    type="password"
+    label="Current password"
+    required
+  />
+  <:actions>
+    <.button type="submit">Change Email</.button>
+  </:actions>
+</.simple_form>

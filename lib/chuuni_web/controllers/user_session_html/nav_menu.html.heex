@@ -1,0 +1,25 @@
+<%= if @current_user do %>
+  <div id="user-menu" class="navbar-item has-dropdown is-hoverable">
+    <div class="navbar-link media">
+      <figure class="media-left">
+        <.gravatar email={@current_user.email} />
+      </figure>
+      <div class="media-content">
+        <p class="title is-5">Display Name</p>
+        <p class="subtitle is-7"><%= @current_user.name %></p>
+      </div>
+    </div>
+    <div class="navbar-dropdown">
+      <a hx-get={~p"/@#{@current_user.name}"} hx-target="#main-container" class="navbar-item">Profile</a>
+      <a href={~p"/users/settings"} hx-boost="true" class="navbar-item">Settings</a>
+      <a hx-get={~p"/users/log_out"} class="navbar-item">Log out</a>
+    </div>
+  </div>
+<% else %>
+  <div id="register-link" class="navbar-item">
+    <a href={~p"/users/register"} hx-boost="true" class="navbar-item">Register</a>
+  </div>
+  <div id="login-link" class="navbar-item">
+    <a href={~p"/users/log_in"} hx-boost="true" class="navbar-item">Log in</a>
+  </div>
+<% end %>

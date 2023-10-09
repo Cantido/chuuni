@@ -1,0 +1,16 @@
+<div>
+  <.header>
+    No confirmation instructions received?
+    <:subtitle>We'll send a new confirmation link to your inbox</:subtitle>
+  </.header>
+
+  <.simple_form for={%{}} id="resend_confirmation_form" hx-post={~p"/users/confirm/send"}>
+    <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+    <.input name="email" value="" type="email" placeholder="Email" required />
+    <:actions>
+      <.button>
+        Resend confirmation instructions
+      </.button>
+    </:actions>
+  </.simple_form>
+</div>

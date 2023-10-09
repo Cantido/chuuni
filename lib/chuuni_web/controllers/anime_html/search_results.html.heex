@@ -1,24 +1,23 @@
-<div>
+<div id="search-results">
   <div class="title" :if={@local_results != []}>Results</div>
 
-  <div :for={result <- @local_results} class="box">
-    <.search_result
-      image={~p"/artwork/anime/#{result}/cover.png"}
-      href={~p"/anime/#{result}"}
-      title={result.title.romaji}
-      subtitle={result.title.english}
-      start_date="unknown"
-      stop_date="unknown"
-      studios="unknown">
-
-    </.search_result>
-  </div>
+  <.search_result
+    :for={result <- @local_results}
+    class="box"
+    image={~p"/artwork/anime/#{result}/cover.png"}
+    href={~p"/anime/#{result}"}
+    title={result.title.romaji}
+    subtitle={result.title.english}
+    start_date="unknown"
+    stop_date="unknown"
+    studios="unknown" />
 
   <div class="title" :if={@anilist_results != []}>Results from AniList</div>
   <div :for={result <- @anilist_results} class="box">
     <.search_result
       image={result["coverImage"]["large"]}
       href={"https://anilist.co/anime/#{result["id"]}"}
+      target="_blank"
       title={result["title"]["romaji"]}
       subtitle={result["title"]["english"]}
       start_date={result["startDate"]["year"]}

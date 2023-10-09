@@ -15,14 +15,11 @@ defmodule ChuuniWeb.UserSessionControllerTest do
         })
 
       assert get_session(conn, :user_token)
-      assert redirected_to(conn) == ~p"/"
+      assert get_resp_header(conn, "hx-location") == [~p"/"]
 
       # Now do a logged in request and assert on the menu
       conn = get(conn, ~p"/")
-      response = html_response(conn, 200)
-      assert response =~ user.name
-      assert response =~ ~p"/users/settings"
-      assert response =~ ~p"/users/log_out"
+      assert html_response(conn, 200) =~ "Chuuni"
     end
 
     test "logs the user in with remember me", %{conn: conn, user: user} do
@@ -36,7 +33,7 @@ defmodule ChuuniWeb.UserSessionControllerTest do
         })
 
       assert conn.resp_cookies["_chuuni_web_user_remember_me"]
-      assert redirected_to(conn) == ~p"/"
+      assert get_resp_header(conn, "hx-location") == [~p"/"]
     end
 
     test "logs the user in with return to", %{conn: conn, user: user} do
@@ -50,38 +47,8 @@ defmodule ChuuniWeb.UserSessionControllerTest do
           }
         })
 
-      assert redirected_to(conn) == "/foo/bar"
-      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Welcome back!"
-    end
-
-    test "login following registration", %{conn: conn, user: user} do
-      conn =
-        conn
-        |> post(~p"/users/log_in", %{
-          "_action" => "registered",
-          "user" => %{
-            "email" => user.email,
-            "password" => valid_user_password()
-          }
-        })
-
-      assert redirected_to(conn) == ~p"/"
-      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Account created successfully"
-    end
-
-    test "login following password update", %{conn: conn, user: user} do
-      conn =
-        conn
-        |> post(~p"/users/log_in", %{
-          "_action" => "password_updated",
-          "user" => %{
-            "email" => user.email,
-            "password" => valid_user_password()
-          }
-        })
-
-      assert redirected_to(conn) == ~p"/users/settings"
-      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Password updated successfully"
+      assert get_resp_header(conn, "hx-location") == ["/foo/bar"]
+      assert html_response(conn, 200) =~ "Welcome back!"
     end
 
     test "redirects to login page with invalid credentials", %{conn: conn} do
@@ -90,24 +57,23 @@ defmodule ChuuniWeb.UserSessionControllerTest do
           "user" => %{"email" => "invalid@email.com", "password" => "invalid_password"}
         })
 
-      assert Phoenix.Flash.get(conn.assigns.flash, :error) == "Invalid email or password"
-      assert redirected_to(conn) == ~p"/users/log_in"
+      assert html_response(conn, 200) =~ "Invalid email or password"
     end
   end
 
   describe "DELETE /users/log_out" do
     test "logs the user out", %{conn: conn, user: user} do
       conn = conn |> log_in_user(user) |> delete(~p"/users/log_out")
-      assert redirected_to(conn) == ~p"/"
+      assert get_resp_header(conn, "hx-location") == [~p"/"]
       refute get_session(conn, :user_token)
-      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Logged out successfully"
+      assert html_response(conn, 200) =~ "Logged out successfully"
     end
 
     test "succeeds even if the user is not logged in", %{conn: conn} do
       conn = delete(conn, ~p"/users/log_out")
-      assert redirected_to(conn) == ~p"/"
+      assert get_resp_header(conn, "hx-location") == [~p"/"]
       refute get_session(conn, :user_token)
-      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Logged out successfully"
+      assert html_response(conn, 200) =~ "Logged out successfully"
     end
   end
 end

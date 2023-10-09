@@ -7,31 +7,47 @@ defmodule ChuuniWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, html: {ChuuniWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
     plug ChuuniWeb.HTMXPlug
-    plug :htmx_bare_layout
+    plug :htmx_layout
+    plug :cache_control
   end
 
   pipeline :api do
     plug :accepts, ["json"]
   end
 
-  def htmx_bare_layout(conn, _opts) do
-    if conn.assigns[:htmx] do
-      put_root_layout(conn, html: false)
+  require Logger
+
+  def htmx_layout(conn, _opts) do
+    if get_in(conn.assigns, [:htmx, :request]) do
+      conn = put_root_layout(conn, html: false)
+
+      if conn.assigns.htmx[:boosted] or conn.assigns.htmx[:history_restore_request] do
+        put_layout(conn, html: {ChuuniWeb.Layouts, :app})
+      else
+        put_layout(conn, html: false)
+      end
     else
       conn
+      |> put_root_layout(html: {ChuuniWeb.Layouts, :root})
+      |> put_layout(html: {ChuuniWeb.Layouts, :app})
     end
+  end
+
+  def cache_control(conn, _opts) do
+    put_resp_header(conn, "vary", "hx-request accept accept-encoding accept-language")
   end
 
   scope "/", ChuuniWeb do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/users/menu", UserSessionController, :menu
     get "/search", PageController, :search
+    get "/top", PageController, :top
 
     get "/anime/search", AnimeController, :search
   end
@@ -85,43 +101,42 @@ defmodule ChuuniWeb.Router do
   scope "/", ChuuniWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
-    live_session :redirect_if_user_is_authenticated,
-      on_mount: [{ChuuniWeb.UserAuth, :redirect_if_user_is_authenticated}] do
-      live "/users/register", UserRegistrationLive, :new
-      live "/users/log_in", UserLoginLive, :new
-      live "/users/reset_password", UserForgotPasswordLive, :new
-      live "/users/reset_password/:token", UserResetPasswordLive, :edit
+    scope "/users" do
+      get "/reset_password", User.PasswordResetController, :index
+      post "/reset_password/send_instructions", User.PasswordResetController, :send_reset_instructions
+      get "/reset_password/token/:token", User.PasswordResetController, :password_reset_form
+      post "/reset_password/update", User.PasswordResetController, :update_password
+
+      get "/register", UserController, :new
+      post "/create", UserController, :create
+      get "/log_in", UserSessionController, :new
+      get "/log_in/form", UserSessionController, :form
+      post "/log_in", UserSessionController, :create
     end
 
-    post "/users/log_in", UserSessionController, :create
   end
 
   scope "/", ChuuniWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    live_session :require_authenticated_user,
-      on_mount: [{ChuuniWeb.UserAuth, :ensure_authenticated}] do
-      live "/users/settings", UserSettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-    end
+    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+    get "/users/settings", UserSettingsController, :edit
+    post "/users/settings/email", UserSettingsController, :update_email
+    get "/users/settings/email/edit", UserSettingsController, :edit_email
+    post "/users/settings/password", UserSettingsController, :update_password
   end
 
   scope "/", ChuuniWeb do
     pipe_through [:browser]
 
+    get "/users/log_out", UserSessionController, :delete
     delete "/users/log_out", UserSessionController, :delete
 
-    live_session :current_user,
-      on_mount: [{ChuuniWeb.UserAuth, :mount_current_user}] do
-      live "/users/confirm/:token", UserConfirmationLive, :edit
-      live "/users/confirm", UserConfirmationInstructionsLive, :new
-    end
-  end
+    get "/users/confirm/:token", UserController, :confirm_form
+    post "/users/confirm", UserController, :confirm
+    post "/users/confirm/send", UserController, :send_confirm_email
+    get "/users/confirm", UserController, :confirmation_instructions
 
-  scope "/", ChuuniWeb do
-    pipe_through :browser
-
-    # must go after the other /users paths
-    get "/users/:username", UserProfileController, :profile
+    get "/@:username", UserProfileController, :profile
   end
 end

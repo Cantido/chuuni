@@ -1,0 +1,15 @@
+<div>
+  <.header>
+    Forgot your password?
+    <:subtitle>We'll send a password reset link to your inbox</:subtitle>
+  </.header>
+
+  <.simple_form for={%{}} id="reset_password_form" hx-post={~p"/users/reset_password"} hx-swap="outerHTML">
+    <.input name="email" value="" type="email" placeholder="Email" required />
+    <:actions>
+      <.button type="submit">
+        Send password reset instructions
+      </.button>
+    </:actions>
+  </.simple_form>
+</div>
