@@ -10,22 +10,22 @@
 
 <div class="box" :for={review <- @reviews}>
   <div class="columns">
-    <div class="column is-1"><p class="is-size-3"><%= review.rank %></p></div>
+    <div class="column is-1"><p class="is-size-3"><%= review.rating_rank.rank %></p></div>
     <div class="column is-9">
-      <a href={~p"/anime/#{review.anime}"}>
+      <a href={~p"/anime/#{review.summary.anime}"}>
         <div class="columns">
           <div class="column is-2">
             <p class="image is-2by3">
-              <img src={~p"/artwork/anime/#{review.anime}/cover.png"} />
+              <img src={~p"/artwork/anime/#{review.summary.anime}/cover.png"} />
             </p>
           </div>
           <div class="column">
-            <p class="title"><%= review.anime.title.romaji %></p>
-            <p class="subtitle"><%= review.anime.title.english %></p>
+            <p class="title"><%= review.summary.anime.title.romaji %></p>
+            <p class="subtitle"><%= review.summary.anime.title.english %></p>
           </div>
         </div>
       </a>
     </div>
-    <div class="column is-2"><p class="is-size-3"><%= Decimal.round(review.rating, 2) %></p></div>
+    <div class="column is-2"><p class="is-size-3"><%= Decimal.round(review.summary.rating, 2) %></p></div>
   </div>
 </div>

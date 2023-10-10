@@ -5,6 +5,7 @@ defmodule Chuuni.Reviews do
 
   import Ecto.Query, warn: false
   alias Chuuni.Reviews.ReviewQueries
+  alias Chuuni.Media.AnimeQueries
   alias Chuuni.Repo
 
   alias Chuuni.Accounts.User
@@ -12,42 +13,15 @@ defmodule Chuuni.Reviews do
   alias Chuuni.Media.Anime
 
   def top_rated do
-    top_rated_query =
-      from r in Review,
-      group_by: :anime_id,
-      select: %{anime_id: r.anime_id, rating: avg(r.rating), count: count()},
-      order_by: [desc: avg(r.rating), desc: count(), asc: r.anime_id],
-      limit: 10
+    top_rated =
+      ReviewQueries.review_summary()
+      |> ReviewQueries.top(10)
+      |> join(:left, [r], rating_rank in subquery(ReviewQueries.rating_rank()), on: rating_rank.anime_id == r.anime_id)
+      |> preload(:anime)
+      |> order_by([r], [desc: r.rating, desc: r.count, desc: r.anime_id])
+      |> select([summary, rating_rank, pop_rank], %{summary: summary, rating_rank: rating_rank})
 
-    top_rated_with_metadata =
-      from a in Anime,
-      join: r in subquery(top_rated_query),
-      on: [anime_id: a.id],
-      select: %{anime: a, rating: r.rating, count: r.count},
-      order_by: [desc: r.rating, desc: r.count, desc: a.id]
-
-    Repo.all(top_rated_with_metadata)
-    |> with_rank()
-    |> Enum.map(fn {item, rank} ->
-      Map.put(item, :rank, rank)
-    end)
-  end
-
-  defp with_rank(enumerable) do
-    {_, _, _, ranks} =
-    Enum.reduce(enumerable, {1, 0, nil, []}, fn elem, {current_rank, ranked_count, last_rating, ranks} ->
-      current_rating = elem.rating
-
-      if is_nil(last_rating) or current_rating == last_rating do
-        # we have a tie, they will share the same ranking
-        {current_rank, ranked_count + 1, current_rating, [current_rank | ranks]}
-      else
-        next_rank = ranked_count + 1
-        {next_rank, ranked_count + 1, current_rating, [next_rank | ranks]}
-      end
-    end)
-
-    Enum.zip(enumerable, Enum.reverse(ranks))
+    Repo.all(top_rated)
   end
 
   def top_for_user(%User{} = user) do
@@ -58,12 +32,12 @@ defmodule Chuuni.Reviews do
   end
 
   def get_rating_summary(rated_id) do
-    summary = Repo.one(
-      from r in Chuuni.Reviews.ReviewQueries.review_summary(),
-      where: [anime_id: ^rated_id]
-    )
+    summary =
+      Chuuni.Reviews.ReviewQueries.review_summary()
+      |> where(anime_id: ^rated_id)
+      |> Repo.one()
 
-    if is_nil(summary.avg) && summary.count != 0 do
+    if is_nil(summary.rating) && summary.count != 0 do
       raise "This shouldn't happen"
     end
 
@@ -71,35 +45,11 @@ defmodule Chuuni.Reviews do
   end
 
   def get_rating_rank(rated_id) do
-    summary = get_rating_summary(rated_id)
-
-    if summary.count == 0 do
-      nil
-    else
-      higher_ranks =
-        from r in Review,
-        group_by: :anime_id,
-        having: avg(r.rating) >= ^summary.avg,
-        select: [:anime_id]
-
-      Enum.count(Repo.all(higher_ranks)) + 1
-    end
+    Repo.one(ReviewQueries.rating_rank(rated_id)).rank
   end
 
   def get_popularity_rank(rated_id) do
-    summary = get_rating_summary(rated_id)
-
-    if summary.count == 0 do
-      nil
-    else
-      higher_ranks =
-        from r in Review,
-        group_by: :anime_id,
-        having: count(r.author_id, :distinct) >= ^summary.count,
-        select: [:anime_id]
-
-      Enum.count(Repo.all(higher_ranks)) + 1
-    end
+    Repo.one(ReviewQueries.popularity_rank(rated_id)).rank
   end
 
   @doc """
@@ -116,22 +66,16 @@ defmodule Chuuni.Reviews do
   end
 
   def latest_reviews do
-    Repo.all(
-      from r in Review,
-      order_by: [desc: :inserted_at],
-      limit: 10,
-      preload: :author
-    )
+    ReviewQueries.latest(10)
+    |> preload(:author)
+    |> Repo.all()
   end
 
   def latest_reviews_for_item(itemid) do
-    Repo.all(
-      from r in Review,
-      where: [anime_id: ^itemid],
-      order_by: [desc: :inserted_at],
-      limit: 10,
-      preload: :author
-    )
+    ReviewQueries.latest(10)
+    |> where(anime_id: ^itemid)
+    |> preload(:author)
+    |> Repo.all()
   end
 
   @doc """

@@ -41,7 +41,7 @@
             <%= if @rating_summary.count == 0 do %>
               <p class="is-size-3">?<small class="is-size-5">/10</small></p>
             <% else %>
-              <p class="is-size-3"><%= Decimal.round(@rating_summary.avg, 2) %><small class="is-size-5">/10</small></p>
+              <p class="is-size-3"><%= Decimal.round(@rating_summary.rating, 2) %><small class="is-size-5">/10</small></p>
             <% end %>
           </div>
         </div>
