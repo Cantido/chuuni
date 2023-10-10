@@ -20,9 +20,10 @@ defmodule ChuuniWeb.UserController do
 
         conn
         |> put_view(ChuuniWeb.UserSessionHTML)
-        |> render(:success_message, message: "Your new account has been created! Please log in.")
+        |> put_flash(:info, "Your new account has been created! Please log in.")
+        |> render(:success_message, message: "")
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :register, changeset: changeset)
+        render(conn, :register_form, changeset: changeset)
     end
   end
 

@@ -254,6 +254,7 @@ defmodule ChuuniWeb.CoreComponents do
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
 
   attr :errors, :list, default: []
+  attr :successes, :list, default: []
   attr :checked, :boolean, doc: "the checked flag for checkbox inputs"
   attr :prompt, :string, default: nil, doc: "the prompt for select inputs"
   attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
@@ -372,13 +373,25 @@ defmodule ChuuniWeb.CoreComponents do
           name={@name}
           id={@id}
           value={Phoenix.HTML.Form.normalize_value(@type, @value)}
-          class="input"
+          class={[
+            "input",
+            input_status_class(@errors, @successes)
+          ]}
           {@rest}
         />
       </div>
+      <.error :for={msg <- @successes}><%= msg %></.error>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """
+  end
+
+  defp input_status_class(errors, success) do
+    cond do
+      success != [] -> "is-success"
+      errors != [] -> "is-danger"
+      true -> ""
+    end
   end
 
   @doc """

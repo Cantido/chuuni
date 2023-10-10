@@ -1,0 +1,20 @@
+<.simple_form
+  :let={f}
+  for={@changeset}
+  id="registration_form"
+  hx-post={~p"/users/create"}
+>
+  <div class="notification is-danger" :if={@changeset.action}>
+    Oops, something went wrong! Please check the errors below.
+  </div>
+
+  <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+
+  <.input field={f[:name]} type="text" label="Username" required />
+  <.input field={f[:email]} type="email" label="Email" required />
+  <.input field={f[:password]} type="password" label="Password" required />
+
+  <:actions>
+    <.button>Create an account</.button>
+  </:actions>
+</.simple_form>
