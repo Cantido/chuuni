@@ -36,4 +36,25 @@
       </tbody>
     </table>
   </div>
+
+  <div class="column is-3">
+    <p class="title is-size-4 has-text-centered">Recent Reviews</p>
+    <table class="table is-hoverable">
+      <tbody>
+        <tr :for={review <- @recent}>
+          <td hx-get={~p"/reviews/#{review}"} hx-target="#main-container" hx-push-url="true">
+            <div class="media">
+              <div class="media-left">
+                <p class="is-size-3"><%= review.rating %></p>
+              </div>
+              <div class="media-content">
+                <p><%= review.anime.title.romaji %></p>
+                <p><small><%= review.anime.title.english %></small></p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

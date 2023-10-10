@@ -31,6 +31,13 @@ defmodule Chuuni.Reviews do
     |> Repo.all()
   end
 
+  def recent_for_user(%User{} = user) do
+    Ecto.assoc(user, :reviews)
+    |> ReviewQueries.latest(10)
+    |> preload(:anime)
+    |> Repo.all()
+  end
+
   def get_rating_summary(rated_id) do
     summary =
       Chuuni.Reviews.ReviewQueries.review_summary()

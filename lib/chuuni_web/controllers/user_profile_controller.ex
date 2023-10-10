@@ -14,9 +14,10 @@ defmodule ChuuniWeb.UserProfileController do
       |> render(:"404")
     else
       top_ten = Reviews.top_for_user(user)
+      recent_reviews = Reviews.recent_for_user(user)
 
       conn
-      |> render(:profile, page_title: user.name, user: user, top_ten: top_ten)
+      |> render(:profile, page_title: user.name, user: user, top_ten: top_ten, recent: recent_reviews)
     end
   end
 end

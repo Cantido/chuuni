@@ -30,6 +30,12 @@ defmodule Chuuni.Reviews.ReviewQueries do
       limit: ^count
   end
 
+  def latest(query, count) do
+    from r in subquery(query),
+      order_by: [desc: :inserted_at],
+      limit: ^count
+  end
+
   def rating_rank do
     from r in subquery(review_summary()),
       select: %{anime_id: r.anime_id, rank: over(rank(), :anime)},
