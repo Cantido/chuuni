@@ -1,5 +1,6 @@
 defmodule Chuuni.Accounts.User do
   use Ecto.Schema
+  alias Chuuni.Reviews.Review
   import Ecto.Changeset
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -9,6 +10,8 @@ defmodule Chuuni.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+
+    has_many :reviews, Review, foreign_key: :author_id
 
     timestamps()
   end

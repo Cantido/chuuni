@@ -4,8 +4,10 @@ defmodule Chuuni.Reviews do
   """
 
   import Ecto.Query, warn: false
+  alias Chuuni.Reviews.ReviewQueries
   alias Chuuni.Repo
 
+  alias Chuuni.Accounts.User
   alias Chuuni.Reviews.Review
   alias Chuuni.Media.Anime
 
@@ -48,12 +50,17 @@ defmodule Chuuni.Reviews do
     Enum.zip(enumerable, Enum.reverse(ranks))
   end
 
+  def top_for_user(%User{} = user) do
+    Ecto.assoc(user, :reviews)
+    |> ReviewQueries.top(10)
+    |> preload(:anime)
+    |> Repo.all()
+  end
+
   def get_rating_summary(rated_id) do
     summary = Repo.one(
-      from r in Review,
-      where: [anime_id: ^rated_id],
-      where: not is_nil(r.rating),
-      select: %{anime_id: ^rated_id, count: count(r.author_id, :distinct), avg: avg(r.rating)}
+      from r in Chuuni.Reviews.ReviewQueries.review_summary(),
+      where: [anime_id: ^rated_id]
     )
 
     if is_nil(summary.avg) && summary.count != 0 do

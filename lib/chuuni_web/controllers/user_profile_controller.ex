@@ -1,6 +1,7 @@
 defmodule ChuuniWeb.UserProfileController do
   use ChuuniWeb, :controller
 
+  alias Chuuni.Reviews
   alias Chuuni.Accounts
 
   def profile(conn, %{"username" => name}) do
@@ -12,8 +13,10 @@ defmodule ChuuniWeb.UserProfileController do
       |> put_view(ChuuniWeb.ErrorHTML)
       |> render(:"404")
     else
+      top_ten = Reviews.top_for_user(user)
+
       conn
-      |> render(:profile, page_title: user.name, user: user)
+      |> render(:profile, page_title: user.name, user: user, top_ten: top_ten)
     end
   end
 end

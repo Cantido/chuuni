@@ -1,20 +1,39 @@
 <h1 class="title">User Profile</h1>
 
-<section class="section">
-  <div class="media">
-    <div class="media-left">
-      <figure class="image">
-        <.gravatar email={@user.email} size={120} />
-      </figure>
-    </div>
-    <div class="media-content">
-      <p class="title is-4">Display Name</p>
-      <p class="subtitle is-6"><%= @user.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></p>
-      <p>Joined on <time datetime={@user.inserted_at}><%= @user.inserted_at %></time></p>
-      <p>0 followers, 0 following</p>
-    </div>
+<div class="media block">
+  <div class="media-left">
+    <figure class="image">
+      <.gravatar email={@user.email} size={120} />
+    </figure>
   </div>
-</section>
+  <div class="media-content">
+    <p class="title is-4">Display Name</p>
+    <p class="subtitle is-6"><%= @user.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></p>
+    <p>User since <time datetime={@user.inserted_at}><%= @user.inserted_at %></time></p>
+    <p>0 followers, 0 following</p>
+  </div>
+</div>
+<hr />
+<div class="columns block">
 
-<section class="section">
-</section>
+  <div class="column is-3">
+    <p class="title is-size-4 has-text-centered">Top Anime</p>
+    <table class="table is-hoverable">
+      <tbody>
+        <tr :for={review <- @top_ten}>
+          <td hx-get={~p"/reviews/#{review}"} hx-target="#main-container" hx-push-url="true">
+            <div class="media">
+              <div class="media-left">
+                <p class="is-size-3"><%= review.rating %></p>
+              </div>
+              <div class="media-content">
+                <p><%= review.anime.title.romaji %></p>
+                <p><small><%= review.anime.title.english %></small></p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

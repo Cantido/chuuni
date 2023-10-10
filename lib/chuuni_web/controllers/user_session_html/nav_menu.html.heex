@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="navbar-dropdown">
-      <a hx-get={~p"/@#{@current_user.name}"} hx-target="#main-container" class="navbar-item">Profile</a>
+      <a hx-get={~p"/@#{@current_user.name}"} hx-target="#main-container" hx-push-url="true" class="navbar-item">Profile</a>
       <a href={~p"/users/settings"} hx-boost="true" class="navbar-item">Settings</a>
       <a hx-get={~p"/users/log_out"} class="navbar-item">Log out</a>
     </div>
