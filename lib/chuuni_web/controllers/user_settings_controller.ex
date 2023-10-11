@@ -38,7 +38,6 @@ defmodule ChuuniWeb.UserSettingsController do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         conn
-        |> put_status(:bad_request)
         |> render(:email_form, email_changeset: changeset)
     end
   end
@@ -61,6 +60,7 @@ defmodule ChuuniWeb.UserSettingsController do
         conn
         |> UserAuth.log_out_user()
         |> put_resp_header("hx-trigger", "logout")
+        |> put_resp_header("hx-location", ~p"/")
         |> render(:success_message,
           message: "You changed your password. You are now being logged out.")
 

@@ -176,6 +176,10 @@ defmodule ChuuniWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
+      <div class="notification is-danger" :if={Map.get(@for, :action)}>
+        Oops, something went wrong! Please check the errors below.
+      </div>
+
       <%= render_slot(@inner_block, f) %>
       <div class="field is-grouped">
         <div :for={action <- @actions} class="control">

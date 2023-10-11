@@ -1,8 +1,4 @@
 <.simple_form :let={f} for={@changeset} action={@action}>
-  <.error :if={@changeset.action}>
-    Oops, something went wrong! Please check the errors below.
-  </.error>
-
   <.input field={f[:rating]} type="select" prompt="Select your rating" options={10..1} required="true" />
   <.input field={f[:body]} type="textarea" placeholder="I thought it was..." />
   <:actions>

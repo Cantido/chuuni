@@ -12,6 +12,7 @@ defmodule ChuuniWeb.UserSessionHTML do
 
   def error_message(assigns)
 
+  attr :success_message, :string, default: nil
   attr :error_message, :string, default: nil
 
   def log_in_form(assigns)

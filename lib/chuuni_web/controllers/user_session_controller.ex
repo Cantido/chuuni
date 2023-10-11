@@ -24,22 +24,21 @@ defmodule ChuuniWeb.UserSessionController do
 
       conn
       |> put_resp_header("hx-trigger", "login")
-      |> put_resp_header("hx-location", user_return_to || ~p"/")
+      |> put_resp_header("hx-location", ChuuniWeb.HTMXPlug.encode_hx_location(user_return_to || ~p"/", "#main-container"))
       |> UserAuth.log_in_user(user, user_params)
       |> put_view(ChuuniWeb.UserSettingsHTML)
       |> render(:success_message, message: "Welcome back!")
     else
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
       conn
-      |> put_view(ChuuniWeb.UserSettingsHTML)
-      |> render(:danger_message, message: "Invalid email or password", close_url: ~p"/users/log_in/form")
+      |> render(:log_in_form, error_message: "Invalid email or password")
     end
   end
 
   def delete(conn, _params) do
     conn
     |> put_resp_header("hx-trigger", "logout")
-    |> put_resp_header("hx-location", ~p"/")
+    |> put_resp_header("hx-location", ChuuniWeb.HTMXPlug.encode_hx_location(~p"/", "#main-container"))
     |> UserAuth.log_out_user()
     |> render(:success_message, message: "Logged out successfully")
   end

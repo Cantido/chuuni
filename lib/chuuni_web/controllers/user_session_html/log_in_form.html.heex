@@ -1,5 +1,7 @@
 <div id="login-form">
-  <.simple_form :let={f} for={%{}} as="user" hx-post={~p"/users/log_in"} hx-swap="closest #login-form">
+  <div :if={@success_message} class="notification is-success"><%= @success_message %></div>
+  <div :if={@error_message} class="notification is-danger"><%= @error_message %></div>
+  <.simple_form :let={f} for={%{}} as="user" hx-post={~p"/users/log_in"} hx-target="closest #login-form" hx-swap="outerHTML">
     <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
     <.input field={f[:email]} type="email" label="Email" required />
     <.input field={f[:password]} type="password" label="Password" required />
