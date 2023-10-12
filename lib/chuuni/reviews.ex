@@ -5,12 +5,10 @@ defmodule Chuuni.Reviews do
 
   import Ecto.Query, warn: false
   alias Chuuni.Reviews.ReviewQueries
-  alias Chuuni.Media.AnimeQueries
   alias Chuuni.Repo
 
   alias Chuuni.Accounts.User
   alias Chuuni.Reviews.Review
-  alias Chuuni.Media.Anime
 
   def top_rated do
     top_rated =

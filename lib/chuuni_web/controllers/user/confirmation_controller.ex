@@ -1,6 +1,8 @@
 defmodule ChuuniWeb.User.ConfirmationController do
   use ChuuniWeb, :controller
 
+  alias Chuuni.Accounts
+
   def send_confirm_email(conn, %{"email" => email}) do
     if user = Accounts.get_user_by_email(email) do
       Accounts.deliver_user_confirmation_instructions(

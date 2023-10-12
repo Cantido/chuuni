@@ -54,19 +54,6 @@ defmodule ChuuniWeb.ShelfController do
     end
   end
 
-  def move(conn, %{"id" => id, "from" => from, "to" => to}) do
-    shelf = Shelves.get_shelf!(id)
-
-    case Shelves.move_item(shelf, from, to) do
-      {:ok, shelf} ->
-        conn
-        |> redirect(to: ~p"/shelves/#{shelf}")
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, shelf: shelf, changeset: changeset)
-    end
-  end
-
   def delete(conn, %{"id" => id}) do
     shelf = Shelves.get_shelf!(id)
     {:ok, _shelf} = Shelves.delete_shelf(shelf)

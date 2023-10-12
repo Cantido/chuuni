@@ -9,7 +9,7 @@
 
 
 <div :for={item <- @shelf.items}>
-      <ChuuniWeb.SearchHTML.search_result
+      <ChuuniWeb.AnimeHTML.search_result
         class="box"
         image={~p"/artwork/anime/#{item.anime}/cover.png"}
         href={~p"/anime/#{item.anime}"}
