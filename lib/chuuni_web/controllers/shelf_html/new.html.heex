@@ -1,0 +1,10 @@
+<.header>
+  New Shelf
+  <:subtitle>Use this form to manage shelf records in your database.</:subtitle>
+</.header>
+
+<div hx-target="#main-container">
+  <.shelf_form changeset={@changeset} action={~p"/shelves"} />
+</div>
+
+<a href={~p"/shelves"} hx-boost="true">Back to shelves</a>

@@ -39,24 +39,21 @@ defmodule Chuuni.Reviews do
   end
 
   def get_rating_summary(rated_id) do
-    summary =
-      Chuuni.Reviews.ReviewQueries.review_summary()
-      |> where(anime_id: ^rated_id)
-      |> Repo.one()
-
-    if is_nil(summary.rating) && summary.count != 0 do
-      raise "This shouldn't happen"
-    end
-
-    summary
+    Chuuni.Reviews.ReviewQueries.review_summary()
+    |> where(anime_id: ^rated_id)
+    |> Repo.one()
   end
 
   def get_rating_rank(rated_id) do
-    Repo.one(ReviewQueries.rating_rank(rated_id)).rank
+    if rank = Repo.one(ReviewQueries.rating_rank(rated_id)) do
+      rank.rank
+    end
   end
 
   def get_popularity_rank(rated_id) do
-    Repo.one(ReviewQueries.popularity_rank(rated_id)).rank
+    if rank = Repo.one(ReviewQueries.popularity_rank(rated_id)) do
+      rank.rank
+    end
   end
 
   @doc """

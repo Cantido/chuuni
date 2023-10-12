@@ -55,6 +55,9 @@ defmodule ChuuniWeb.Router do
   scope "/", ChuuniWeb do
     pipe_through [:browser, :require_authenticated_user]
 
+    resources "/shelves", ShelfController do
+      post "/move", ShelfController, :move
+    end
     resources "/reviews", ReviewController
     get "/anime/new", AnimeController, :new
     post "/anime/import", AnimeController, :import

@@ -1,0 +1,15 @@
+<.simple_form :let={f} for={@changeset} hx-post={@action}>
+  <div class="notification is-danger" :if={@changeset.action}>
+    Oops, something went wrong! Please check the errors below.
+  </div>
+  <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+  <.input field={f[:author_id]} type="hidden" />
+  <.input field={f[:title]} type="text" label="Title" />
+
+
+
+
+  <:actions>
+    <.button>Save Shelf</.button>
+  </:actions>
+</.simple_form>

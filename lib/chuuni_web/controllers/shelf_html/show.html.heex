@@ -1,0 +1,24 @@
+<.header>
+  <%= @shelf.title %>
+  <:actions>
+    <.link href={~p"/shelves/#{@shelf}/edit"}>
+      <.button>Edit shelf</.button>
+    </.link>
+  </:actions>
+</.header>
+
+
+<div :for={item <- @shelf.items}>
+      <ChuuniWeb.SearchHTML.search_result
+        class="box"
+        image={~p"/artwork/anime/#{item.anime}/cover.png"}
+        href={~p"/anime/#{item.anime}"}
+        title={item.anime.title.romaji}
+        subtitle={item.anime.title.english}
+        start_date="unknown"
+        stop_date="unknown"
+        studios="unknown" />
+</div>
+
+<.back navigate={~p"/shelves"}>Back to shelves</.back>
+
