@@ -60,31 +60,42 @@ defmodule ChuuniWeb.Router do
       get "/register", UserController, :new
       post "/create", UserController, :create
     end
-  end
 
-  scope "/", ChuuniWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
-    resources "/shelves", ShelfController do
-      post "/move", ShelfController, :move
-    end
+    resources "/shelves", ShelfController
     resources "/reviews", ReviewController
+
     get "/anime/new", AnimeController, :new
     post "/anime/import", AnimeController, :import
 
     scope "/anime/:anime_id" do
-      get "/summary_card", AnimeController, :summary_card
       get "/edit", AnimeController, :edit
       put "/", AnimeController, :update
 
       resources "/reviews", ReviewController, only: [:new, :create]
     end
-  end
-
-  scope "/", ChuuniWeb do
-    pipe_through :browser
 
     resources "/anime", AnimeController, only: [:show]
+
+    scope "/users" do
+      get "/log_in", UserSessionController, :new
+      post "/log_in", UserSessionController, :create
+    end
+
+    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+    get "/users/settings", UserSettingsController, :edit
+    post "/users/settings/email", UserSettingsController, :update_email
+    get "/users/settings/email/edit", UserSettingsController, :edit_email
+    post "/users/settings/password", UserSettingsController, :update_password
+
+    get "/users/log_out", UserSessionController, :delete
+    delete "/users/log_out", UserSessionController, :delete
+
+    get "/users/confirm/:token", User.ConfirmationController, :confirm_form
+    post "/users/confirm", User.ConfirmationController, :confirm
+    post "/users/confirm/send", User.ConfirmationController, :send_confirm_email
+    get "/users/confirm", User.ConfirmationController, :confirmation_instructions
+
+    get "/@:username", UserProfileController, :profile
   end
 
   # Other scopes may use custom stacks.
@@ -107,42 +118,5 @@ defmodule ChuuniWeb.Router do
       live_dashboard "/dashboard", metrics: ChuuniWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
-  end
-
-  ## Authentication routes
-
-  scope "/", ChuuniWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
-
-    scope "/users" do
-      get "/log_in", UserSessionController, :new
-      get "/log_in/form", UserSessionController, :form
-      post "/log_in", UserSessionController, :create
-    end
-
-  end
-
-  scope "/", ChuuniWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
-    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
-    get "/users/settings", UserSettingsController, :edit
-    post "/users/settings/email", UserSettingsController, :update_email
-    get "/users/settings/email/edit", UserSettingsController, :edit_email
-    post "/users/settings/password", UserSettingsController, :update_password
-  end
-
-  scope "/", ChuuniWeb do
-    pipe_through [:browser]
-
-    get "/users/log_out", UserSessionController, :delete
-    delete "/users/log_out", UserSessionController, :delete
-
-    get "/users/confirm/:token", User.ConfirmationController, :confirm_form
-    post "/users/confirm", User.ConfirmationController, :confirm
-    post "/users/confirm/send", User.ConfirmationController, :send_confirm_email
-    get "/users/confirm", User.ConfirmationController, :confirmation_instructions
-
-    get "/@:username", UserProfileController, :profile
   end
 end

@@ -4,6 +4,10 @@ defmodule ChuuniWeb.UserSettingsController do
   alias ChuuniWeb.UserAuth
   alias Chuuni.Accounts
 
+  import ChuuniWeb.UserAuth, only: [require_authenticated_user: 2]
+
+  plug :require_authenticated_user
+
   def edit(conn, _params) do
     user = conn.assigns.current_user
     email_changeset = Accounts.change_user_email(user)

@@ -87,37 +87,55 @@ defmodule ChuuniWeb.AnimeController do
   end
 
   def import(conn, %{"provider" => "anilist", "id" => id}) do
-    case Media.import_anilist_anime(id) do
-      {:ok, anime} ->
-        conn
-        |> put_flash(:info, "Anime imported successfully.")
-        |> redirect(to: ~p"/anime/#{anime}")
+    if conn.assigns[:current_user] do
+      case Media.import_anilist_anime(id) do
+        {:ok, anime} ->
+          conn
+          |> put_flash(:info, "Anime imported successfully.")
+          |> redirect(to: ~p"/anime/#{anime}")
 
-      {:error, error} ->
-        Logger.error("Failed to import anime: #{inspect error}")
-        conn
-        |> put_flash(:error, "Failed to import anime. An admin has been notified")
-        |> redirect(to: ~p"/")
+        {:error, error} ->
+          Logger.error("Failed to import anime: #{inspect error}")
+          conn
+          |> put_flash(:error, "Failed to import anime. An admin has been notified")
+          |> redirect(to: ~p"/")
+      end
+    else
+      conn
+      |> put_view(html: ChuuniWeb.UserAuthHTML)
+      |> render(:must_be_logged_in)
     end
   end
 
   def edit(conn, %{"anime_id" => id}) do
-    anime = Media.get_anime!(id)
-    changeset = Media.change_anime(anime)
-    render(conn, :edit, anime: anime, changeset: changeset)
+    if conn.assigns[:current_user] do
+      anime = Media.get_anime!(id)
+      changeset = Media.change_anime(anime)
+      render(conn, :edit, anime: anime, changeset: changeset)
+    else
+      conn
+      |> put_view(html: ChuuniWeb.UserAuthHTML)
+      |> render(:must_be_logged_in)
+    end
   end
 
   def update(conn, %{"anime_id" => id, "anime" => anime_params}) do
-    anime = Media.get_anime!(id)
+    if conn.assigns[:current_user] do
+      anime = Media.get_anime!(id)
 
-    with {:ok, anime} <- Media.update_anime(anime, anime_params),
-         :ok <- update_cover(anime, anime_params["cover"]) do
-      conn
-      |> put_flash(:info, "Anime updated successfully.")
-      |> redirect(to: ~p"/anime/#{anime}")
+      with {:ok, anime} <- Media.update_anime(anime, anime_params),
+           :ok <- update_cover(anime, anime_params["cover"]) do
+        conn
+        |> put_flash(:info, "Anime updated successfully.")
+        |> redirect(to: ~p"/anime/#{anime}")
+      else
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, :edit, anime: anime, changeset: changeset)
+      end
     else
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, anime: anime, changeset: changeset)
+      conn
+      |> put_view(html: ChuuniWeb.UserAuthHTML)
+      |> render(:must_be_logged_in)
     end
   end
 

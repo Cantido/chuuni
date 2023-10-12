@@ -4,6 +4,10 @@ defmodule ChuuniWeb.ReviewController do
   alias Chuuni.Reviews
   alias Chuuni.Reviews.Review
 
+  import ChuuniWeb.UserAuth, only: [require_authenticated_user: 2]
+
+  plug :require_authenticated_user
+
   def index(conn, _params) do
     reviews = Reviews.top_rated()
     render(conn, :index, reviews: reviews)

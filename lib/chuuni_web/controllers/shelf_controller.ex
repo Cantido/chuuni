@@ -4,6 +4,10 @@ defmodule ChuuniWeb.ShelfController do
   alias Chuuni.Shelves
   alias Chuuni.Shelves.Shelf
 
+  import ChuuniWeb.UserAuth, only: [require_authenticated_user: 2]
+
+  plug :require_authenticated_user
+
   def index(conn, _params) do
     shelves = Shelves.list_shelves_for_user(conn.assigns.current_user)
     render(conn, :index, shelves: shelves)
