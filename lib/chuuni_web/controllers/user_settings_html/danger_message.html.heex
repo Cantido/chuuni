@@ -1,7 +1,7 @@
 <article class="message is-danger">
   <div class="message-header">
     <p>Error</p>
-    <button class="delete" :if={@close_url} hx-get={@close_url} hx-swap="outerHTML" hx-target="closest .message" aria-label="delete"></button>
+    <button class="delete" hx-get={~p"/"} hx-swap="outerHTML" hx-target="#main-container"></button>
   </div>
   <div class="message-body">
     <%= @message %>

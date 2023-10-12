@@ -2,12 +2,15 @@ defmodule ChuuniWeb.User.PasswordResetController do
   use ChuuniWeb, :controller
 
   alias Chuuni.Accounts
+  import ChuuniWeb.UserAuth, only: [redirect_if_user_is_authenticated: 2]
+
+  plug :redirect_if_user_is_authenticated
 
   def index(conn, _params) do
     render(conn, :index)
   end
 
-  def send_reset_instructions(conn, %{"user" => %{"email" => email}}) do
+  def send_reset_instructions(conn, %{"email" => email}) do
     if user = Accounts.get_user_by_email(email) do
       Accounts.deliver_user_reset_password_instructions(
         user,

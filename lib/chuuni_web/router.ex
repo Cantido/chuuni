@@ -50,6 +50,13 @@ defmodule ChuuniWeb.Router do
     get "/top", PageController, :top
 
     get "/anime/search", AnimeController, :search
+
+    scope "/users" do
+      get "/reset_password", User.PasswordResetController, :index
+      post "/reset_password/send_instructions", User.PasswordResetController, :send_reset_instructions
+      get "/reset_password/token/:token", User.PasswordResetController, :password_reset_form
+      post "/reset_password/update", User.PasswordResetController, :update_password
+    end
   end
 
   scope "/", ChuuniWeb do
@@ -105,11 +112,6 @@ defmodule ChuuniWeb.Router do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     scope "/users" do
-      get "/reset_password", User.PasswordResetController, :index
-      post "/reset_password/send_instructions", User.PasswordResetController, :send_reset_instructions
-      get "/reset_password/token/:token", User.PasswordResetController, :password_reset_form
-      post "/reset_password/update", User.PasswordResetController, :update_password
-
       get "/register", UserController, :new
       post "/create", UserController, :create
       get "/log_in", UserSessionController, :new

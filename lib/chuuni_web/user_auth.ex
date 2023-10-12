@@ -110,10 +110,17 @@ defmodule ChuuniWeb.UserAuth do
   """
   def redirect_if_user_is_authenticated(conn, _opts) do
     if conn.assigns[:current_user] do
-      conn
-      |> put_resp_header("hx-location", signed_in_path(conn))
-      |> redirect(to: signed_in_path(conn))
-      |> halt()
+      if conn.assigns[:htmx] do
+        conn
+        |> put_resp_header("hx-location", signed_in_path(conn))
+        |> put_view(html: ChuuniWeb.UserAuthHTML)
+        |> render(:must_be_logged_out)
+        |> halt()
+      else
+        conn
+        |> redirect(to: signed_in_path(conn))
+        |> halt()
+      end
     else
       conn
     end
@@ -129,12 +136,19 @@ defmodule ChuuniWeb.UserAuth do
     if conn.assigns[:current_user] do
       conn
     else
-      conn
-      |> put_flash(:error, "You must log in to access this page.")
-      |> maybe_store_return_to()
-      |> put_resp_header("hx-location", ~p"/users/log_in")
-      |> redirect(to: ~p"/users/log_in")
-      |> halt()
+      if conn.assigns[:htmx] do
+        conn
+        |> maybe_store_return_to()
+        |> put_resp_header("hx-location", ~p"/users/log_in")
+        |> put_view(html: ChuuniWeb.UserAuthHTML)
+        |> render(:must_be_logged_in)
+        |> halt()
+      else
+        conn
+        |> maybe_store_return_to()
+        |> redirect(to: ~p"/users/log_in")
+        |> halt()
+      end
     end
   end
 
