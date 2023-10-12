@@ -31,13 +31,13 @@ defmodule ChuuniWeb.UserSettingsController do
         Accounts.deliver_user_update_email_instructions(
           applied_user,
           user.email,
-          &url(~p"/users/settings/confirm_email/#{&1}")
+          &url(~p"/settings/email/confirm/#{&1}")
         )
 
         conn
         |> render(:success_message,
           message: "A link to confirm your email change has been sent to the new address.",
-          close_url: ~p"/users/settings/email/edit"
+          close_url: ~p"/settings/email"
         )
 
       {:error, %Ecto.Changeset{} = changeset} ->

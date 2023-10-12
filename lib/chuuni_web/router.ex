@@ -72,25 +72,23 @@ defmodule ChuuniWeb.Router do
     get "/@:username", UserProfileController, :profile
 
     scope "/settings" do
+      get "/", UserSettingsController, :edit
+
+      scope "/email" do
+        get "/", UserSettingsController, :edit_email
+        post "/", UserSettingsController, :update_email
+        get "/confirm/:token", UserSettingsController, :confirm_email
+      end
+
       scope "/password" do
+        post "/", UserSettingsController, :update_password
+
         scope "/reset" do
           get "/", User.PasswordResetController, :index
           post "/", User.PasswordResetController, :update_password
           post "/send-instructions", User.PasswordResetController, :send_reset_instructions
           get "/token/:token", User.PasswordResetController, :password_reset_form
         end
-      end
-    end
-
-    scope "/users" do
-      get "/menu", UserSessionController, :menu
-
-      scope "/settings" do
-        get "/", UserSettingsController, :edit
-        get "/confirm_email/:token", UserSettingsController, :confirm_email
-        post "/email", UserSettingsController, :update_email
-        get "/email/edit", UserSettingsController, :edit_email
-        post "/password", UserSettingsController, :update_password
       end
 
       scope "/confirm" do
@@ -99,6 +97,10 @@ defmodule ChuuniWeb.Router do
         get "/:token", User.ConfirmationController, :confirm_form
         post "/send", User.ConfirmationController, :send_confirm_email
       end
+    end
+
+    scope "/users" do
+      get "/menu", UserSessionController, :menu
     end
   end
 

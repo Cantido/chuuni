@@ -4,6 +4,10 @@ defmodule ChuuniWeb.UserController do
   alias Chuuni.Accounts
   alias Chuuni.Accounts.User
 
+  import ChuuniWeb.UserAuth, only: [redirect_if_user_is_authenticated: 2]
+
+  plug :redirect_if_user_is_authenticated
+
   def new(conn, _params) do
     changeset = Accounts.change_user_registration(%User{})
     render(conn, :register, changeset: changeset)
@@ -15,7 +19,7 @@ defmodule ChuuniWeb.UserController do
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
             user,
-            &url(~p"/users/confirm/#{&1}")
+            &url(~p"/settings/confirm/#{&1}")
           )
 
         conn

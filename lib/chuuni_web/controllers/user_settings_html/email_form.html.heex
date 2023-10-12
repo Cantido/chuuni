@@ -2,7 +2,7 @@
   :let={f}
   for={@email_changeset}
   id="email_form"
-  hx-post={~p"/users/settings/email"}
+  hx-post={~p"/settings/email"}
 >
   <.input name="_csrf_token" type="hidden" value={get_csrf_token()} />
   <.input field={f[:email]} type="email" label="Email" required />

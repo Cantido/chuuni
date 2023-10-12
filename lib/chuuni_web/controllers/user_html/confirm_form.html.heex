@@ -5,7 +5,7 @@
     for={%{}}
     as="user"
     id="confirmation_form"
-    hx-post={~p"/users/confirm"}>
+    hx-post={~p"/settings/confirm"}>
     <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
     <input type="hidden" name="token" value={@token} />
     <:actions>
