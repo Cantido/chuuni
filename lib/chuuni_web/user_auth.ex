@@ -139,14 +139,14 @@ defmodule ChuuniWeb.UserAuth do
       if conn.assigns[:htmx] do
         conn
         |> maybe_store_return_to()
-        |> put_resp_header("hx-location", ~p"/users/log_in")
+        |> put_resp_header("hx-location", ~p"/login")
         |> put_view(html: ChuuniWeb.UserAuthHTML)
         |> render(:must_be_logged_in)
         |> halt()
       else
         conn
         |> maybe_store_return_to()
-        |> redirect(to: ~p"/users/log_in")
+        |> redirect(to: ~p"/login")
         |> halt()
       end
     end

@@ -51,6 +51,9 @@ defmodule ChuuniWeb.Router do
     get "/register", UserController, :new
     post "/register", UserController, :create
 
+    get "/login", UserSessionController, :new
+    post "/login", UserSessionController, :create
+
     resources "/shelves", ShelfController
     resources "/reviews", ReviewController
 
@@ -68,8 +71,6 @@ defmodule ChuuniWeb.Router do
     scope "/users" do
       get "/menu", UserSessionController, :menu
 
-      get "/log_in", UserSessionController, :new
-      post "/log_in", UserSessionController, :create
       get "/log_out", UserSessionController, :delete
       delete "/log_out", UserSessionController, :delete
 
