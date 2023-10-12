@@ -71,15 +71,19 @@ defmodule ChuuniWeb.Router do
 
     get "/@:username", UserProfileController, :profile
 
+    scope "/settings" do
+      scope "/password" do
+        scope "/reset" do
+          get "/", User.PasswordResetController, :index
+          post "/", User.PasswordResetController, :update_password
+          post "/send-instructions", User.PasswordResetController, :send_reset_instructions
+          get "/token/:token", User.PasswordResetController, :password_reset_form
+        end
+      end
+    end
+
     scope "/users" do
       get "/menu", UserSessionController, :menu
-
-      scope "/reset_password" do
-        get "/", User.PasswordResetController, :index
-        post "/send_instructions", User.PasswordResetController, :send_reset_instructions
-        get "/token/:token", User.PasswordResetController, :password_reset_form
-        post "/update", User.PasswordResetController, :update_password
-      end
 
       scope "/settings" do
         get "/", UserSettingsController, :edit

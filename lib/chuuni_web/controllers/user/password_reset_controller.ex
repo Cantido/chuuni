@@ -14,7 +14,7 @@ defmodule ChuuniWeb.User.PasswordResetController do
     if user = Accounts.get_user_by_email(email) do
       Accounts.deliver_user_reset_password_instructions(
         user,
-        &url(~p"/users/reset_password/token/#{&1}")
+        &url(~p"/settings/password/reset/token/#{&1}")
       )
     end
 
