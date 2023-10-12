@@ -2,7 +2,7 @@
   :let={f}
   for={@changeset}
   id="registration_form"
-  hx-post={~p"/users/create"}
+  hx-post={~p"/register"}
 >
   <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
 

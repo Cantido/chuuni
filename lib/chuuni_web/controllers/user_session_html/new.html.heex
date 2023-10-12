@@ -3,16 +3,16 @@
     Sign in to account
     <:subtitle>
       Don't have an account?
-      <.link navigate={~p"/users/register"}>
+      <a href={~p"/register"} hx-boost="true">
         Sign up
-      </.link>
+      </a>
       for an account now.
     </:subtitle>
   </.header>
 
   <.log_in_form />
 
-  <.link href={~p"/users/reset_password"}>
+  <a href={~p"/users/reset_password"} hx-boost="true">
     Forgot your password?
-  </.link>
+  </a>
 </div>
