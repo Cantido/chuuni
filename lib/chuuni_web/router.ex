@@ -45,57 +45,56 @@ defmodule ChuuniWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    get "/users/menu", UserSessionController, :menu
     get "/search", PageController, :search
     get "/top", PageController, :top
-
-    get "/anime/search", AnimeController, :search
-
-    scope "/users" do
-      get "/reset_password", User.PasswordResetController, :index
-      post "/reset_password/send_instructions", User.PasswordResetController, :send_reset_instructions
-      get "/reset_password/token/:token", User.PasswordResetController, :password_reset_form
-      post "/reset_password/update", User.PasswordResetController, :update_password
-
-      get "/register", UserController, :new
-      post "/create", UserController, :create
-    end
 
     resources "/shelves", ShelfController
     resources "/reviews", ReviewController
 
-    get "/anime/new", AnimeController, :new
-    post "/anime/import", AnimeController, :import
+    scope "/anime" do
+      get "/search", AnimeController, :search
+      post "/import", AnimeController, :import
 
-    scope "/anime/:anime_id" do
-      get "/edit", AnimeController, :edit
-      put "/", AnimeController, :update
-
-      resources "/reviews", ReviewController, only: [:new, :create]
+      resources "/", AnimeController, except: [:delete] do
+        resources "/reviews", ReviewController, only: [:new, :create]
+      end
     end
-
-    resources "/anime", AnimeController, only: [:show]
-
-    scope "/users" do
-      get "/log_in", UserSessionController, :new
-      post "/log_in", UserSessionController, :create
-    end
-
-    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
-    get "/users/settings", UserSettingsController, :edit
-    post "/users/settings/email", UserSettingsController, :update_email
-    get "/users/settings/email/edit", UserSettingsController, :edit_email
-    post "/users/settings/password", UserSettingsController, :update_password
-
-    get "/users/log_out", UserSessionController, :delete
-    delete "/users/log_out", UserSessionController, :delete
-
-    get "/users/confirm/:token", User.ConfirmationController, :confirm_form
-    post "/users/confirm", User.ConfirmationController, :confirm
-    post "/users/confirm/send", User.ConfirmationController, :send_confirm_email
-    get "/users/confirm", User.ConfirmationController, :confirmation_instructions
 
     get "/@:username", UserProfileController, :profile
+
+    scope "/users" do
+      get "/register", UserController, :new
+      post "/create", UserController, :create
+
+      get "/menu", UserSessionController, :menu
+
+      get "/log_in", UserSessionController, :new
+      post "/log_in", UserSessionController, :create
+      get "/log_out", UserSessionController, :delete
+      delete "/log_out", UserSessionController, :delete
+
+      scope "/reset_password" do
+        get "/", User.PasswordResetController, :index
+        post "/send_instructions", User.PasswordResetController, :send_reset_instructions
+        get "/token/:token", User.PasswordResetController, :password_reset_form
+        post "/update", User.PasswordResetController, :update_password
+      end
+
+      scope "/settings" do
+        get "/", UserSettingsController, :edit
+        get "/confirm_email/:token", UserSettingsController, :confirm_email
+        post "/email", UserSettingsController, :update_email
+        get "/email/edit", UserSettingsController, :edit_email
+        post "/password", UserSettingsController, :update_password
+      end
+
+      scope "/confirm" do
+        get "/", User.ConfirmationController, :confirmation_instructions
+        post "/", User.ConfirmationController, :confirm
+        get "/:token", User.ConfirmationController, :confirm_form
+        post "/send", User.ConfirmationController, :send_confirm_email
+      end
+    end
   end
 
   # Other scopes may use custom stacks.
