@@ -56,6 +56,9 @@ defmodule ChuuniWeb.Router do
       post "/reset_password/send_instructions", User.PasswordResetController, :send_reset_instructions
       get "/reset_password/token/:token", User.PasswordResetController, :password_reset_form
       post "/reset_password/update", User.PasswordResetController, :update_password
+
+      get "/register", UserController, :new
+      post "/create", UserController, :create
     end
   end
 
@@ -112,8 +115,6 @@ defmodule ChuuniWeb.Router do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     scope "/users" do
-      get "/register", UserController, :new
-      post "/create", UserController, :create
       get "/log_in", UserSessionController, :new
       get "/log_in/form", UserSessionController, :form
       post "/log_in", UserSessionController, :create
@@ -137,10 +138,10 @@ defmodule ChuuniWeb.Router do
     get "/users/log_out", UserSessionController, :delete
     delete "/users/log_out", UserSessionController, :delete
 
-    get "/users/confirm/:token", UserController, :confirm_form
-    post "/users/confirm", UserController, :confirm
-    post "/users/confirm/send", UserController, :send_confirm_email
-    get "/users/confirm", UserController, :confirmation_instructions
+    get "/users/confirm/:token", User.ConfirmationController, :confirm_form
+    post "/users/confirm", User.ConfirmationController, :confirm
+    post "/users/confirm/send", User.ConfirmationController, :send_confirm_email
+    get "/users/confirm", User.ConfirmationController, :confirmation_instructions
 
     get "/@:username", UserProfileController, :profile
   end
