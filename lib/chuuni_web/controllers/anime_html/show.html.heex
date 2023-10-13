@@ -1,7 +1,6 @@
 <div class="columns">
   <div class="column is-one-quarter">
     <div class="image is-256x256 is-2by3 block">
-      <%!-- <img src={@anime["coverImage"]["extraLarge"]} /> --%>
       <img src={~p"/artwork/anime/#{@anime}/cover.png"} />
     </div>
 
@@ -24,7 +23,7 @@
 
   <div class="column">
     <.header>
-      <%= @anime.title.english %>
+      <%= @anime.title.english || @anime.title.native %>
       <:subtitle>
       <%= @anime.title.romaji %>
       </:subtitle>
