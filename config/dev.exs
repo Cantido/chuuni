@@ -25,8 +25,8 @@ config :chuuni, ChuuniWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "d+GGg6h84OHZsm3DxJ4ceq9dI6IELL0fmvfsteyNQBBASeuJU54p5SNFQFr5/gfe",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+    esbuildjs: {Esbuild, :install_and_run, [:js, ~w(--sourcemap=inline --watch)]},
+    esbuildcss: {Esbuild, :install_and_run, [:css, ~w(--sourcemap=inline --watch)]}
   ]
 
 # ## SSL Support
