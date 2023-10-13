@@ -4,6 +4,7 @@ defmodule Chuuni.Shelves.ShelfItem do
   alias Chuuni.Shelves.Shelf
   alias Chuuni.Media.Anime
   alias Chuuni.Accounts.User
+  alias Chuuni.Reviews.Review
 
   @primary_key false
   @foreign_key_type :binary_id

@@ -30,8 +30,8 @@ let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
 
 // Show progress bar on live navigation and form submits
-window.addEventListener("htmx:xhr:loadstart", _info => topbar.show(100))
-window.addEventListener("htmx:xhr:loadend", _info => topbar.hide())
+// window.addEventListener("htmx:xhr:loadstart", _info => topbar.show(100))
+// window.addEventListener("htmx:xhr:loadend", _info => topbar.hide())
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()

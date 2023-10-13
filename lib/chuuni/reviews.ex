@@ -9,6 +9,7 @@ defmodule Chuuni.Reviews do
 
   alias Chuuni.Accounts.User
   alias Chuuni.Reviews.Review
+  alias Chuuni.Shelves.Shelf
 
   def top_rated do
     top_rated =
@@ -52,6 +53,17 @@ defmodule Chuuni.Reviews do
     if rank = Repo.one(ReviewQueries.popularity_rank(rated_id)) do
       rank.rank
     end
+  end
+
+  def reviews_for_shelf(%Shelf{} = shelf) do
+    Repo.all(
+      from r in Review,
+        join: a in assoc(r, :anime),
+        join: s in assoc(a, :shelves),
+        where: s.id == ^shelf.id,
+        select: {r.anime_id, r}
+    )
+    |> Map.new()
   end
 
   @doc """

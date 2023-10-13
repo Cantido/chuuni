@@ -3,6 +3,7 @@ defmodule ChuuniWeb.ShelfController do
 
   alias Chuuni.Shelves
   alias Chuuni.Shelves.Shelf
+  alias Chuuni.Reviews
 
   import ChuuniWeb.UserAuth, only: [require_authenticated_user: 2]
 
@@ -33,7 +34,8 @@ defmodule ChuuniWeb.ShelfController do
   def show(conn, %{"id" => id}) do
     shelves = Shelves.list_shelves_for_user(conn.assigns.current_user)
     shelf = Shelves.get_shelf!(id)
-    render(conn, :show, shelf: shelf, shelves: shelves)
+    reviews = Reviews.reviews_for_shelf(shelf)
+    render(conn, :show, shelf: shelf, shelves: shelves, reviews: reviews)
   end
 
   def edit(conn, %{"id" => id}) do

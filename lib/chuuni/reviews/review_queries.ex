@@ -57,4 +57,5 @@ defmodule Chuuni.Reviews.ReviewQueries do
     popularity_rank()
     |> where([anime_id: ^anime_id])
   end
+
 end

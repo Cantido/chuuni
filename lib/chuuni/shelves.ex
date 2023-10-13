@@ -48,11 +48,6 @@ defmodule Chuuni.Shelves do
     |> Repo.preload([:author, items: [:anime]])
   end
 
-  def get_all_user_shelves(%User{} = user) do
-    Repo.get_by(ShelfItem, author_id: user.id)
-    |> Repo.preload(:anime)
-  end
-
   def get_user_shelf_for_anime(%User{} = user, %Anime{} = anime) do
     Repo.get_by(ShelfItem, author_id: user.id, anime_id: anime.id)
   end

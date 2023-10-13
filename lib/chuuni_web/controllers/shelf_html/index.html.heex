@@ -15,19 +15,6 @@
     </ul>
   </div>
 
-  <div id="shelf-items">
-    <%= for shelf <- @shelves do %>
-      <div :for={item <- shelf.items} class="block">
-        <ChuuniWeb.AnimeHTML.search_result
-          class="box"
-          image={~p"/artwork/anime/#{item.anime}/cover.png"}
-          href={~p"/anime/#{item.anime}"}
-          title={item.anime.title.romaji}
-          subtitle={item.anime.title.english}
-          start_date="unknown"
-          stop_date="unknown"
-          studios="unknown" />
-      </div>
-    <% end %>
-  </div>
+
+  <.shelf id="shelf-all" items={Enum.flat_map(@shelves, &(&1.items))} shelves={@shelves} />
 </div>

@@ -3,6 +3,9 @@ defmodule Chuuni.Media.Anime do
 
   alias Chuuni.Media.AnimeTitles
   alias Chuuni.Media.AnimeMetadataServices
+  alias Chuuni.Reviews.Review
+  alias Chuuni.Shelves.ShelfItem
+  alias Chuuni.Shelves.Shelf
 
   import Ecto.Changeset
 
@@ -13,6 +16,10 @@ defmodule Chuuni.Media.Anime do
     embeds_one :title, AnimeTitles, on_replace: :update
     field :description, :string
     embeds_one :external_ids, AnimeMetadataServices, on_replace: :update
+
+    has_many :reviews, Review
+    has_many :shelf_items, ShelfItem
+    has_many :shelves, through: [:shelf_items, :shelf]
 
     timestamps()
   end

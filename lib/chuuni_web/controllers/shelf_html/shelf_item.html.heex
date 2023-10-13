@@ -1,0 +1,24 @@
+<tr>
+  <td>
+    <figure class="image is-2by3 is-fullwidth">
+      <img src={@image} />
+    </figure>
+  </td>
+  <td>
+    <div class="title is-5"><%= (@title) %></div>
+    <div class="subtitle is-7"><%= (@subtitle) %></div>
+  </td>
+  <td>
+    <.fuzzy_date_range start_date={@start_date} stop_date={@stop_date} />
+  </td>
+  <td>
+    <%= (@studios) %>
+  </td>
+  <td>
+    <%= if (@rating) do %>
+      <p class="is-size-3"><%= Decimal.round(@rating_summary.rating, 2) %><small class="is-size-5">/10</small></p>
+    <% else %>
+      <p>No rating</p>
+    <% end %>
+  </td>
+</tr>
