@@ -15,6 +15,10 @@
 //     import "some-package"
 //
 
+import htmx from "../vendor/htmx"
+
+window.htmx = htmx
+
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
