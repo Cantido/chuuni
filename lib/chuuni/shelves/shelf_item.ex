@@ -33,15 +33,20 @@ defmodule Chuuni.Shelves.ShelfItem do
     start_date = get_field(changeset, start_field)
     finish_date = get_field(changeset, finish_field)
 
-    if start_date && finish_date && Date.compare(start_date, finish_date) in [:lt, :eq] do
+    if start_date && finish_date do
+      if Date.compare(start_date, finish_date) in [:lt, :eq] do
+        changeset
+      else
+        add_error(
+          changeset,
+          :end_date,
+          "must be after %{start_field}, which is %{start_date}",
+          start_field: start_field,
+          start_date: start_date
+        )
+      end
+    else
       changeset
     end
-      add_error(
-        changeset,
-        :end_date,
-        "must be after %{start_field}, which is %{start_date}",
-        start_field: start_field,
-        start_date: start_date
-      )
   end
 end

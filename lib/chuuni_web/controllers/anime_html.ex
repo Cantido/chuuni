@@ -1,6 +1,8 @@
 defmodule ChuuniWeb.AnimeHTML do
   use ChuuniWeb, :html
 
+  alias Chuuni.Media.Anime
+
   embed_templates "anime_html/*"
 
   attr :href, :string, required: true
@@ -50,4 +52,11 @@ defmodule ChuuniWeb.AnimeHTML do
     <%= (@start_date) %>&ndash;<%= (@stop_date) %>
     """
   end
+
+  attr :shelves, :list, required: true
+  attr :anime, Anime, required: true
+  attr :success_message, :string, default: nil
+  attr :error_message, :string, default: nil
+
+  def shelf_select(assigns)
 end

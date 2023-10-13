@@ -2,6 +2,8 @@ defmodule ChuuniWeb.AnimeController do
   use ChuuniWeb, :controller
 
   alias Chuuni.Reviews
+  alias Chuuni.Shelves
+  alias Chuuni.Shelves.ShelfItem
   alias Chuuni.Media
   alias Chuuni.Media.Anime
 
@@ -74,6 +76,11 @@ defmodule ChuuniWeb.AnimeController do
         Reviews.get_review_by_user(id, current_user.id)
       end
 
+    user_shelf_item =
+      if current_user = conn.assigns[:current_user] do
+        Shelves.get_user_shelf_for_anime(current_user, anime)
+      end
+
     review_changeset = Reviews.change_review(%Chuuni.Reviews.Review{}, %{anime_id: id})
 
     render(conn, :show,
@@ -83,8 +90,58 @@ defmodule ChuuniWeb.AnimeController do
       rating_rank: rating_rank,
       popularity_rank: popularity_rank,
       user_review: user_review,
+      user_shelf_item: user_shelf_item,
       review_changeset: review_changeset)
   end
+
+  def shelf(conn, %{"anime_id" => id}) do
+    anime = Media.get_anime!(id)
+
+    if current_user = conn.assigns[:current_user] do
+      user_shelves =
+        Shelves.list_shelves_for_user(current_user)
+
+      changeset = Shelves.change_shelf_item(%ShelfItem{})
+
+      conn
+      |> render(:shelf_select, shelves: user_shelves, anime: anime, changeset: changeset)
+    else
+      conn
+      |> resp(:no_content, "")
+    end
+  end
+
+  def select_shelf(conn, %{"anime_id" => id, "shelf_item" => shelf_item_params}) do
+    anime = Media.get_anime!(id)
+    if user = conn.assigns[:current_user] do
+      shelf_item_params =
+        shelf_item_params
+        |> Map.put("anime_id", id)
+        |> Map.put("author_id", user.id)
+      case Shelves.create_shelf_item(shelf_item_params, user) do
+        {:ok, shelf_item} ->
+          user_shelves =
+            Shelves.list_shelves_for_user(user)
+
+          changeset = Shelves.change_shelf_item(%ShelfItem{}, %{anime_id: id, author_id: user.id})
+
+          conn
+          |> render(:shelf_select, shelves: user_shelves, anime: anime, success_message: "Moved!", changeset: changeset)
+        {:error, changeset} ->
+          Logger.error("error adding shelf item: #{inspect changeset}")
+          user_shelves =
+            Shelves.list_shelves_for_user(user)
+
+          conn
+          |> render(:shelf_select, shelves: user_shelves, anime: anime, changeset: changeset)
+      end
+    else
+      conn
+      |> put_view(html: ChuuniWeb.UserAuthHTML)
+      |> render(:must_be_logged_in)
+    end
+  end
+
 
   def import(conn, %{"provider" => "anilist", "id" => id}) do
     if conn.assigns[:current_user] do

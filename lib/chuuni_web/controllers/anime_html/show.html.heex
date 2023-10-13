@@ -5,6 +5,10 @@
       <img src={~p"/artwork/anime/#{@anime}/cover.png"} />
     </div>
 
+    <%= if(@current_user) do %>
+      <div id="shelf-select" hx-get={~p"/anime/#{@anime}/shelf"} hx-trigger="load" />
+    <% end %>
+
     <div class="panel">
       <div class="panel-block">
         <p><strong>Type:</strong> TV</p>
@@ -100,12 +104,6 @@
     </div>
 
     <%= if @current_user do %>
-
-      <div class="block">
-        <p class="title is-4">Your lists</p>
-
-        <p>Lists go here</p>
-      </div>
 
       <%= if @user_review do %>
 

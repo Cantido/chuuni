@@ -15,7 +15,7 @@
     </ul>
   </div>
 
-  <div :for={item <- @shelf.items}>
+  <div :for={item <- @shelf.items} class="block">
         <ChuuniWeb.AnimeHTML.search_result
           class="box"
           image={~p"/artwork/anime/#{item.anime}/cover.png"}

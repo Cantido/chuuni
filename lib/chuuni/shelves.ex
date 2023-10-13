@@ -7,8 +7,10 @@ defmodule Chuuni.Shelves do
   alias Chuuni.Repo
 
   alias Chuuni.Shelves.Shelf
+  alias Chuuni.Shelves.ShelfItem
   alias Chuuni.Shelves.ShelfQueries
   alias Chuuni.Accounts.User
+  alias Chuuni.Media.Anime
 
   @doc """
   Returns the list of shelves.
@@ -46,6 +48,15 @@ defmodule Chuuni.Shelves do
     |> Repo.preload([:author, items: [:anime]])
   end
 
+  def get_all_user_shelves(%User{} = user) do
+    Repo.get_by(ShelfItem, author_id: user.id)
+    |> Repo.preload(:anime)
+  end
+
+  def get_user_shelf_for_anime(%User{} = user, %Anime{} = anime) do
+    Repo.get_by(ShelfItem, author_id: user.id, anime_id: anime.id)
+  end
+
 
   @doc """
   Creates a shelf.
@@ -62,6 +73,13 @@ defmodule Chuuni.Shelves do
   def create_shelf(attrs \\ %{}) do
     %Shelf{}
     |> Shelf.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_shelf_item(attrs, current_user) do
+    %ShelfItem{}
+    |> ShelfItem.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:author, current_user)
     |> Repo.insert()
   end
 
@@ -110,5 +128,9 @@ defmodule Chuuni.Shelves do
   """
   def change_shelf(%Shelf{} = shelf, attrs \\ %{}) do
     Shelf.changeset(shelf, attrs)
+  end
+
+  def change_shelf_item(%ShelfItem{} = shelf, attrs \\ %{}) do
+    ShelfItem.changeset(shelf, attrs)
   end
 end

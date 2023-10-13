@@ -1,0 +1,22 @@
+<div class="block">
+  <.simple_form :let={f} for={@changeset} hx-put={~p"/anime/#{@anime}/shelf"} class="block">
+    <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+
+    <div class="field has-addons">
+      <div class="control">
+        <.input
+          field={f[:shelf_id]}
+          type="select"
+          options={Enum.map(@shelves, fn shelf -> {shelf.title, shelf.id} end)}>
+          value={if item = Enum.find(shelf.items, fn item -> item.anime.id == @anime.id end), do: item.id, else: ""}
+        </.input>
+      </div>
+      <div class="control">
+        <.button type="submit">Move</.button>
+      </div>
+    </div>
+  </.simple_form>
+  <div :if={@error_message} class="notification is-danger">
+     <%= @error_message %>
+  </div>
+</div>

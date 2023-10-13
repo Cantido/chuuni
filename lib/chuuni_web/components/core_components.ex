@@ -305,18 +305,20 @@ defmodule ChuuniWeb.CoreComponents do
   def input(%{type: "select"} = assigns) do
     ~H"""
     <div phx-feedback-for={@name} class="field">
-      <.label for={@id}><%= @label %></.label>
+      <.label :if={@label} for={@id}><%= @label %></.label>
 
-      <div class="control select">
-        <select
-          id={@id}
-          name={@name}
-          multiple={@multiple}
-          {@rest}
-        >
-          <option :if={@prompt} value=""><%= @prompt %></option>
-          <%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
-        </select>
+      <div class="control">
+        <div class="select">
+          <select
+            id={@id}
+            name={@name}
+            multiple={@multiple}
+            {@rest}
+          >
+            <option :if={@prompt} value=""><%= @prompt %></option>
+            <%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
+          </select>
+        </div>
       </div>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
