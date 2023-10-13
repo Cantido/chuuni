@@ -13,6 +13,6 @@ defmodule Chuuni.Media.AnimeTitles do
   def changeset(%AnimeTitles{} = anime_titles, attrs) do
     anime_titles
     |> cast(attrs, [:english, :romaji, :native])
-    |> validate_required([:english])
+    |> validate_required([:native])
   end
 end
