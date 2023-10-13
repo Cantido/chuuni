@@ -1,9 +1,14 @@
 <nav id="main-nav" class="navbar block" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a href="/" hx-boost="true" class="navbar-item"><strong>Chuuni</strong></a>
+    <a role="button" class="navbar-burger" data-target="main-nav-menu" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
   </div>
 
-  <div class="navbar-menu" boost="true" hx-push-url="true">
+  <div id="main-nav-menu" class="navbar-menu" boost="true" hx-push-url="true">
     <a href="/search"  class="navbar-item">Search</a>
     <a href="/top" class="navbar-item">Top Anime</a>
   </div>
