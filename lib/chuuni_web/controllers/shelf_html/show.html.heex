@@ -1,24 +1,29 @@
-<.header>
-  <%= @shelf.title %>
-  <:actions>
-    <.link href={~p"/shelves/#{@shelf}/edit"}>
-      <.button>Edit shelf</.button>
-    </.link>
-  </:actions>
-</.header>
+<div id="shelf-display">
+  <.header>
+    <%= @shelf.title %>
+    <:actions>
+      <.link href={~p"/shelves/#{@shelf}/edit"}>
+        <.button>Edit shelf</.button>
+      </.link>
+    </:actions>
+  </.header>
 
+  <div class="tabs" hx-target="#shelf-display" hx-push-url="true">
+    <ul>
+      <li><a hx-get={~p"/shelves"}>All Anime</a></li>
+      <li :for={shelf <- @shelves} class={if shelf.id == @shelf.id, do: "is-active", else: ""}><a hx-get={~p"/shelves/#{shelf}"}><%= shelf.title %></a></li>
+    </ul>
+  </div>
 
-<div :for={item <- @shelf.items}>
-      <ChuuniWeb.AnimeHTML.search_result
-        class="box"
-        image={~p"/artwork/anime/#{item.anime}/cover.png"}
-        href={~p"/anime/#{item.anime}"}
-        title={item.anime.title.romaji}
-        subtitle={item.anime.title.english}
-        start_date="unknown"
-        stop_date="unknown"
-        studios="unknown" />
+  <div :for={item <- @shelf.items}>
+        <ChuuniWeb.AnimeHTML.search_result
+          class="box"
+          image={~p"/artwork/anime/#{item.anime}/cover.png"}
+          href={~p"/anime/#{item.anime}"}
+          title={item.anime.title.romaji}
+          subtitle={item.anime.title.english}
+          start_date="unknown"
+          stop_date="unknown"
+          studios="unknown" />
+  </div>
 </div>
-
-<.back navigate={~p"/shelves"}>Back to shelves</.back>
-

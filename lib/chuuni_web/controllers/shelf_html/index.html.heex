@@ -1,19 +1,21 @@
-<.header>
-  Your Anime
-  <:actions>
-    <.link href={~p"/shelves/new"}>
-      <.button>New Shelf</.button>
-    </.link>
-  </:actions>
-</.header>
+<div id="shelf-display">
+  <.header>
+    Your Anime
+    <:actions>
+      <.link href={~p"/shelves/new"}>
+        <.button>New Shelf</.button>
+      </.link>
+    </:actions>
+  </.header>
 
-<div class="tabs">
-  <ul>
-    <li class="is-active"><a href={~p"/shelves"}>All Anime</a></li>
-    <li :for={shelf <- @shelves}><a href={~p"/shelves/#{shelf}"}><%= shelf.title %></a></li>
-  </ul>
-</div>
+  <div class="tabs" hx-push-url="true">
+    <ul hx-target="#shelf-display">
+      <li class="is-active"><a hx-get={~p"/shelves"}>All Anime</a></li>
+      <li :for={shelf <- @shelves}><a hx-get={~p"/shelves/#{shelf}"}><%= shelf.title %></a></li>
+    </ul>
+  </div>
 
-<div id="shelf-items">
+  <div id="shelf-items">
 
+  </div>
 </div>

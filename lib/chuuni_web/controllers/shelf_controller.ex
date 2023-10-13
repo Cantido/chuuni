@@ -31,8 +31,9 @@ defmodule ChuuniWeb.ShelfController do
   end
 
   def show(conn, %{"id" => id}) do
+    shelves = Shelves.list_shelves_for_user(conn.assigns.current_user)
     shelf = Shelves.get_shelf!(id)
-    render(conn, :show, shelf: shelf)
+    render(conn, :show, shelf: shelf, shelves: shelves)
   end
 
   def edit(conn, %{"id" => id}) do
