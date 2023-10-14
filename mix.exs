@@ -32,12 +32,13 @@ defmodule Chuuni.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:oban, "~> 2.16"},
+      {:activity_pub, git: "https://github.com/bonfire-networks/activity_pub.git", branch: "develop"},
+      {:oban, "~> 2.16", override: true},
       {:httpoison, "~> 2.1"},
       {:neuron, "~> 5.1.0"},
       {:earmark, "~> 1.4"},
       {:argon2_elixir, "~> 4.0"},
-      {:phoenix, "~> 1.7.7"},
+      {:phoenix, "~> 1.7.7", override: true},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
@@ -50,7 +51,7 @@ defmodule Chuuni.MixProject do
       {:swoosh, "~> 1.3"},
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 0.6"},
-      {:telemetry_poller, "~> 1.0"},
+      {:telemetry_poller, "~> 1.0", override: true},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"}

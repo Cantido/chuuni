@@ -30,7 +30,12 @@ config :chuuni, ChuuniWeb.Endpoint,
 config :chuuni, Oban,
   repo: Chuuni.Repo,
   plugins: [Oban.Plugins.Pruner],
-  queues: [default: 10]
+  queues: [
+    default: 10,
+    federator_incoming: 50,
+    federator_outgoing: 50,
+    remote_fetcher: 20
+  ]
 
 # Configures the mailer
 #
@@ -40,6 +45,38 @@ config :chuuni, Oban,
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
 config :chuuni, Chuuni.Mailer, adapter: Swoosh.Adapters.Local
+
+config :activity_pub,
+  adapter: Chuuni.ActivityPub.Adapter,
+  repo: Chuuni.Repo,
+  mrf_simple: [
+    media_removal: [],
+    media_nsfw: [],
+    report_removal: [],
+    accept: [],
+    avatar_removal: [],
+    banner_removal: []
+  ],
+  instance: [
+    hostname: "localhost:4000",
+    federation_publisher_modules: [ActivityPub.Federator.APPublisher],
+    federation_reachability_timeout_days: 7,
+    federating: true,
+    rewrite_policy: []
+  ],
+  http: [
+    proxy_url: nil,
+    user_agent: "chuuni",
+    send_user_agent: true,
+    adapter: [
+      ssl_options: [
+        # Workaround for remote server certificate chain issues
+        partial_chain: &:hackney_connect.partial_chain/1,
+        # We don't support TLS v1.3 yet
+        versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2"]
+      ]
+    ]
+  ]
 
 # Configure esbuild (the version is required)
 config :esbuild,

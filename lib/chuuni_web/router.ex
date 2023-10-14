@@ -1,5 +1,6 @@
 defmodule ChuuniWeb.Router do
   use ChuuniWeb, :router
+  use ActivityPub.Web.Router
 
   import ChuuniWeb.UserAuth
 
