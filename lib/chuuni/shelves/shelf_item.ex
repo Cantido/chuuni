@@ -1,13 +1,11 @@
 defmodule Chuuni.Shelves.ShelfItem do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Chuuni.Schema
   alias Chuuni.Shelves.Shelf
   alias Chuuni.Media.Anime
   alias Chuuni.Accounts.User
   alias Chuuni.Reviews.Review
 
   @primary_key false
-  @foreign_key_type :binary_id
   schema "shelf_items" do
     belongs_to :shelf, Shelf
     belongs_to :author, User

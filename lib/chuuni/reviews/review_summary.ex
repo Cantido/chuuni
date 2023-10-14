@@ -1,5 +1,5 @@
 defmodule Chuuni.Reviews.ReviewSummary do
-  use Ecto.Schema
+  use Chuuni.Schema
 
   alias Chuuni.Media.Anime
 

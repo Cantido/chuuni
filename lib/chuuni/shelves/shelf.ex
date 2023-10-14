@@ -1,12 +1,10 @@
 defmodule Chuuni.Shelves.Shelf do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Chuuni.Schema
+
   alias Chuuni.Accounts.User
   alias Chuuni.Shelves.ShelfItem
   alias Chuuni.Media.Anime
 
-  @primary_key {:id, :binary_id, autogenerate: true}
-  @foreign_key_type :binary_id
   schema "shelves" do
     field :title, :string
     belongs_to :author, User

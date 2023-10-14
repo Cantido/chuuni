@@ -1,13 +1,9 @@
 defmodule Chuuni.Reviews.Review do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Chuuni.Schema
 
   alias Chuuni.Accounts.User
   alias Chuuni.Media.Anime
 
-  @primary_key {:id, :binary_id, autogenerate: true}
-  @foreign_key_type :binary_id
-  @timestamps_opts type: :utc_datetime
   schema "reviews" do
     field :rating, :integer
     field :body, :string

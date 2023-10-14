@@ -16,7 +16,6 @@
           field={f[:shelf_id]}
           type="select"
           options={Enum.map(@shelves, fn shelf -> {shelf.title, shelf.id} end)}
-          prompt="Select a shelf"
           value={if @current_shelf, do: @current_shelf.id, else: ""}>
         </.input>
       </div>

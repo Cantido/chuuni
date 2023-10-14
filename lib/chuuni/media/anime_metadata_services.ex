@@ -1,6 +1,5 @@
 defmodule Chuuni.Media.AnimeMetadataServices do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Chuuni.Schema
   alias Chuuni.Media.AnimeMetadataServices
 
   embedded_schema do

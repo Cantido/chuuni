@@ -1,5 +1,5 @@
 defmodule Chuuni.Media.Anime do
-  use Ecto.Schema
+  use Chuuni.Schema
 
   alias Chuuni.Media.AnimeTitles
   alias Chuuni.Media.AnimeMetadataServices
@@ -7,10 +7,6 @@ defmodule Chuuni.Media.Anime do
   alias Chuuni.Shelves.ShelfItem
   alias Chuuni.Shelves.Shelf
 
-  import Ecto.Changeset
-
-  @primary_key {:id, :binary_id, autogenerate: true}
-  @foreign_key_type :binary_id
   schema "anime" do
     field :cover, :binary, virtual: true
     embeds_one :title, AnimeTitles, on_replace: :update

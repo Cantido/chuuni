@@ -1,6 +1,5 @@
 defmodule Chuuni.Media.AnimeTitles do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Chuuni.Schema
   alias Chuuni.Media.AnimeTitles
 
   embedded_schema do
