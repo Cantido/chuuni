@@ -55,6 +55,7 @@ defmodule ChuuniWeb.AnimeHTML do
 
   attr :shelves, :list, required: true
   attr :anime, Anime, required: true
+  attr :current_shelf, :string, default: nil
   attr :success_message, :string, default: nil
   attr :error_message, :string, default: nil
 

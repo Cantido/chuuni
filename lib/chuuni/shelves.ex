@@ -78,6 +78,17 @@ defmodule Chuuni.Shelves do
     |> Repo.insert()
   end
 
+  def move_shelf_item(%Anime{} = anime, %User{} = user, attrs) do
+    Ecto.Multi.new()
+    |> Ecto.Multi.delete_all(:delete_previous_shelf, ShelfQueries.shelf_for_user_and_anime(anime, user))
+    |> Ecto.Multi.insert(:insert_new_shelf,
+      %ShelfItem{}
+      |> ShelfItem.changeset(attrs)
+      |> Ecto.Changeset.put_assoc(:author, user)
+    )
+    |> Repo.transaction()
+  end
+
   @doc """
   Updates a shelf.
 

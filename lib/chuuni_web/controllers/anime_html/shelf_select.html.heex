@@ -1,5 +1,13 @@
 <div class="block">
-  <.simple_form :let={f} for={@changeset} hx-put={~p"/anime/#{@anime}/shelf"} class="block">
+  <.simple_form
+    id={"shelf-select-#{@anime.id}"}
+    :let={f}
+    for={@changeset}
+    hx-put={~p"/anime/#{@anime}/shelf"}
+    class="block"
+    _="on htmx:xhr:loadstart add .is-loading to .shelf-select-submit
+       on htmx:xhr:loadend remove .is-loading from .shelf-select-submit"
+    >
     <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
 
     <div class="field has-addons">
@@ -7,12 +15,13 @@
         <.input
           field={f[:shelf_id]}
           type="select"
-          options={Enum.map(@shelves, fn shelf -> {shelf.title, shelf.id} end)}>
-          value={if item = Enum.find(shelf.items, fn item -> item.anime.id == @anime.id end), do: item.id, else: ""}
+          options={Enum.map(@shelves, fn shelf -> {shelf.title, shelf.id} end)}
+          prompt="Select a shelf"
+          value={if @current_shelf, do: @current_shelf.id, else: ""}>
         </.input>
       </div>
-      <div class="control">
-        <.button type="submit">Move</.button>
+      <div class="control shelf-select-submit">
+        <.button type="submit" >Move</.button>
       </div>
     </div>
   </.simple_form>

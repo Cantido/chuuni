@@ -103,8 +103,11 @@ defmodule ChuuniWeb.AnimeController do
 
       changeset = Shelves.change_shelf_item(%ShelfItem{})
 
+      current_shelf =
+        Enum.find(user_shelves, fn shelf -> Enum.any?(shelf.items, &(&1.anime_id == anime.id)) end)
+
       conn
-      |> render(:shelf_select, shelves: user_shelves, anime: anime, changeset: changeset)
+      |> render(:shelf_select, shelves: user_shelves, anime: anime, current_shelf: current_shelf, changeset: changeset)
     else
       conn
       |> resp(:no_content, "")
@@ -118,22 +121,28 @@ defmodule ChuuniWeb.AnimeController do
         shelf_item_params
         |> Map.put("anime_id", id)
         |> Map.put("author_id", user.id)
-      case Shelves.create_shelf_item(shelf_item_params, user) do
-        {:ok, shelf_item} ->
+      case Shelves.move_shelf_item(anime, user, shelf_item_params) do
+        {:ok, _shelf_item} ->
           user_shelves =
             Shelves.list_shelves_for_user(user)
+
+          current_shelf =
+            Enum.find(user_shelves, fn shelf -> Enum.any?(shelf.items, &(&1.anime_id == anime.id)) end)
 
           changeset = Shelves.change_shelf_item(%ShelfItem{}, %{anime_id: id, author_id: user.id})
 
           conn
-          |> render(:shelf_select, shelves: user_shelves, anime: anime, success_message: "Moved!", changeset: changeset)
+          |> render(:shelf_select, shelves: user_shelves, anime: anime, current_shelf: current_shelf, success_message: "Moved!", changeset: changeset)
         {:error, changeset} ->
           Logger.error("error adding shelf item: #{inspect changeset}")
           user_shelves =
             Shelves.list_shelves_for_user(user)
 
+          current_shelf =
+            Enum.find(user_shelves, fn shelf -> Enum.any?(shelf.items, &(&1.anime_id == anime.id)) end)
+
           conn
-          |> render(:shelf_select, shelves: user_shelves, anime: anime, changeset: changeset)
+          |> render(:shelf_select, shelves: user_shelves, anime: anime, current_shelf: current_shelf, changeset: changeset)
       end
     else
       conn
