@@ -27,6 +27,11 @@ config :chuuni, ChuuniWeb.Endpoint,
   pubsub_server: Chuuni.PubSub,
   live_view: [signing_salt: "g4+x6aQz"]
 
+config :chuuni, Oban,
+  repo: Chuuni.Repo,
+  plugins: [Oban.Plugins.Pruner],
+  queues: [default: 10]
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails

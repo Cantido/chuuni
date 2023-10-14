@@ -32,6 +32,7 @@ defmodule Chuuni.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:oban, "~> 2.16"},
       {:httpoison, "~> 2.1"},
       {:neuron, "~> 5.1.0"},
       {:earmark, "~> 1.4"},

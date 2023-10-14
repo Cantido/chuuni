@@ -14,6 +14,8 @@ defmodule Chuuni.Application do
       ChuuniWeb.Telemetry,
       # Start the Ecto repository
       Chuuni.Repo,
+      # Start the Oban job runner
+      {Oban, Application.fetch_env!(:chuuni, Oban)},
       # Start the PubSub system
       {Phoenix.PubSub, name: Chuuni.PubSub},
       # Start Finch
