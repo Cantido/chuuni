@@ -5,6 +5,15 @@ meta {
 }
 
 get {
-  url: localhost:4000/anime/search?query=uzaki
+  url: {{BASE_URL}}/anime/search?query=uzaki
   body: none
+  auth: none
+}
+
+query {
+  query: uzaki
+}
+
+assert {
+  res.body: contains Uzaki-chan wa Asobitai!
 }
