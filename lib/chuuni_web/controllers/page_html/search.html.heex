@@ -12,8 +12,8 @@
       hx-trigger="keyup changed delay:500ms"
       hx-target="#search-results"
       hx-swap="outerHTML"
-      _="on htmx:xhr:loadstart toggle .is-loading on closest .control
-         on htmx:xhr:loadend toggle .is-loading on closest .control"
+      data-script="on htmx:xhr:loadstart toggle .is-loading on closest .control
+                   on htmx:xhr:loadend toggle .is-loading on closest .control"
     />
     <span class="icon is-left">
       <.icon name="hero-magnifying-glass" />

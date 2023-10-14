@@ -5,8 +5,8 @@
     for={@changeset}
     hx-put={~p"/anime/#{@anime}/shelf"}
     class="block"
-    _="on htmx:xhr:loadstart add .is-loading to .shelf-select-submit
-       on htmx:xhr:loadend remove .is-loading from .shelf-select-submit"
+    data-script="on htmx:xhr:loadstart add .is-loading to .shelf-select-submit
+                 on htmx:xhr:loadend remove .is-loading from .shelf-select-submit"
     >
     <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
 
@@ -19,11 +19,14 @@
           value={if @current_shelf, do: @current_shelf.id, else: ""}>
         </.input>
       </div>
-      <div class="control shelf-select-submit">
-        <.button type="submit" >Move</.button>
+      <div class="control">
+        <.button type="submit" class="shelf-select-submit">Move</.button>
       </div>
     </div>
   </.simple_form>
+  <div :if={@success_message} class="notification is-success">
+     <%= @success_message %>
+  </div>
   <div :if={@error_message} class="notification is-danger">
      <%= @error_message %>
   </div>
