@@ -5,7 +5,7 @@
     </div>
 
     <%= if(@current_user) do %>
-      <div id="shelf-select" hx-get={~p"/anime/#{@anime}/shelf"} hx-trigger="load" />
+      <div id="shelf-select" hx-get={~p"/anime/#{@anime}/shelf"} hx-trigger="load" class="block"/>
     <% end %>
 
     <div class="panel">
