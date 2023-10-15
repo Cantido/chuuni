@@ -2,6 +2,8 @@ defmodule Chuuni.Accounts.User do
   use Chuuni.Schema
   alias Chuuni.Reviews.Review
   alias Chuuni.Shelves.Shelf
+  alias Chuuni.Accounts.User
+  alias Chuuni.Accounts.Follow
 
   schema "users" do
     field :name, :string
@@ -12,6 +14,9 @@ defmodule Chuuni.Accounts.User do
 
     has_many :reviews, Review, foreign_key: :author_id
     has_many :shelves, Shelf, foreign_key: :author_id
+
+    many_to_many :followers, User, join_through: Follow, join_keys: [following_id: :id, follower_id: :id]
+    many_to_many :following, User, join_through: Follow, join_keys: [follower_id: :id, following_id: :id]
 
     field :keys, Chuuni.Accounts.Key
 

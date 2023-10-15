@@ -16,8 +16,10 @@ defmodule ChuuniWeb.UserProfileController do
       top_ten = Reviews.top_for_user(user)
       recent_reviews = Reviews.recent_for_user(user)
 
+      %{follower_count: follower_count, following_count: following_count} = Accounts.get_follow_counts(user)
+
       conn
-      |> render(:profile, page_title: user.name, user: user, top_ten: top_ten, recent: recent_reviews)
+      |> render(:profile, page_title: user.name, user: user, top_ten: top_ten, recent: recent_reviews, follower_count: follower_count, following_count: following_count)
     end
   end
 end

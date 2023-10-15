@@ -1,0 +1,5 @@
+<%= if @following == [] do %>
+  <p>This user is not following anyone.</p>
+<% else %>
+  <p>This user is following <%= Enum.count(@following) %> other users.</p>
+<% end %>

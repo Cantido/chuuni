@@ -8,7 +8,33 @@ defmodule Chuuni.Accounts do
 
   alias Chuuni.Accounts.{User, UserToken, UserNotifier}
 
-  ## Database getters
+  def get_followers(%User{} = user) do
+    Repo.all(
+      from u in User,
+        where: [id: ^user.id],
+        join: follower in assoc(u, :followers),
+        select: follower
+    )
+  end
+
+  def get_follow_counts(%User{} = user) do
+    query = from u in User, where: [id: ^user.id]
+
+    followers_query =
+      from u in query,
+        join: f in assoc(u, :followers),
+        select: count(f)
+
+    following_query =
+      from u in query,
+        join: f in assoc(u, :following),
+        select: count(f)
+
+    followers = Repo.one(followers_query)
+    following = Repo.one(following_query)
+
+    %{follower_count: followers, following_count: following}
+  end
 
   @doc """
   Gets a user by email.

@@ -72,7 +72,12 @@ defmodule ChuuniWeb.Router do
       end
     end
 
-    get "/@:username", UserProfileController, :profile
+    scope "/@:username" do
+      get "/", UserProfileController, :profile
+      post "/follow", UserFollowController, :follow
+      get "/followers", UserFollowController, :list_followers
+      get "/following", UserFollowController, :list_following
+    end
 
     scope "/settings" do
       get "/", UserSettingsController, :edit

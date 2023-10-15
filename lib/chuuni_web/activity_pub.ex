@@ -3,7 +3,10 @@ defmodule ChuuniWeb.ActivityPub.Adapter do
 
   alias ActivityPub.Actor
   alias Chuuni.Accounts
+  alias Chuuni.Accounts.User
   alias Chuuni.Repo
+
+  import Ecto.Query
 
   require Logger
 
@@ -47,12 +50,22 @@ defmodule ChuuniWeb.ActivityPub.Adapter do
     end
   end
 
-  def get_follower_local_ids(%Actor{}) do
-    []
+  def get_follower_local_ids(%Actor{} = actor) do
+    Repo.all(
+      from u in User,
+        where: [id: ^actor.id],
+        join: follower in assoc(u, :followers),
+        select: follower.id
+    )
   end
 
-  def get_following_local_ids(%Actor{}) do
-    []
+  def get_following_local_ids(%Actor{} = actor) do
+    Repo.all(
+      from u in User,
+        where: [id: ^actor.id],
+        join: following in assoc(u, :following),
+        select: following.id
+    )
   end
 
   def get_locale, do: "en"
