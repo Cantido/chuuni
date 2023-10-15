@@ -1,0 +1,19 @@
+meta {
+  name: Get Actor's outbox
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{BASE_URL}}/pub/actors/{{USERNAME}}/outbox
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+assert {
+  res.status: eq 200
+}
