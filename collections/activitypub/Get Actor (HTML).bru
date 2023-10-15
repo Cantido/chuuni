@@ -1,0 +1,16 @@
+meta {
+  name: Get Actor (HTML)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{BASE_URL}}/pub/actors/rosa
+  body: none
+  auth: none
+}
+
+assert {
+  res.body: contains User Profile
+  res.status: eq 200
+}

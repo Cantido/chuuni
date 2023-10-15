@@ -97,6 +97,16 @@ defmodule Chuuni.Accounts do
     User.registration_changeset(user, attrs, hash_password: false, validate_email: false)
   end
 
+  def change_user_keys(%User{} = user, attrs \\ %{}) do
+    User.key_changeset(user, attrs)
+  end
+
+  def update_user_keys(%User{} = user, attrs) do
+    user
+    |> change_user_keys(attrs)
+    |> Repo.update()
+  end
+
   ## Settings
 
   @doc """

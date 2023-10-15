@@ -14,6 +14,20 @@ config :chuuni,
     For example: /path/to/directory
     """
 
+
+vault_key =
+  System.get_env("CHUUNI_VAULT_KEY") ||
+    raise """
+    environment variable CHUUNI_VAULT_KEY is missing.
+    For example: aJ7HcM24BcyiwsAvRsa3EG3jcvaFWooyQJ+91OO7bRU=
+    Generate with iex> :crypto.strong_rand_bytes(32) |> Base.encode64()
+    """
+
+config :chuuni, Chuuni.Vault,
+  ciphers: [
+    default: {Cloak.Ciphers.AES.GCM, tag: "AES.GCM.V1", key: Base.decode64!(vault_key)}
+  ]
+
 # ## Using releases
 #
 # If you use `mix release`, you need to explicitly enable the server

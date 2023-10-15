@@ -10,6 +10,7 @@ defmodule Chuuni.Application do
     test_artwork_path()
 
     children = [
+      Chuuni.Vault,
       # Start the Telemetry supervisor
       ChuuniWeb.Telemetry,
       # Start the Ecto repository

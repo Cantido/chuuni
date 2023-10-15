@@ -47,7 +47,7 @@ config :chuuni, Oban,
 config :chuuni, Chuuni.Mailer, adapter: Swoosh.Adapters.Local
 
 config :activity_pub,
-  adapter: Chuuni.ActivityPub.Adapter,
+  adapter: ChuuniWeb.ActivityPub.Adapter,
   repo: Chuuni.Repo,
   mrf_simple: [
     media_removal: [],

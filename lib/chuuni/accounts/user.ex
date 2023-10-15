@@ -8,10 +8,12 @@ defmodule Chuuni.Accounts.User do
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
-    field :confirmed_at, :naive_datetime
+    field :confirmed_at, :utc_datetime
 
     has_many :reviews, Review, foreign_key: :author_id
     has_many :shelves, Shelf, foreign_key: :author_id
+
+    field :keys, Chuuni.Accounts.Key
 
     timestamps()
   end
@@ -130,7 +132,7 @@ defmodule Chuuni.Accounts.User do
   Confirms the account by setting `confirmed_at`.
   """
   def confirm_changeset(user) do
-    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
     change(user, confirmed_at: now)
   end
 
@@ -159,5 +161,10 @@ defmodule Chuuni.Accounts.User do
     else
       add_error(changeset, :current_password, "is not valid")
     end
+  end
+
+  def key_changeset(user, params \\ %{}) do
+    user
+    |> cast(params, [:keys])
   end
 end
