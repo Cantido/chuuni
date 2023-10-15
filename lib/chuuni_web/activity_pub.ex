@@ -23,7 +23,7 @@ defmodule ChuuniWeb.ActivityPub.Adapter do
 
   def get_actor_by_username(username) do
     if user = Accounts.get_user_by_name(username) do
-      ap_id = ChuuniWeb.Endpoint.url() <> ~p"/@#{user.name}"
+      ap_id = ChuuniWeb.Endpoint.url() <> ~p"/pub/actors/#{user.name}"
 
       {:ok, %Actor{
         ap_id: ap_id,
