@@ -1,0 +1,22 @@
+meta {
+  name: Get Actor's Following
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{BASE_URL}}/pub/actors/{{USERNAME}}/following
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+assert {
+  res.status: eq 200
+  res.body.id: startsWith http://localhost:4000
+  res.body.type: in Collection, OrderedCollection
+  res.body.totalItems: isNumber
+}

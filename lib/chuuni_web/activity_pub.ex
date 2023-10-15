@@ -9,6 +9,10 @@ defmodule ChuuniWeb.ActivityPub.Adapter do
 
   @behaviour ActivityPub.Federator.Adapter
 
+  def base_url do
+    ChuuniWeb.Endpoint.url()
+  end
+
   def get_redirect_url(username) do
     user = Accounts.get_user_by_name(username)
 
@@ -19,18 +23,39 @@ defmodule ChuuniWeb.ActivityPub.Adapter do
 
   def get_actor_by_username(username) do
     if user = Accounts.get_user_by_name(username) do
+      ap_id = ChuuniWeb.Endpoint.url() <> ~p"/@#{user.name}"
+
       {:ok, %Actor{
+        ap_id: ap_id,
         id: user.id,
         local: true,
-        keys: user.keys,
-        ap_id: "#{ChuuniWeb.Endpoint.url()}/@#{user.name}",
         username: user.name,
-        data: %{}
+        deactivated: false,
+        keys: user.keys,
+        updated_at: user.updated_at,
+        data: %{
+          "type" => "Person",
+          "id" => ap_id,
+          "inbox" => ChuuniWeb.Endpoint.url() <> ~p"/pub/actors/#{user.name}/inbox",
+          "outbox" => ChuuniWeb.Endpoint.url() <> ~p"/pub/actors/#{user.name}/outbox",
+          "followers" => ChuuniWeb.Endpoint.url() <> ~p"/pub/actors/#{user.name}/followers",
+          "following" => ChuuniWeb.Endpoint.url() <> ~p"/pub/actors/#{user.name}/following"
+        }
       }}
     else
       {:error, :not_found}
     end
   end
+
+  def get_follower_local_ids(%Actor{}) do
+    []
+  end
+
+  def get_following_local_ids(%Actor{}) do
+    []
+  end
+
+  def get_locale, do: "en"
 
   def update_local_actor(%Actor{} = actor, %{keys: keys} = params) when is_binary(keys) do
     user = Accounts.get_user!(actor.id)
@@ -42,6 +67,4 @@ defmodule ChuuniWeb.ActivityPub.Adapter do
         {:error, error}
     end
   end
-
-  def get_locale, do: "en"
 end
