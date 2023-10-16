@@ -1,0 +1,7 @@
+<form
+  hx-post={~p"/@#{@user.name}/follow"}
+  hx-swap="outerHTML"
+>
+  <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+  <.button type="submit">Follow</.button>
+</form>

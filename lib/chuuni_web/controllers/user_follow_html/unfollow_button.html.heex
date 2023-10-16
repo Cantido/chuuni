@@ -1,0 +1,8 @@
+<form
+  hx-post={~p"/@#{@user.name}/unfollow"}
+  hx-confirm={"Are you sure you want to unfollow #{@user.name}?"}
+  hx-swap="outerHTML"
+>
+  <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+  <.button type="submit" class="is-danger">Unfollow</.button>
+</form>

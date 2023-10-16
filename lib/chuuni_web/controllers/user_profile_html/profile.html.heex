@@ -10,7 +10,17 @@
     <p class="title is-4">Display Name</p>
     <p class="subtitle is-6"><%= @user.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></p>
     <p>User since <time datetime={@user.inserted_at}><%= @user.inserted_at %></time></p>
-    <p><%= @follower_count %> followers, <%= @following_count %> following</p>
+    <p><ChuuniWeb.UserFollowHTML.follower_count user={@user} follower_count={@follower_count} /> followers, <%= (@following_count) %> following</p>
+  </div>
+</div>
+
+<div>
+  <div :if={(@current_user) && (@current_user.id != @user.id)}>
+    <%= if @is_following? do %>
+      <ChuuniWeb.UserFollowHTML.unfollow_button user={@user} />
+    <% else %>
+      <ChuuniWeb.UserFollowHTML.follow_button user={@user} />
+    <% end %>
   </div>
 </div>
 <hr />

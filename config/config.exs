@@ -55,7 +55,8 @@ config :activity_pub,
     report_removal: [],
     accept: [],
     avatar_removal: [],
-    banner_removal: []
+    banner_removal: [],
+    reject: []
   ],
   instance: [
     hostname: "localhost:4000",

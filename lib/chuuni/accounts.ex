@@ -6,7 +6,7 @@ defmodule Chuuni.Accounts do
   import Ecto.Query, warn: false
   alias Chuuni.Repo
 
-  alias Chuuni.Accounts.{User, UserToken, UserNotifier}
+  alias Chuuni.Accounts.{Follow, User, UserToken, UserNotifier, UserQueries}
 
   def get_followers(%User{} = user) do
     Repo.all(
@@ -17,23 +17,51 @@ defmodule Chuuni.Accounts do
     )
   end
 
-  def get_follow_counts(%User{} = user) do
-    query = from u in User, where: [id: ^user.id]
+  def get_follower_count(%User{} = user) do
+    UserQueries.user_by_id(user.id)
+    |> UserQueries.follower_count()
+    |> Repo.one()
+  end
 
-    followers_query =
-      from u in query,
-        join: f in assoc(u, :followers),
-        select: count(f)
+  def get_following_count(%User{} = user) do
+    UserQueries.user_by_id(user.id)
+    |> UserQueries.following_count()
+    |> Repo.one()
+  end
 
-    following_query =
-      from u in query,
-        join: f in assoc(u, :following),
-        select: count(f)
+  def change_follow(%User{} = follower, %User{} = following) do
+    Follow.create_changeset(follower, following)
+  end
 
-    followers = Repo.one(followers_query)
-    following = Repo.one(following_query)
+  def follow(%User{} = follower, %User{} = following) do
+    case Repo.insert(change_follow(follower, following)) do
+      {:ok, follow} ->
+        {:ok, actor} = ChuuniWeb.ActivityPub.Adapter.user_to_actor(follower)
+        {:ok, object} = ChuuniWeb.ActivityPub.Adapter.user_to_actor(following)
 
-    %{follower_count: followers, following_count: following}
+        {:ok, follow_object} = ActivityPub.follow(%{actor: actor, object: object})
+        {:ok, accept_object} = ActivityPub.accept(follow_object)
+        {:ok, follow}
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  def unfollow(%User{} = follower, %User{} = following) do
+    case Repo.delete_all(from f in Follow, where: [follower_id: ^follower.id, following_id: ^following.id]) do
+      {count, _} when is_integer(count) ->
+        {:ok, actor} = ChuuniWeb.ActivityPub.Adapter.user_to_actor(follower)
+        {:ok, object} = ChuuniWeb.ActivityPub.Adapter.user_to_actor(following)
+
+        ActivityPub.unfollow(%{actor: actor, object: object})
+        :ok
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  def following?(%User{} = follower, %User{} = following) do
+    Repo.exists?(from f in Follow, where: [follower_id: ^follower.id, following_id: ^following.id])
   end
 
   @doc """

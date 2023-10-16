@@ -11,6 +11,11 @@ defmodule Chuuni.Accounts.Follow do
     timestamps()
   end
 
+  def create_changeset(%User{} = follower, %User{} = following) do
+    changeset(%__MODULE__{}, %{follower_id: follower.id, following_id: following.id})
+  end
+
+
   def changeset(model, params) do
     model
     |> cast(params, [:follower_id, :following_id])
