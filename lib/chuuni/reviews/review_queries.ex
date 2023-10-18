@@ -39,23 +39,23 @@ defmodule Chuuni.Reviews.ReviewQueries do
   def rating_rank do
     from r in subquery(review_summary()),
       select: %{anime_id: r.anime_id, rank: over(rank(), :anime)},
-      windows: [anime: [partition_by: r.anime_id, order_by: r.rating]]
+      windows: [anime: [order_by: [desc_nulls_last: r.rating]]]
   end
 
   def rating_rank(anime_id) do
-    rating_rank()
-    |> where([anime_id: ^anime_id])
+    from r in subquery(rating_rank()),
+      where: [anime_id: ^anime_id]
   end
 
   def popularity_rank do
     from r in subquery(review_summary()),
       select: %{anime_id: r.anime_id, rank: over(rank(), :anime)},
-      windows: [anime: [partition_by: r.anime_id, order_by: r.count]]
+      windows: [anime: [order_by: [desc_nulls_last: r.count]]]
   end
 
   def popularity_rank(anime_id) do
-    popularity_rank()
-    |> where([anime_id: ^anime_id])
+    from r in subquery(popularity_rank()),
+      where: [anime_id: ^anime_id]
   end
 
 end
