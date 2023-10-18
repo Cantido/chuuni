@@ -22,6 +22,7 @@
           <div class="column">
             <p class="title"><%= review.summary.anime.title.romaji %></p>
             <p class="subtitle"><%= review.summary.anime.title.english %></p>
+            <p><strong>Aired: </strong><ChuuniWeb.AnimeHTML.fuzzy_date_range start_date={review.summary.anime.start_date} stop_date={review.summary.anime.stop_date} /></p>
           </div>
         </div>
       </a>
