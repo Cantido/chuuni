@@ -50,7 +50,7 @@ defmodule ChuuniWeb.AnimeHTML do
   attr :rest, :global
 
   def fuzzy_date(assigns) do
-    if is_nil(assigns.date) do
+    if is_nil(assigns.date) or is_nil(assigns.date.year) do
       ~H"<span>unknown</span>"
     else
       datestr = FuzzyDate.to_iso8601(assigns.date)
