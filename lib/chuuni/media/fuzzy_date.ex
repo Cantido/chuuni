@@ -17,7 +17,7 @@ defmodule Chuuni.Media.FuzzyDate do
   def to_iso8601(date) do
     [date.year, date.month, date.day]
     |> Enum.reject(&is_nil/1)
-    |> Enum.join("-")
+    |> Enum.map_join("-", &String.pad_leading(to_string(&1), 2, "0"))
   end
 
   def changeset(model, params) do
