@@ -50,9 +50,9 @@ defmodule Chuuni.Media.FuzzyDate do
   end
 
   defp validate_date(changeset) do
-    with {yloc, year} when yloc in [:changes, :data] <- fetch_field(changeset, :year),
-         {mloc, month} when mloc in [:changes, :data] <- fetch_field(changeset, :month),
-         {dloc, day} when dloc in [:changes, :data] <- fetch_field(changeset, :day)
+    with {yloc, year} when yloc in [:changes, :data] and not is_nil(year) <- fetch_field(changeset, :year),
+         {mloc, month} when mloc in [:changes, :data] and not is_nil(month) <- fetch_field(changeset, :month),
+         {dloc, day} when dloc in [:changes, :data] and not is_nil(day) <- fetch_field(changeset, :day)
     do
       if Calendar.ISO.valid_date?(year, month, day) do
         changeset
@@ -60,7 +60,7 @@ defmodule Chuuni.Media.FuzzyDate do
         add_error(changeset, :day, "is not valid")
       end
     else
-      :error -> changeset
+      _ -> changeset
     end
   end
 end

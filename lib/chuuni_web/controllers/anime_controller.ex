@@ -177,7 +177,7 @@ defmodule ChuuniWeb.AnimeController do
     end
   end
 
-  def edit(conn, %{"anime_id" => id}) do
+  def edit(conn, %{"id" => id}) do
     if conn.assigns[:current_user] do
       anime = Media.get_anime!(id)
       changeset = Media.change_anime(anime)
@@ -189,7 +189,7 @@ defmodule ChuuniWeb.AnimeController do
     end
   end
 
-  def update(conn, %{"anime_id" => id, "anime" => anime_params}) do
+  def update(conn, %{"id" => id, "anime" => anime_params}) do
     if conn.assigns[:current_user] do
       anime = Media.get_anime!(id)
 
@@ -201,6 +201,10 @@ defmodule ChuuniWeb.AnimeController do
       else
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, :edit, anime: anime, changeset: changeset)
+        {:error, _err} ->
+          conn
+          |> put_view(ChuuniWeb.ErrorHTML)
+          |> render(:"500")
       end
     else
       conn

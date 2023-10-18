@@ -252,7 +252,7 @@ defmodule ChuuniWeb.CoreComponents do
   attr :type, :string,
     default: "text",
     values: ~w(checkbox color date datetime-local email file hidden month number password
-               range radio search select tel text textarea time url week)
+               range radio search select tel text textarea time url week fuzzy-date)
 
   attr :field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
@@ -268,7 +268,45 @@ defmodule ChuuniWeb.CoreComponents do
     include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
                 multiple pattern placeholder readonly required rows size step)
 
-  slot :inner_block
+  def input(%{type: "fuzzy-date", field: _field} = assigns) do
+    ~H"""
+    <.inputs_for :let={date} field={@field}>
+      <.label><%= @label %></.label>
+      <div class="field has-addons">
+        <div class="control">
+          <input
+            type="number"
+            name={date[:year].name}
+            id={date[:year].id}
+            value={Phoenix.HTML.Form.normalize_value("number", date[:year].value)}
+            class={"input"}
+            placeholder="YYYY"
+          />
+        </div>
+        <div class="control">
+          <input
+            type="number"
+            name={date[:month].name}
+            id={date[:month].id}
+            value={Phoenix.HTML.Form.normalize_value("number", date[:month].value)}
+            class={"input"}
+            placeholder="MM"
+          />
+        </div>
+        <div class="control">
+          <input
+            type="number"
+            name={date[:day].name}
+            id={date[:day].id}
+            value={Phoenix.HTML.Form.normalize_value("number", date[:day].value)}
+            class={"input"}
+            placeholder="DD"
+          />
+        </div>
+      </div>
+    </.inputs_for>
+    """
+  end
 
   def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
@@ -278,6 +316,7 @@ defmodule ChuuniWeb.CoreComponents do
     |> assign_new(:value, fn -> field.value end)
     |> input()
   end
+
 
   def input(%{type: "checkbox", value: value} = assigns) do
     assigns =
@@ -308,7 +347,7 @@ defmodule ChuuniWeb.CoreComponents do
       <.label :if={@label} for={@id}><%= @label %></.label>
 
       <div class="control">
-        <div class="select">
+        <div class="select is-fullwidth">
           <select
             id={@id}
             name={@name}

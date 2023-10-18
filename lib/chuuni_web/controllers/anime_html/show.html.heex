@@ -105,7 +105,7 @@
     </div>
 
     <div class="box content">
-      <%= raw @anime.description %>
+      <%= raw Earmark.as_html!(@anime.description) %>
     </div>
 
     <%= if @current_user do %>
