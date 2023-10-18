@@ -1,4 +1,5 @@
 defmodule ChuuniWeb.AnimeHTML do
+  alias Chuuni.Media.FuzzyDate
   use ChuuniWeb, :html
 
   alias Chuuni.Media.Anime
@@ -10,8 +11,8 @@ defmodule ChuuniWeb.AnimeHTML do
   attr :image, :string, required: true
   attr :title, :string, required: true
   attr :subtitle, :string, required: true
-  attr :start_date, :string
-  attr :stop_date, :string
+  attr :start_date, FuzzyDate
+  attr :stop_date, FuzzyDate
   attr :studios, :string, required: true
   attr :rest, :global
 
@@ -32,7 +33,7 @@ defmodule ChuuniWeb.AnimeHTML do
         </div>
 
         <div class="block">
-          <p><strong>Aired:</strong> <.fuzzy_date_range start_date={@start_date} stop_date={@stop_date} /></p>
+          <p :if={@start_date || @stop_date}><strong>Aired:</strong> <.fuzzy_date_range start_date={@start_date} stop_date={@stop_date} /></p>
           <p><strong>Studios:</strong> <%= (@studios) %></p>
         </div>
 
@@ -44,13 +45,36 @@ defmodule ChuuniWeb.AnimeHTML do
     """
   end
 
-  attr :start_date, :string, default: "unknown"
-  attr :stop_date, :string, default: "unknown"
+  attr :date, Chuuni.Media.FuzzyDate
+
+  attr :rest, :global
+
+  def fuzzy_date(assigns) do
+    if is_nil(assigns.date) do
+      ~H""
+    else
+      datestr = FuzzyDate.to_iso8601(assigns.date)
+
+      assigns = assign(assigns, :datestr, datestr)
+      ~H"""
+      <time {@rest}><%= @datestr %></time>
+      """
+    end
+  end
+
+  attr :start_date, Chuuni.Media.FuzzyDate
+  attr :stop_date, Chuuni.Media.FuzzyDate
+
+  attr :rest, :global
 
   def fuzzy_date_range(assigns) do
-    ~H"""
-    <%= (@start_date) %>&ndash;<%= (@stop_date) %>
-    """
+    if is_nil(assigns.start_date) && is_nil(assigns.stop_date) do
+      ~H""
+    else
+      ~H"""
+      <span {@rest}><.fuzzy_date date={@start_date} />/<.fuzzy_date date={@stop_date} /></span>
+      """
+    end
   end
 
   attr :shelves, :list, required: true

@@ -3,6 +3,7 @@ defmodule Chuuni.Media.Anime do
 
   alias Chuuni.Media.AnimeTitles
   alias Chuuni.Media.AnimeMetadataServices
+  alias Chuuni.Media.FuzzyDate
   alias Chuuni.Reviews.Review
   alias Chuuni.Shelves.ShelfItem
   alias Chuuni.Shelves.Shelf
@@ -12,6 +13,9 @@ defmodule Chuuni.Media.Anime do
     embeds_one :title, AnimeTitles, on_replace: :update
     field :description, :string
     embeds_one :external_ids, AnimeMetadataServices, on_replace: :update
+
+    embeds_one :start_date, FuzzyDate
+    embeds_one :stop_date, FuzzyDate
 
     has_many :reviews, Review
     has_many :shelf_items, ShelfItem
@@ -26,6 +30,8 @@ defmodule Chuuni.Media.Anime do
     |> cast(attrs, [:description])
     |> cast_embed(:title)
     |> cast_embed(:external_ids)
+    |> cast_embed(:start_date)
+    |> cast_embed(:stop_date)
     |> validate_required([:title])
     |> unique_constraint(:external_ids, name: "anime__external_ids____anilist_index")
   end

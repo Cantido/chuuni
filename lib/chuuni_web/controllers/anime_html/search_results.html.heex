@@ -12,8 +12,8 @@
         href={~p"/anime/#{result}"}
         title={result.title.romaji}
         subtitle={result.title.english}
-        start_date="unknown"
-        stop_date="unknown"
+        start_date={result.start_date}
+        stop_date={result.stop_date}
         studios="unknown" />
     </div>
   </div>
@@ -27,8 +27,20 @@
         target="_blank"
         title={result["title"]["romaji"]}
         subtitle={result["title"]["english"]}
-        start_date={result["startDate"]["year"]}
-        stop_date={result["endDate"]["year"]}
+        start_date={
+          %Chuuni.Media.FuzzyDate{
+            year: result["startDate"]["year"],
+            month: result["startDate"]["month"],
+            day: result["startDate"]["day"]
+          }
+        }
+        stop_date={
+          %Chuuni.Media.FuzzyDate{
+            year: result["endDate"]["year"],
+            month: result["endDate"]["month"],
+            day: result["endDate"]["day"]
+          }
+        }
         studios={result["studios"]["nodes"] |> Enum.map_join(", ", fn node -> node["name"] end)}>
         <:actions>
             <.form for={%{}} action={~p"/anime/import"} method="post">

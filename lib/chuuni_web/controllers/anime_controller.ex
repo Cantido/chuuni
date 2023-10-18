@@ -47,9 +47,13 @@ defmodule ChuuniWeb.AnimeController do
             }
             startDate {
               year
+              month
+              day
             }
             endDate {
               year
+              month
+              day
             }
           }
         }

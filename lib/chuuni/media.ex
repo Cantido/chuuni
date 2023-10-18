@@ -84,7 +84,16 @@ defmodule Chuuni.Media do
             extraLarge
           }
           description(asHtml: false)
-          episodes
+          startDate {
+            year
+            month
+            day
+          }
+          endDate {
+            year
+            month
+            day
+          }
         }
       }
       """,
@@ -100,6 +109,16 @@ defmodule Chuuni.Media do
         native: media["title"]["native"]
       },
       description: media["description"],
+      start_date: %{
+        year: media["startDate"]["year"],
+        month: media["startDate"]["month"],
+        day: media["startDate"]["day"]
+      },
+      stop_date: %{
+        year: media["endDate"]["year"],
+        month: media["endDate"]["month"],
+        day: media["endDate"]["day"]
+      },
       external_ids: %{
         anilist: anilist_id
       }
