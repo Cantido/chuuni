@@ -134,7 +134,7 @@
         <p>This anime has not been reviewed yet.</p>
       <% end %>
 
-      <div :for={review <- @reviews}>
+      <div :for={review <- @reviews} class="block">
         <ChuuniWeb.ReviewHTML.review_card review={review} />
       </div>
     </div>
