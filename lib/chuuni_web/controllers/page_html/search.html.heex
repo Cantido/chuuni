@@ -2,23 +2,37 @@
   <.header>
     Find anime to review
   </.header>
-  <div class="control has-icons-left">
-    <input
-      class="input"
-      type="text"
-      name="query"
-      placeholder="Search"
-      hx-get="/anime/search"
-      hx-trigger="keyup changed delay:500ms"
-      hx-target="#search-results"
-      hx-swap="outerHTML"
-      data-script="on htmx:xhr:loadstart toggle .is-loading on closest .control
-                   on htmx:xhr:loadend toggle .is-loading on closest .control"
-    />
-    <span class="icon is-left">
-      <.icon name="hero-magnifying-glass" />
-    </span>
-  </div>
+  <form action={~p"/search"} method="POST" hx-post={~p"/search"} hx-target="#search-controls" hx-swap="outerHTML">
+    <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+    <div class="field has-addons">
+      <div class="control is-expanded has-icons-left">
+        <input
+          class="input"
+          type="search"
+          name="query"
+          placeholder="Search"
+          hx-get={~p"/search/results"}
+          hx-trigger="keyup changed delay:500ms"
+          hx-target="#search-results"
+          hx-swap="outerHTML"
+          value={@query}
+          data-script="on htmx:xhr:loadstart toggle .is-loading on closest .control
+                       on htmx:xhr:loadend toggle .is-loading on closest .control"
+        />
+        <span class="icon is-left">
+          <.icon name="hero-magnifying-glass-mini" />
+        </span>
+      </div>
+      <div class="control">
+        <button type="submit" class="button is-primary">
+          Search
+        </button>
+      </div>
+    </div>
+  </form>
 </div>
 
-<div id="search-results" class="block"></div>
+<ChuuniWeb.AnimeHTML.search_results
+  local_results={@local_results}
+  anilist_results={@anilist_results}
+/>

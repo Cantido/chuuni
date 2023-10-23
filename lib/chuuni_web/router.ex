@@ -47,6 +47,8 @@ defmodule ChuuniWeb.Router do
 
     get "/", PageController, :home
     get "/search", PageController, :search
+    post "/search", PageController, :perform_search
+    get "/search/results", PageController, :search_results
     get "/top", PageController, :top
 
     get "/register", UserController, :new
@@ -62,7 +64,6 @@ defmodule ChuuniWeb.Router do
     resources "/reviews", ReviewController
 
     scope "/anime" do
-      get "/search", AnimeController, :search
       post "/import", AnimeController, :import
 
       resources "/", AnimeController, except: [:delete] do

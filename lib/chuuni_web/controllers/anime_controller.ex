@@ -13,59 +13,6 @@ defmodule ChuuniWeb.AnimeController do
     render(conn, :search_controls)
   end
 
-  def search(conn, %{"query" => ""}) do
-    conn
-    |> render(:search_results, local_results: [], anilist_results: [])
-  end
-
-  def search(conn, %{"query" => query}) do
-    local_results = Media.search_anime(query)
-
-    Neuron.Config.set(url: "https://graphql.anilist.co")
-
-    {:ok, resp} = Neuron.query("""
-      query ($search: String, $perPage: Int, $page: Int) {
-        Page(page: $page, perPage: $perPage) {
-          pageInfo {
-            total
-            perPage
-          }
-          media(search: $search, type: ANIME, sort: FAVOURITES_DESC) {
-            id
-            title {
-              romaji
-              english
-              native
-            }
-            coverImage {
-              large
-            }
-            studios(sort: NAME) {
-              nodes {
-                name
-              }
-            }
-            startDate {
-              year
-              month
-              day
-            }
-            endDate {
-              year
-              month
-              day
-            }
-          }
-        }
-      }
-    """,
-    %{search: query, perPage: 10, page: 1}
-    )
-
-    conn
-    |> render(:search_results, local_results: local_results, anilist_results: resp.body["data"]["Page"]["media"])
-  end
-
   def show(conn, %{"id" => id}) do
     anime = Media.get_anime!(id)
     rating_summary = Reviews.get_rating_summary(id)

@@ -30,8 +30,57 @@ defmodule Chuuni.Media do
     Repo.all(Anime)
   end
 
+  def search_anime(""), do: []
+
   def search_anime(query) do
     Repo.all(AnimeQuery.search(query))
+  end
+
+  def search_anilist(""), do: []
+
+  def search_anilist(query) do
+    Neuron.Config.set(url: "https://graphql.anilist.co")
+
+    {:ok, resp} = Neuron.query("""
+      query ($search: String, $perPage: Int, $page: Int) {
+        Page(page: $page, perPage: $perPage) {
+          pageInfo {
+            total
+            perPage
+          }
+          media(search: $search, type: ANIME, sort: FAVOURITES_DESC) {
+            id
+            title {
+              romaji
+              english
+              native
+            }
+            coverImage {
+              large
+            }
+            studios(sort: NAME) {
+              nodes {
+                name
+              }
+            }
+            startDate {
+              year
+              month
+              day
+            }
+            endDate {
+              year
+              month
+              day
+            }
+          }
+        }
+      }
+    """,
+    %{search: query, perPage: 10, page: 1}
+    )
+
+    resp.body["data"]["Page"]["media"]
   end
 
   @doc """

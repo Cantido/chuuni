@@ -18,7 +18,7 @@ defmodule Chuuni.Accounts.User do
     many_to_many :followers, User, join_through: Follow, join_keys: [following_id: :id, follower_id: :id]
     many_to_many :following, User, join_through: Follow, join_keys: [follower_id: :id, following_id: :id]
 
-    field :keys, Chuuni.Accounts.Key
+    field :keys, Chuuni.Accounts.Key, redact: true
 
     timestamps()
   end
