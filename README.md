@@ -4,8 +4,9 @@ An anime review community that will someday be compatible with ActivityPub.
 
 ## Usage
 
-To start your Phoenix server:
+To start Chuuni:
 
+  * Run `docker compose -f docker-compose.dev.yml up` to start the dev database
   * Run `mix setup` to install and setup dependencies
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
