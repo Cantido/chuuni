@@ -61,7 +61,7 @@ defmodule ChuuniWeb.Router do
     delete "/logout", UserSessionController, :delete
 
     resources "/shelves", ShelfController
-    resources "/reviews", ReviewController
+    resources "/reviews", ReviewController, except: [:index]
 
     scope "/anime" do
       post "/import", AnimeController, :import

@@ -1,1 +1,32 @@
-<div hx-get={~p"/reviews"} hx-trigger="load" />
+<.header>
+  Top Anime
+</.header>
+
+<div class="columns is-size-5">
+  <div class="column is-1">Rank</div>
+  <div class="column is-9">Title</div>
+  <div class="column is-2">Rating</div>
+</div>
+
+<div class="box" :for={review <- @reviews}>
+  <div class="columns">
+    <div class="column is-1"><p class="is-size-3"><%= review.rating_rank.rank %></p></div>
+    <div class="column is-9">
+      <a href={~p"/anime/#{review.summary.anime}"}>
+        <div class="columns">
+          <div class="column is-2">
+            <p class="image is-2by3">
+              <img src={~p"/artwork/anime/#{review.summary.anime}/cover.png"} />
+            </p>
+          </div>
+          <div class="column">
+            <p class="title"><%= review.summary.anime.title.romaji %></p>
+            <p class="subtitle"><%= review.summary.anime.title.english %></p>
+            <p><strong>Aired: </strong><ChuuniWeb.AnimeHTML.fuzzy_date_range start_date={review.summary.anime.start_date} stop_date={review.summary.anime.stop_date} /></p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="column is-2"><p class="is-size-3"><%= Decimal.round(review.summary.rating, 2) %></p></div>
+  </div>
+</div>

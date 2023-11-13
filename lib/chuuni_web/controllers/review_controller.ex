@@ -8,11 +8,6 @@ defmodule ChuuniWeb.ReviewController do
 
   plug :require_authenticated_user
 
-  def index(conn, _params) do
-    reviews = Reviews.top_rated()
-    render(conn, :index, reviews: reviews)
-  end
-
   def new(conn, params) do
     anime_id = Map.get(params, "anime_id")
 

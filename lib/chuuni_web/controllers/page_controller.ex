@@ -2,6 +2,7 @@ defmodule ChuuniWeb.PageController do
   use ChuuniWeb, :controller
 
   alias Chuuni.Media
+  alias Chuuni.Reviews
 
   plug :put_layout, html: {ChuuniWeb.Layouts, :app}
 
@@ -37,7 +38,9 @@ defmodule ChuuniWeb.PageController do
   end
 
   def top(conn, _params) do
+    reviews = Reviews.top_rated()
+
     conn
-    |> render(:top)
+    |> render(:top, reviews: reviews)
   end
 end
