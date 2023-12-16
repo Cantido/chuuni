@@ -3,6 +3,8 @@ defmodule Chuuni.Media do
   alias Chuuni.Media.Anime.Query, as: AnimeQuery
   alias Chuuni.Repo
 
+  import Ecto.Query
+
   @doc """
   Returns the filesystem path that artwork is stored in.
   """
@@ -28,6 +30,14 @@ defmodule Chuuni.Media do
   """
   def list_anime do
     Repo.all(Anime)
+  end
+
+  def new_anime(limit) do
+    Repo.all(
+      from a in Anime,
+      order_by: :inserted_at,
+      limit: ^limit
+    )
   end
 
   def search_anime(""), do: []

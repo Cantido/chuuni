@@ -7,9 +7,14 @@ defmodule ChuuniWeb.PageController do
   plug :put_layout, html: {ChuuniWeb.Layouts, :app}
 
   def home(conn, _params) do
+    new_anime = Media.new_anime(6)
+
+    top_anime = Reviews.top_rated()
+      |> Enum.map(fn review -> review.summary.anime end)
+
     conn
     |> assign(:page_title, "Welcome")
-    |> render(:home)
+    |> render(:home, new_anime: new_anime, top_anime: top_anime)
   end
 
   def search(conn, _params) do
