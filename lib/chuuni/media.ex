@@ -35,7 +35,7 @@ defmodule Chuuni.Media do
   def new_anime(limit) do
     Repo.all(
       from a in Anime,
-      order_by: :inserted_at,
+      order_by: [desc: :inserted_at],
       limit: ^limit
     )
   end
@@ -108,6 +108,13 @@ defmodule Chuuni.Media do
 
   """
   def get_anime!(id), do: Repo.get!(Anime, id)
+
+  def get_anime_by_anilist_id(anilist_id) do
+    Repo.one(
+      from a in Anime,
+      where: a.external_ids["anilist"] == ^anilist_id
+    )
+  end
 
   @doc """
   Creates a anime.
@@ -223,6 +230,8 @@ defmodule Chuuni.Media do
 
   """
   def delete_anime(%Anime{} = anime) do
+    cover_path = cover_artwork_path(anime)
+    _ = File.rm(cover_path)
     Repo.delete(anime)
   end
 

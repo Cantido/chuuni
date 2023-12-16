@@ -38,6 +38,7 @@ defmodule Chuuni.MixProject do
       {:httpoison, "~> 2.1"},
       {:neuron, "~> 5.1.0"},
       {:earmark, "~> 1.4"},
+      {:faker, "~> 0.17.0", only: :dev},
       {:argon2_elixir, "~> 4.0"},
       {:phoenix, "~> 1.7.7", override: true},
       {:phoenix_ecto, "~> 4.4"},
@@ -68,6 +69,7 @@ defmodule Chuuni.MixProject do
   defp aliases do
     [
       setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
+      "seed.dev": ["run priv/repo/seeds/dev.exs"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
