@@ -9,7 +9,7 @@ defmodule ChuuniWeb.PageController do
   def home(conn, _params) do
     new_anime = Media.new_anime(6)
 
-    top_anime = Reviews.top_rated()
+    top_anime = Reviews.top_rated(6)
       |> Enum.map(fn review -> review.summary.anime end)
 
     conn

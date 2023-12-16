@@ -2,13 +2,19 @@
   <div class="card-content">
     <article class="media">
       <figure class="media-left">
-        <p class="image is-64x64">
-          <.gravatar email={@review.author.email} size={128} />
-        </p>
+        <a href={~p"/@#{@review.author.name}"}>
+          <p class="image is-64x64">
+            <.gravatar email={@review.author.email} size={128} />
+          </p>
+        </a>
       </figure>
       <div class="media-content">
         <div class="content">
-          <p><strong>Display Name</strong> <small>@<%= @review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small> <small><%= @review.inserted_at %></small></p>
+          <p>
+            <a href={~p"/@#{@review.author.name}"}>
+            <strong>Display Name</strong> <small>@<%= @review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small> <small><%= @review.inserted_at %></small>
+            </a>
+          </p>
           <p>Rating: <span class="is-size-5"><%= @review.rating %><small>/10</small></span></p>
           <%= if @review.body do %>
             <%= raw Earmark.as_html!(@review.body) %>

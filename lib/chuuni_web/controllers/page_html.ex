@@ -22,7 +22,7 @@ defmodule ChuuniWeb.PageHTML do
           </div>
 
           <div class="card-content is-size-7">
-            <%= @anime.title.romaji %>
+            <%= @anime.title.english %>
           </div>
         </a>
       </div>

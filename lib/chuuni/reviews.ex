@@ -11,10 +11,10 @@ defmodule Chuuni.Reviews do
   alias Chuuni.Reviews.Review
   alias Chuuni.Shelves.Shelf
 
-  def top_rated do
+  def top_rated(limit \\ 10) do
     top_rated =
       ReviewQueries.review_summary()
-      |> ReviewQueries.top(10)
+      |> ReviewQueries.top(limit)
       |> join(:left, [r], rating_rank in subquery(ReviewQueries.rating_rank()), on: rating_rank.anime_id == r.anime_id)
       |> preload(:anime)
       |> order_by([r], [desc: r.rating, desc: r.count, desc: r.anime_id])
