@@ -20,8 +20,7 @@ defmodule ChuuniWeb.ReviewController do
     case Reviews.create_review(review_params) do
       {:ok, review} ->
         conn
-        |> put_flash(:info, "Review created successfully.")
-        |> redirect(to: ~p"/reviews/#{review}")
+        |> render(:create_success, review: Chuuni.Repo.preload(review, :author), message: "Review submitted!")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset, anime: Ecto.Changeset.get_field(changeset, :anime_id))

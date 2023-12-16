@@ -1,4 +1,5 @@
-<.form :let={f} for={@changeset} action={@action}>
+<.form :let={f} for={@changeset} hx-post={@action}>
+  <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
   <.input field={f[:anime_id]} type="hidden" />
 
   <div class="card">
