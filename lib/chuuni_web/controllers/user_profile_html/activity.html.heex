@@ -1,0 +1,35 @@
+<div id="profile-body">
+  <div class="tabs" hx-target="#profile-body">
+    <ul>
+      <li class="is-active"><a hx-get={~p"/@#{@user.name}/activity"}>Activity</a></li>
+      <li><a hx-get={~p"/@#{@user.name}/alltime"}>All Time</a></li>
+    </ul>
+  </div>
+
+  <div class="columns">
+    <div class="column is-4">
+      <p class="title is-size-4 has-text-centered">Recently Rated</p>
+      <table class="table is-hoverable">
+        <tbody>
+          <tr :for={review <- @recent}>
+            <td hx-get={~p"/reviews/#{review}"} hx-target="#main-container" hx-push-url="true">
+              <div class="media">
+                <div class="media-left">
+                  <div class="image is-64x64 is-2by3 block">
+                    <img src={~p"/artwork/anime/#{review.anime}/cover.png"} />
+                  </div>
+                </div>
+                <div class="media-content">
+                  <p><%= review.anime.title.english %></p>
+                </div>
+                <div class="media-right">
+                  <p><span class="is-size-3"><%= review.rating %></span></p>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

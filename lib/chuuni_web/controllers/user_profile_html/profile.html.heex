@@ -3,7 +3,7 @@
 <div class="block">
   <div class="columns">
     <div class="column">
-      <div class="media">
+      <div class="media block">
 
         <div class="media-left">
           <figure class="image">
@@ -16,6 +16,16 @@
           <p class="subtitle is-6"><%= @user.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></p>
           <p>User since <time datetime={@user.inserted_at}><%= @user.inserted_at %></time></p>
           <p><ChuuniWeb.UserFollowHTML.follower_count user={@user} follower_count={@follower_count} /> followers, <%= (@following_count) %> following</p>
+        </div>
+      </div>
+
+      <div class="block">
+        <div :if={(@current_user) && (@current_user.id != @user.id)}>
+          <%= if @is_following? do %>
+            <ChuuniWeb.UserFollowHTML.unfollow_button user={@user} />
+          <% else %>
+            <ChuuniWeb.UserFollowHTML.follow_button user={@user} />
+          <% end %>
         </div>
       </div>
     </div>
@@ -39,65 +49,4 @@
   </div>
 </div>
 
-<div>
-  <div :if={(@current_user) && (@current_user.id != @user.id)}>
-    <%= if @is_following? do %>
-      <ChuuniWeb.UserFollowHTML.unfollow_button user={@user} />
-    <% else %>
-      <ChuuniWeb.UserFollowHTML.follow_button user={@user} />
-    <% end %>
-  </div>
-</div>
-<hr />
-<div class="columns block">
-
-  <div class="column is-4">
-    <p class="title is-size-4 has-text-centered">Highest Rated</p>
-    <table class="table is-hoverable">
-      <tbody>
-        <tr :for={review <- @top_ten}>
-          <td hx-get={~p"/reviews/#{review}"} hx-target="#main-container" hx-push-url="true">
-            <div class="media">
-              <div class="media-left">
-                <div class="image is-64x64 is-2by3 block">
-                  <img src={~p"/artwork/anime/#{review.anime}/cover.png"} />
-                </div>
-              </div>
-              <div class="media-content">
-                <p><%= review.anime.title.english %></p>
-              </div>
-              <div class="media-right">
-                <p><span class="is-size-3"><%= review.rating %></span></p>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="column is-4">
-    <p class="title is-size-4 has-text-centered">Recently Rated</p>
-    <table class="table is-hoverable">
-      <tbody>
-        <tr :for={review <- @recent}>
-          <td hx-get={~p"/reviews/#{review}"} hx-target="#main-container" hx-push-url="true">
-            <div class="media">
-              <div class="media-left">
-                <div class="image is-64x64 is-2by3 block">
-                  <img src={~p"/artwork/anime/#{review.anime}/cover.png"} />
-                </div>
-              </div>
-              <div class="media-content">
-                <p><%= review.anime.title.english %></p>
-              </div>
-              <div class="media-right">
-                <p><span class="is-size-3"><%= review.rating %></span></p>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<.activity user={@user} recent={@recent} />
