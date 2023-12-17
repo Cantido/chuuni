@@ -60,7 +60,6 @@ defmodule ChuuniWeb.Router do
     get "/logout", UserSessionController, :delete
     delete "/logout", UserSessionController, :delete
 
-    resources "/shelves", ShelfController
     resources "/reviews", ReviewController, except: [:index]
 
     scope "/anime" do
@@ -81,6 +80,7 @@ defmodule ChuuniWeb.Router do
       get "/followers/count", UserFollowController, :follower_count
       get "/following", UserFollowController, :list_following
       get "/following/count", UserFollowController, :following_count
+      resources "/shelves", ShelfController
     end
 
     scope "/settings" do

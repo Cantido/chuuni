@@ -1,16 +1,41 @@
 <h1 class="title">User Profile</h1>
 
-<div class="media block">
-  <div class="media-left">
-    <figure class="image">
-      <.gravatar email={@user.email} size={120} />
-    </figure>
-  </div>
-  <div class="media-content">
-    <p class="title is-4">Display Name</p>
-    <p class="subtitle is-6"><%= @user.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></p>
-    <p>User since <time datetime={@user.inserted_at}><%= @user.inserted_at %></time></p>
-    <p><ChuuniWeb.UserFollowHTML.follower_count user={@user} follower_count={@follower_count} /> followers, <%= (@following_count) %> following</p>
+<div class="block">
+  <div class="columns">
+    <div class="column">
+      <div class="media">
+
+        <div class="media-left">
+          <figure class="image">
+            <.gravatar email={@user.email} size={120} />
+          </figure>
+        </div>
+
+        <div class="media-content">
+          <p class="title is-4">Display Name</p>
+          <p class="subtitle is-6"><%= @user.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></p>
+          <p>User since <time datetime={@user.inserted_at}><%= @user.inserted_at %></time></p>
+          <p><ChuuniWeb.UserFollowHTML.follower_count user={@user} follower_count={@follower_count} /> followers, <%= (@following_count) %> following</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="column is-4">
+      <div class="panel">
+        <div class="panel-heading">Shelves</div>
+        <a :for={shelf <- @user.shelves} class="panel-block" href={~p"/@#{@user.name}/shelves/#{shelf}"}>
+          <div class="level" style="width: 100%">
+            <div class="level-left">
+              <div class="level-item"><%= shelf.title %></div>
+            </div>
+            <div class="level-right">
+              <div class="level-item"><%= Enum.count(shelf.items) %> shows</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
   </div>
 </div>
 

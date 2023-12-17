@@ -33,6 +33,28 @@ user_params =
 
 IO.puts("Created #{user_count} user profiles.")
 
+shelves =
+  Enum.flat_map(users, fn user ->
+    [
+      "Watching",
+      "Completed",
+      "On Hold",
+      "Dropped",
+      "Plan to Watch"
+    ]
+    |> Enum.map(fn title ->
+      %{
+        title: title,
+        author_id: user.id,
+        inserted_at: DateTime.utc_now(),
+        updated_at: DateTime.utc_now()
+      }
+    end)
+  end)
+
+shelf_count = user_count * 5
+{^shelf_count, _} = Chuuni.Repo.insert_all_chunked(Chuuni.Shelves.Shelf, shelves)
+
 IO.puts("Creating user relationships...")
 
 follow_params =

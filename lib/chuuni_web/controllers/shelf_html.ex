@@ -35,7 +35,6 @@ defmodule ChuuniWeb.ShelfHTML do
     """
   end
 
-  attr :shelves, :list, default: []
   attr :items, :list, default: []
 
   attr :rest, :global

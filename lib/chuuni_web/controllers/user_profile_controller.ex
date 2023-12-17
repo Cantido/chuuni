@@ -6,6 +6,7 @@ defmodule ChuuniWeb.UserProfileController do
 
   def profile(conn, %{"username" => name}) do
     user = Accounts.get_user_by_name(name)
+      |> Chuuni.Repo.preload(shelves: :items)
 
     if is_nil(user) do
       conn

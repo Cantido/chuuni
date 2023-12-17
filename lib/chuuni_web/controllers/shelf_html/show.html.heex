@@ -1,19 +1,26 @@
 <div id="shelf-display">
-  <.header>
-    <%= @shelf.title %>
-    <:actions>
-      <.link href={~p"/shelves/#{@shelf}/edit"}>
-        <.button>Edit shelf</.button>
-      </.link>
-    </:actions>
-  </.header>
+  <div class="media">
+    <div class="media-left">
+      <.gravatar email={@user.email} size={120} />
+    </div>
+
+    <div class="media-content">
+      <p class="title"><%= @user.name %>'s shelves</p>
+    </div>
+
+    <div class="media-right">
+      <a href={~p"/@#{@user.name}/shelves/new"}>
+        <.button>New Shelf</.button>
+      </a>
+    </div>
+  </div>
 
   <div class="tabs" hx-target="#shelf-display" hx-push-url="true">
     <ul>
-      <li><a hx-get={~p"/shelves"}>All Anime</a></li>
-      <li :for={shelf <- @shelves} class={if shelf.id == @shelf.id, do: "is-active", else: ""}><a hx-get={~p"/shelves/#{shelf}"}><%= shelf.title %></a></li>
+      <li class={if @shelf.id == :all, do: "is-active", else: ""}><a hx-get={~p"/@#{@user.name}/shelves"}>All Anime</a></li>
+      <li :for={shelf <- @shelves} class={if shelf.id == @shelf.id, do: "is-active", else: ""}><a hx-get={~p"/@#{@user.name}/shelves/#{shelf}"}><%= shelf.title %></a></li>
     </ul>
   </div>
 
-  <.shelf id={"shelf-#{@shelf.id}"} items={@shelf.items} shelves={@shelves} />
+  <.shelf id={"shelf-#{@shelf.id}"} items={@shelf.items} />
 </div>

@@ -23,6 +23,18 @@ defmodule Chuuni.Accounts.User do
     timestamps()
   end
 
+  def new_changeset do
+    %__MODULE__{
+      shelves: [
+        %Shelf{title: "Watching"},
+        %Shelf{title: "Completed"},
+        %Shelf{title: "On Hold"},
+        %Shelf{title: "Dropped"},
+        %Shelf{title: "Plan to Watch"},
+      ]
+    }
+  end
+
   @doc """
   A user changeset for registration.
 

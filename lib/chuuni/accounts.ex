@@ -133,7 +133,7 @@ defmodule Chuuni.Accounts do
 
   """
   def register_user(attrs) do
-    %User{}
+    User.new_changeset()
     |> User.registration_changeset(attrs)
     |> Repo.insert()
   end
