@@ -1,0 +1,26 @@
+<div class="card">
+  <div class="card-content">
+    <article class="media">
+      <figure class="media-left">
+        <a href={~p"/#{@review.anime}"}>
+          <p class="image is-128x128 is-2by3">
+            <img src={~p"/artwork/anime/#{@review.anime}/cover.png"} />
+          </p>
+        </a>
+      </figure>
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <a href={~p"/@#{@review.author.name}"}>
+              <strong><%= @review.anime.title.english %></strong>
+            </a>
+          </p>
+          <p>Rating: <span class="is-size-5"><%= @review.rating %><small>/10</small></span></p>
+          <%= if @review.body do %>
+            <%= raw Earmark.as_html!(@review.body) %>
+          <% end %>
+        </div>
+      </div>
+    </article>
+  </div>
+</div>

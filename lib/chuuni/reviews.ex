@@ -33,7 +33,7 @@ defmodule Chuuni.Reviews do
   def recent_for_user(%User{} = user) do
     Ecto.assoc(user, :reviews)
     |> ReviewQueries.latest(10)
-    |> preload(:anime)
+    |> preload([:anime, :author])
     |> Repo.all()
   end
 

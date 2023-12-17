@@ -44,7 +44,9 @@ defmodule ChuuniWeb.UserProfileController do
       |> put_view(ChuuniWeb.ErrorHTML)
       |> render(:"404")
     else
-      recent_reviews = Reviews.recent_for_user(user)
+      recent_reviews =
+        Reviews.recent_for_user(user)
+        |> Chuuni.Repo.preload(:author)
 
       conn
       |> render(
