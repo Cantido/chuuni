@@ -9,20 +9,23 @@ defmodule ChuuniWeb.PageHTML do
 
   def search(assigns)
 
-  attr :anime, Chuuni.Media.Anime
+  attr :summary, Chuuni.Reviews.ReviewSummary
 
   def anime_card(assigns) do
     ~H"""
       <div class="card">
-        <a href={~p"/anime/#{@anime}"}>
+        <a href={~p"/anime/#{@summary.anime}"}>
           <div class="card-image">
             <div class="image is-2by3">
-              <img src={~p"/artwork/anime/#{@anime}/cover.png"} />
+              <img src={~p"/artwork/anime/#{@summary.anime}/cover.png"} />
             </div>
           </div>
 
-          <div class="card-content is-size-7">
-            <%= @anime.title.english %>
+          <div class="is-size-7 is-flex is-flex-direction-column is-justify-content-space-between" style="height: 7rem; padding: 0.75rem;">
+            <p style="overflow: hidden; max-height: 100%"><%= @summary.anime.title.english %></p>
+            <div :if={@summary.count}>
+              <p class="has-text-grey-light"><small><%= Decimal.round(@summary.rating, 2) %> &mdash; <%= @summary.count %> reviews</small></p>
+            </div>
           </div>
         </a>
       </div>

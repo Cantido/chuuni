@@ -1,8 +1,8 @@
 <div class="block">
   <div class="title">New Anime</div>
   <div class="columns">
-    <div class="column is-2" :for={anime <- @new_anime} >
-      <.anime_card anime={anime} />
+    <div class="column is-2" :for={review <- @new_anime} >
+      <.anime_card summary={review.summary} />
     </div>
   </div>
 </div>
@@ -11,8 +11,8 @@
   <div class="title">Top Anime</div>
 
   <div class="columns">
-    <div class="column is-2" :for={anime <- @top_anime}>
-      <.anime_card anime={anime} />
+    <div class="column is-2" :for={review <- @top_anime}>
+      <.anime_card summary={review.summary} />
     </div>
   </div>
 </div>

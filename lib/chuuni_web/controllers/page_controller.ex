@@ -8,9 +8,12 @@ defmodule ChuuniWeb.PageController do
 
   def home(conn, _params) do
     new_anime = Media.new_anime(6)
+      |> Enum.map(fn anime ->
+        summary = Reviews.get_rating_summary(anime.id)|> Chuuni.Repo.preload(:anime)
+        %{summary: summary}
+      end)
 
     top_anime = Reviews.top_rated(6)
-      |> Enum.map(fn review -> review.summary.anime end)
 
     conn
     |> assign(:page_title, "Welcome")
