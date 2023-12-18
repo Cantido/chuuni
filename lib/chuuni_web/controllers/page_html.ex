@@ -24,7 +24,7 @@ defmodule ChuuniWeb.PageHTML do
           <div class="is-size-7 is-flex is-flex-direction-column is-justify-content-space-between" style="height: 7rem; padding: 0.75rem;">
             <p style="overflow: hidden; max-height: 100%"><%= @summary.anime.title.english %></p>
             <div :if={@summary.count}>
-              <p class="has-text-grey-light"><small><%= Decimal.round(@summary.rating, 2) %> &mdash; <%= @summary.count %> reviews</small></p>
+              <p class="has-text-grey-light"><small><%= Decimal.round(@summary.rating, 2) %> &mdash; <%= ngettext "1 review", "%{count} reviews", @summary.count %></small></p>
             </div>
           </div>
         </a>
