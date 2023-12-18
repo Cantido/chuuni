@@ -30,6 +30,12 @@ defmodule Chuuni.Reviews do
     |> Repo.all()
   end
 
+  def trending(limit) do
+    ReviewQueries.trending(limit)
+    |> preload(:anime)
+    |> Repo.all()
+  end
+
   def recent_for_user(%User{} = user) do
     Ecto.assoc(user, :reviews)
     |> ReviewQueries.latest(10)

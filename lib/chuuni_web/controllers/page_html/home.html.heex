@@ -8,11 +8,11 @@
 </div>
 
 <div class="block">
-  <div class="title">Top Anime</div>
+  <div class="title">Recently Popular</div>
 
   <div class="columns">
-    <div class="column is-2" :for={review <- @top_anime}>
-      <.anime_card summary={review.summary} />
+    <div class="column is-2" :for={review <- @trending}>
+      <.anime_card summary={review} />
     </div>
   </div>
 </div>

@@ -24,6 +24,16 @@ defmodule Chuuni.Reviews.ReviewQueries do
       limit: ^count
   end
 
+  def trending(count) do
+    recent =
+      from r in Review,
+        where: r.inserted_at >= ago(1, "week")
+
+    from rs in subquery(review_summary(recent)),
+      order_by: [desc: rs.rating, desc: rs.count],
+      limit: ^count
+  end
+
   def latest(count) do
     from r in Review,
       order_by: [desc: :inserted_at],

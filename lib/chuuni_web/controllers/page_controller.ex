@@ -13,11 +13,11 @@ defmodule ChuuniWeb.PageController do
         %{summary: summary}
       end)
 
-    top_anime = Reviews.top_rated(6)
+    trending = Reviews.trending(6)
 
     conn
     |> assign(:page_title, "Welcome")
-    |> render(:home, new_anime: new_anime, top_anime: top_anime)
+    |> render(:home, new_anime: new_anime, trending: trending)
   end
 
   def search(conn, _params) do
