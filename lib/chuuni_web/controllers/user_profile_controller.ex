@@ -24,7 +24,7 @@ defmodule ChuuniWeb.UserProfileController do
       conn
       |> render(
         :profile,
-        page_title: user.name,
+        page_title: user.display_name,
         user: user,
         recent: recent_reviews,
         follower_count: follower_count,

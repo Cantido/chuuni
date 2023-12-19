@@ -12,7 +12,7 @@
         </div>
 
         <div class="media-content">
-          <p class="title is-4">Display Name</p>
+          <p class="title is-4" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis"><%= @user.display_name %></p>
           <p class="subtitle is-6"><%= @user.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></p>
           <p>User since <time datetime={@user.inserted_at}><%= @user.inserted_at %></time></p>
           <p><ChuuniWeb.UserFollowHTML.follower_count user={@user} follower_count={@follower_count} /> followers, <%= (@following_count) %> following</p>

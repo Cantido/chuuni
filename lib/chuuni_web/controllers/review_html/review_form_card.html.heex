@@ -13,7 +13,7 @@
         <div class="media-content">
           <div class="content">
             <p>
-              <strong>Display Name</strong> <small>@<%= @author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small>
+              <strong><%= @author.display_name %></strong> <small>@<%= @author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small>
               <br>
               <.input field={f[:rating]} type="select" prompt="Select your rating" options={10..1} required="true" />
               <.input field={f[:body]} type="textarea" placeholder="I thought it was..." />

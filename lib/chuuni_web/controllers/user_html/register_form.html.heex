@@ -6,6 +6,7 @@
 >
   <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
 
+  <.input field={f[:display_name]} type="text" label="Display name" required />
   <.input field={f[:name]} type="text" label="Username" required />
   <.input field={f[:email]} type="email" label="Email" required />
   <.input field={f[:password]} type="password" label="Password" required />

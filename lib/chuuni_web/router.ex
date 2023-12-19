@@ -89,6 +89,9 @@ defmodule ChuuniWeb.Router do
     scope "/settings" do
       get "/", UserSettingsController, :edit
 
+      post "/display-name", UserSettingsController, :update_display_name
+      get "/display-name", UserSettingsController, :edit_display_name
+
       scope "/email" do
         get "/", UserSettingsController, :edit_email
         post "/", UserSettingsController, :update_email

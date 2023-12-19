@@ -12,8 +12,9 @@ defmodule ChuuniWeb.UserSettingsController do
     user = conn.assigns.current_user
     email_changeset = Accounts.change_user_email(user)
     password_changeset = Accounts.change_user_password(user)
+    display_name_changeset = Accounts.change_user_display_name(user)
 
-    render(conn, :edit, email_changeset: email_changeset, password_changeset: password_changeset)
+    render(conn, :edit, email_changeset: email_changeset, password_changeset: password_changeset, display_name_changeset: display_name_changeset)
   end
 
   def edit_email(conn, _params) do
@@ -70,6 +71,29 @@ defmodule ChuuniWeb.UserSettingsController do
 
       {:error, changeset} ->
         render(conn, :password_form, password_changeset: changeset)
+    end
+  end
+
+  def edit_display_name(conn, _params) do
+    user = conn.assigns.current_user
+    email_changeset = Accounts.change_user_display_name(user)
+
+    render(conn, :display_name_form, changeset: email_changeset)
+  end
+
+  def update_display_name(conn, %{"user" => user_params}) do
+    user = conn.assigns.current_user
+
+    case Accounts.update_user_display_name(user, user_params) do
+      {:ok, user} ->
+        conn
+        |> render(:success_message,
+          message: "You successfully changed your display name.",
+          close_url: ~p"/settings/display-name"
+        )
+
+      {:error, _changeset} ->
+        resp(conn, 400, "Something went wrong")
     end
   end
 end

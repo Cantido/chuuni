@@ -225,6 +225,15 @@ defmodule Chuuni.Accounts do
     |> Ecto.Multi.delete_all(:tokens, UserToken.user_and_contexts_query(user, [context]))
   end
 
+  def change_user_display_name(%User{} = user, attrs \\ %{}) do
+    User.display_name_changeset(user, attrs)
+  end
+
+  def update_user_display_name(%User{} = user, attrs \\ %{}) do
+    User.display_name_changeset(user, attrs)
+    |> Repo.update()
+  end
+
   @doc ~S"""
   Delivers the update email instructions to the given user.
 

@@ -5,7 +5,7 @@
         <.gravatar email={@current_user.email} />
       </figure>
       <div class="media-content">
-        <p class="title is-5">Display Name</p>
+        <p class="title is-5" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis"><%= @current_user.display_name %></p>
         <p class="subtitle is-7"><%= @current_user.name %></p>
       </div>
     </div>

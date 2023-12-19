@@ -12,7 +12,7 @@
         <div class="content">
           <p>
             <a href={~p"/@#{@review.author.name}"}>
-            <strong>Display Name</strong> <small>@<%= @review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small> <small><%= @review.inserted_at %></small>
+            <strong><%= @review.author.display_name %></strong> <small>@<%= @review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small> <small><%= @review.inserted_at %></small>
             </a>
           </p>
           <p>Rating: <span class="is-size-5"><%= @review.rating %><small>/10</small></span></p>

@@ -12,7 +12,8 @@ defmodule Chuuni.AccountsFixtures do
     Enum.into(attrs, %{
       name: unique_user_name(),
       email: unique_user_email(),
-      password: valid_user_password()
+      password: valid_user_password(),
+      display_name: "Display Name"
     })
   end
 

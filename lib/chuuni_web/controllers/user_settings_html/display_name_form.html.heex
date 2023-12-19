@@ -1,0 +1,15 @@
+<.simple_form
+  :let={f}
+  for={@changeset}
+  id="display-name-form"
+  hx-post={~p"/settings/display-name"}
+>
+  <.input name="_csrf_token" type="hidden" value={get_csrf_token()} />
+  <.input
+    field={f[:display_name]}
+    label="Display name"
+  />
+  <:actions>
+    <.button type="submit">Change display name</.button>
+  </:actions>
+</.simple_form>

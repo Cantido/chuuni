@@ -6,6 +6,7 @@ defmodule Chuuni.Accounts.User do
   alias Chuuni.Accounts.Follow
 
   schema "users" do
+    field :display_name, :string
     field :name, :string
     field :email, :string
     field :password, :string, virtual: true, redact: true
@@ -60,9 +61,11 @@ defmodule Chuuni.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password, :name])
+    |> cast(attrs, [:email, :password, :name, :display_name])
     |> validate_email(opts)
     |> validate_password(opts)
+    |> validate_length(:display_name, min: 3, max: 255)
+    |> validate_length(:name, min: 3, max: 63)
     |> check_constraint(:name, name: :name_must_be_long, message: "must be at least three characters long")
     |> unique_constraint(:name)
   end
@@ -109,6 +112,12 @@ defmodule Chuuni.Accounts.User do
     else
       changeset
     end
+  end
+
+  def display_name_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:display_name])
+    |> validate_length(:display_name, min: 3, max: 128)
   end
 
   @doc """

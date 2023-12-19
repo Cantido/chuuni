@@ -21,6 +21,7 @@ user_params =
     id = Ecto.UUID.generate()
     %{
       id: id,
+      display_name: Faker.Person.name(),
       name: Faker.Internet.user_name() <> Integer.to_string(Enum.random(1000..9999)),
       email: "#{id}@example.com",
       hashed_password: user_password_hash,
