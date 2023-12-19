@@ -1,4 +1,6 @@
 defmodule Chuuni.Reviews.ReviewQueries do
+  alias Chuuni.Accounts.User
+  alias Chuuni.Media.Anime
   alias Chuuni.Reviews.Review
   alias Chuuni.Reviews.ReviewSummary
 
@@ -68,4 +70,42 @@ defmodule Chuuni.Reviews.ReviewQueries do
       where: [anime_id: ^anime_id]
   end
 
+  def average_rating(%User{} = user) do
+    from r in Ecto.assoc(user, :ratings),
+      select: avg(r.rating)
+  end
+
+  def similarity(%User{id: ua_id} = user_a, %User{id: ub_id} = user_b) do
+    average_ratings =
+      from r in Review,
+      group_by: :author_id,
+      select: %{user_id: r.author_id, average_rating: avg(r.rating)}
+
+    normalized_ratings =
+      from r in Review,
+        join: avg_rating in subquery(average_ratings), on: r.author_id == avg_rating.user_id,
+        select: %{
+          id: r.id,
+          author_id: r.author_id,
+          anime_id: r.anime_id,
+          normalized_rating: r.rating - avg_rating.average_rating
+        }
+
+    paired_ratings =
+      from a in Anime,
+      join: ra in ^(from subquery(normalized_ratings), where: [author_id: ^ua_id]), on: ra.anime_id == a.id,
+      join: rb in ^(from subquery(normalized_ratings), where: [author_id: ^ub_id]), on: rb.anime_id == a.id,
+      select: %{rating_a: coalesce(ra.normalized_rating, 0.0), rating_b: coalesce(rb.normalized_rating, 0.0)}
+
+    terms =
+      from r in subquery(paired_ratings),
+        select: %{
+          term_a: sum(r.rating_a * r.rating_b),
+          term_b: fragment("sqrt(?)", sum(r.rating_a * r.rating_a)),
+          term_c: fragment("sqrt(?)", sum(r.rating_b * r.rating_b))
+        }
+
+    from t in subquery(terms),
+      select: t.term_a / fragment("NULLIF(?, 0)", (t.term_b * t.term_c))
+  end
 end

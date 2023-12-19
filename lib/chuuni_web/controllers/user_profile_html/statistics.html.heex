@@ -1,0 +1,23 @@
+<div id="profile-body">
+  <.profile_tabs active_tab={:statistics} user={@user} hx-target="#profile-body" />
+
+  <p class="title is-size-4 has-text-centered">Review Statistics</p>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>Average Rating</th>
+        <td><%= Decimal.round(@average_rating, 2) %></td>
+      </tr>
+      <tr>
+        <th>Similarity with you</th>
+        <td>
+          <%= if @similarity do %>
+            <%= Float.round(@similarity, 2) %>
+          <% else %>
+            ?
+          <% end %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

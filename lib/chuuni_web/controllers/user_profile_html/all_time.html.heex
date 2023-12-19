@@ -1,10 +1,5 @@
 <div id="profile-body">
-  <div class="tabs" hx-target="#profile-body">
-    <ul>
-      <li><a hx-get={~p"/@#{@user.name}/activity"}>Activity</a></li>
-      <li class="is-active"><a hx-get={~p"/@#{@user.name}/alltime"}>All Time</a></li>
-    </ul>
-  </div>
+  <.profile_tabs active_tab={:all_time} user={@user} hx-target="#profile-body" />
 
   <div class="columns block">
     <div class="column is-4">

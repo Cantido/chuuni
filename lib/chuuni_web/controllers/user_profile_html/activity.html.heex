@@ -1,10 +1,5 @@
 <div id="profile-body">
-  <div class="tabs" hx-target="#profile-body">
-    <ul>
-      <li class="is-active"><a hx-get={~p"/@#{@user.name}/activity"}>Activity</a></li>
-      <li><a hx-get={~p"/@#{@user.name}/alltime"}>All Time</a></li>
-    </ul>
-  </div>
+  <.profile_tabs active_tab={:activity} user={@user} hx-target="#profile-body" />
 
   <p class="title is-size-4 has-text-centered">Recent Activity</p>
   <div class="block" :for={review <- @recent}>

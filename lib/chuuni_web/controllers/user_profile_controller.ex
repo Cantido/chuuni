@@ -77,4 +77,26 @@ defmodule ChuuniWeb.UserProfileController do
       )
     end
   end
+
+  def statistics(conn, %{"username" => name}) do
+    user = Accounts.get_user_by_name(name)
+
+    if is_nil(user) do
+      conn
+      |> put_status(:not_found)
+      |> put_view(ChuuniWeb.ErrorHTML)
+      |> render(:"404")
+    else
+      average_rating = Reviews.average_rating(user)
+      similarity = Reviews.similarity(conn.assigns.current_user, user)
+
+      conn
+      |> render(
+        :statistics,
+        user: user,
+        average_rating: average_rating,
+        similarity: similarity
+      )
+    end
+  end
 end

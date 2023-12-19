@@ -43,6 +43,16 @@ defmodule Chuuni.Reviews do
     |> Repo.all()
   end
 
+  def average_rating(%User{} = user) do
+    Ecto.assoc(user, :reviews)
+    |> Repo.aggregate(:avg, :rating)
+  end
+
+  def similarity(%User{} = user_a, %User{} = user_b) do
+    ReviewQueries.similarity(user_a, user_b)
+    |> Repo.one()
+  end
+
   def get_rating_summary(rated_id) do
     Chuuni.Reviews.ReviewQueries.review_summary()
     |> where(anime_id: ^rated_id)
