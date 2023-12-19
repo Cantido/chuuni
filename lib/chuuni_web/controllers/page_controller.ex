@@ -16,7 +16,6 @@ defmodule ChuuniWeb.PageController do
     trending = Reviews.trending(6)
 
     conn
-    |> assign(:page_title, "Welcome")
     |> render(:home, new_anime: new_anime, trending: trending)
   end
 

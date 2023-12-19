@@ -4,9 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <.live_title suffix=" · Chuuni">
-      <%= assigns[:page_title] || "Chuuni" %>
-    </.live_title>
+    <title>Chuuni</title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
     <script src="https://unpkg.com/hyperscript.org@0.9.11" integrity="sha512-UPUKoNNLO0B5K1RbmFZq6bB6BSpfU4xjqAn3YuWnvEnAQ8P+cM1EXbFLsGjMp+Zm+1E5K2vZzEHgJQ8YBPu96w==" crossorigin="anonymous"></script>

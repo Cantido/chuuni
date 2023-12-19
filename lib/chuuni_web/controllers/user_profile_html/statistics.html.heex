@@ -6,7 +6,13 @@
     <tbody>
       <tr>
         <th>Average Rating</th>
-        <td><%= Decimal.round(@average_rating, 2) %></td>
+        <td>
+          <%= if @average_rating do %>
+            <%= Decimal.round(@average_rating, 2) %>
+          <% else %>
+            ?
+          <% end %>
+        </td>
       </tr>
       <tr>
         <th>Similarity with you</th>
