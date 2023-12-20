@@ -20,7 +20,13 @@
         </.input>
       </div>
       <div class="control">
-        <.button type="submit" class="shelf-select-submit">Move</.button>
+        <.button type="submit" class="shelf-select-submit">
+          <%= if @current_shelf do %>
+            Move
+          <% else %>
+            Add
+          <% end %>
+        </.button>
       </div>
     </div>
   </.simple_form>
