@@ -9,6 +9,7 @@
         <td>
           <%= if @average_rating do %>
             <%= Decimal.round(@average_rating, 2) %>
+            <span class="fa-solid fa-star" />
           <% else %>
             ?
           <% end %>
@@ -18,7 +19,7 @@
         <th>Similarity with you</th>
         <td>
           <%= if @similarity do %>
-            <%= Float.round(@similarity, 2) %>
+            <%= trunc(@similarity * 100) %>%
           <% else %>
             ?
           <% end %>

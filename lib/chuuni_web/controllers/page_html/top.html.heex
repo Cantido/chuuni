@@ -29,6 +29,11 @@
         </div>
       </a>
     </td>
-    <td><p class="is-size-4"><%= Decimal.round(review.summary.rating, 2) %></p></td>
+    <td>
+      <p class="is-size-4">
+        <%= Decimal.round(review.summary.rating, 2) %>
+        <span class="fa-solid fa-star" />
+      </p>
+    </td>
   </tr>
 </table>

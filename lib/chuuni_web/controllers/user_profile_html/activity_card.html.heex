@@ -12,10 +12,18 @@
         <div class="content">
           <p>
             <a href={~p"/anime/#{@review.anime}"}>
-              <strong><%= @review.anime.title.english %></strong>
+              <strong>
+                <%= @review.anime.title.english %>
+              </strong>
             </a>
+            was rated
+            <%= @review.rating %>
+            <span class="fa-solid fa-star" />
           </p>
-          <p>Rating: <span class="is-size-5"><%= @review.rating %><small>/10</small></span></p>
+          <p>
+            <span class="is-size-5">
+            </span>
+          </p>
           <%= if @review.body do %>
             <%= raw Earmark.as_html!(@review.body) %>
           <% end %>
