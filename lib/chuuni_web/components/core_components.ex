@@ -98,7 +98,7 @@ defmodule ChuuniWeb.CoreComponents do
                   class="-m-3 flex-none p-3 opacity-20 hover:opacity-40"
                   aria-label={gettext("close")}
                 >
-                  <.icon name="hero-x-mark-solid" class="h-5 w-5" />
+                  <.icon name="fa-xmark" class="h-5 w-5" />
                 </button>
               </div>
               <div id={"#{@id}-content"}>
@@ -613,7 +613,7 @@ defmodule ChuuniWeb.CoreComponents do
         navigate={@navigate}
         class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
       >
-        <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
+        <.icon name="fa-arrow-left" class="h-3 w-3" />
         <%= render_slot(@inner_block) %>
       </.link>
     </div>
@@ -635,16 +635,16 @@ defmodule ChuuniWeb.CoreComponents do
 
   ## Examples
 
-      <.icon name="hero-x-mark-solid" />
-      <.icon name="hero-arrow-path" class="ml-1 w-3 h-3 animate-spin" />
+      <.icon name="fa-xmark" />
+      <.icon name="fa-arrow-rotate-right" />
   """
   attr :name, :string, required: true
   attr :class, :string, default: nil
 
-  def icon(%{name: "hero-" <> _} = assigns) do
+  def icon(%{name: "fa-" <> _} = assigns) do
     ~H"""
     <span class={["icon", @class]}>
-      <span class={@name} />
+      <span class={["fa-solid", @name]} />
     </span>
     """
   end
