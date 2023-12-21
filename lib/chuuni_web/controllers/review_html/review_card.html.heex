@@ -7,27 +7,37 @@
             <.gravatar email={@review.author.email} size={128} />
           </p>
         </a>
+        <div class="is-size-4 has-text-centered mt-5">
+          <%= @review.rating %>
+          <span class="fa-solid fa-star" />
+        </div>
       </figure>
       <div class="media-content">
-        <div class="content">
-          <p>
-            <a href={~p"/@#{@review.author.name}"}>
-            <strong><%= @review.author.display_name %></strong> <small>@<%= @review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small> <small><%= @review.inserted_at %></small>
-            </a>
-          </p>
-          <p>Rating: <span class="is-size-5"><%= @review.rating %><small>/10</small></span></p>
-          <%= if @review.body do %>
-            <%= raw Earmark.as_html!(@review.body) %>
-          <% end %>
+        <div class="columns">
+          <div class="column">
+            <div class="content">
+              <p>
+                <a href={~p"/@#{@review.author.name}"}>
+                  <strong><%= @review.author.display_name %></strong>
+                  <br />
+                  <small>@<%= @review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small>
+                </a>
+                <br />
+                <small><%= @review.inserted_at %></small>
+              </p>
+            </div>
+          </div>
         </div>
+        <%= if @review.body do %>
+          <div class="content">
+            <%= raw Earmark.as_html!(@review.body) %>
+          </div>
+        <% else %>
+          <p class="is-italic has-text-grey-light">
+            This user did not write a review.
+          </p>
+        <% end %>
       </div>
     </article>
   </div>
-  <footer class="card-footer">
-    <.link navigate={~p"/reviews/#{@review}"} class="card-footer-item">Show</.link>
-    <.link navigate={~p"/reviews/#{@review}/edit"} class="card-footer-item">Edit</.link>
-    <.link href={~p"/reviews/#{@review}"} method="delete" data-confirm="Are you sure?" class="card-footer-item">
-      Delete
-    </.link>
-  </footer>
 </div>

@@ -50,9 +50,15 @@
           </header>
           <div class="card-content has-text-centered">
             <%= if is_nil(@rating_summary) or @rating_summary.count == 0 do %>
-              <p class="is-size-3">?<small class="is-size-5">/10</small></p>
+              <p class="is-size-3">
+                ?
+                <span class="fa-solid fa-star" />
+              </p>
             <% else %>
-              <p class="is-size-3"><%= Decimal.round(@rating_summary.rating, 2) %><small class="is-size-5">/10</small></p>
+              <p class="is-size-3">
+                <%= Decimal.round(@rating_summary.rating, 2) %>
+                <span class="fa-solid fa-star" />
+              </p>
             <% end %>
           </div>
         </div>
@@ -96,11 +102,14 @@
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">
-              Users
+              Reviews
             </p>
           </header>
           <div class="card-content has-text-centered">
-            <p class="is-size-3"><%= if is_nil(@rating_summary), do: 0, else: @rating_summary.count %></p>
+            <p class="is-size-3">
+              <%= if is_nil(@rating_summary), do: 0, else: @rating_summary.count %>
+              <span class="fa-solid fa-user" />
+            </p>
           </div>
         </div>
       </div>
