@@ -3,8 +3,8 @@
 <div class="block" hx-boost="true">
   <div class="title">New Anime</div>
   <div class="columns">
-    <div class="column is-2" :for={review <- @new_anime} >
-      <.anime_card summary={review.summary} />
+    <div class="column is-2" :for={summary <- @new_anime} >
+      <.anime_card summary={summary} />
     </div>
   </div>
 </div>

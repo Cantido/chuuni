@@ -32,6 +32,10 @@ defmodule Chuuni.Media do
     Repo.all(Anime)
   end
 
+  def count_anime do
+    Repo.aggregate(Anime, :count)
+  end
+
   def new_anime(limit) do
     Repo.all(
       from a in Anime,

@@ -21,6 +21,7 @@ defmodule ChuuniWeb.AnimeController do
 
     reviews = Reviews.latest_reviews_for_item(id)
 
+    anime_count = Media.count_anime()
 
     user_review =
       if current_user = conn.assigns[:current_user] do
@@ -36,6 +37,7 @@ defmodule ChuuniWeb.AnimeController do
 
     render(conn, :show,
       anime: anime,
+      anime_count: anime_count,
       rating_summary: rating_summary,
       reviews: reviews,
       rating_rank: rating_rank,
@@ -43,6 +45,14 @@ defmodule ChuuniWeb.AnimeController do
       user_review: user_review,
       user_shelf_item: user_shelf_item,
       review_changeset: review_changeset)
+  end
+
+  def rating_breakdown(conn, %{"anime_id" => id}) do
+    ratings = Reviews.get_rating_breakdown(id)
+    rating_count = Enum.sum(Map.values(ratings))
+
+    conn
+    |> render(:rating_breakdown, ratings: ratings, rating_count: rating_count)
   end
 
   def shelf(conn, %{"anime_id" => id}) do

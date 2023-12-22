@@ -68,6 +68,7 @@ defmodule ChuuniWeb.Router do
       resources "/", AnimeController, except: [:delete] do
         get "/shelf", AnimeController, :shelf
         put "/shelf", AnimeController, :select_shelf
+        get "/rating-breakdown", AnimeController, :rating_breakdown
         resources "/reviews", ReviewController, only: [:new, :create]
       end
     end

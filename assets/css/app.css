@@ -1,2 +1,10 @@
 @import "../vendor/bulma";
 @import "../vendor/bulmaswatch";
+
+#extra-info-pane {
+  max-height: 0;
+}
+
+#extra-info-pane.tall {
+  max-height: 500px;
+}

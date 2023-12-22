@@ -4,16 +4,25 @@ defmodule ChuuniWeb.PageController do
   alias Chuuni.Media
   alias Chuuni.Reviews
 
+  require Logger
+
   plug :put_layout, html: {ChuuniWeb.Layouts, :app}
 
   def home(conn, _params) do
     new_anime = Media.new_anime(6)
       |> Enum.map(fn anime ->
-        summary = Reviews.get_rating_summary(anime.id)|> Chuuni.Repo.preload(:anime)
-        %{summary: summary}
+        summary = Reviews.get_rating_summary(anime.id)
+        if is_nil(summary) do
+          %{count: 0, rating: nil, anime: anime}
+        else
+          %{summary | anime: anime}
+        end
       end)
 
     trending = Reviews.trending(6)
+
+    Logger.debug("new anime: #{inspect new_anime}")
+    Logger.debug("trending anime: #{inspect trending}")
 
     conn
     |> render(:home, new_anime: new_anime, trending: trending)
@@ -21,7 +30,6 @@ defmodule ChuuniWeb.PageController do
 
   def search(conn, _params) do
     conn
-    |> assign(:page_title, "Search")
     |> render(:search)
   end
 

@@ -1,0 +1,18 @@
+<div class="columns">
+  <div class="column is-6">
+    <div :for={rating <- 10..1} class="level mb-0">
+      <p class="level-item" style="width: 2em;">
+        <%= rating %>
+      </p>
+      <progress
+        value={Map.get(@ratings, rating, 0)}
+        max={Enum.sum(Map.values(@ratings))}
+        class="progress is-info is-small level-item mb-0"
+        style="width: 90%;"
+      />
+      <p class="level-item" style="width: 3em;">
+        <%= trunc(Map.get(@ratings, rating, 0) / @rating_count * 100) %>%
+      </p>
+    </div>
+  </div>
+</div>

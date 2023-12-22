@@ -26,7 +26,11 @@ defmodule ChuuniWeb.PageHTML do
             <div :if={@summary.count}>
               <p class="has-text-grey-light">
                 <small>
-                  <%= Decimal.round(@summary.rating, 2) %>
+                  <%= if @summary.rating do %>
+                    <%= Decimal.round(@summary.rating, 2) %>
+                  <% else %>
+                    ??
+                  <% end %>
                   <span class="fa-solid fa-star" />
                   &nbsp;
                   <%= @summary.count %>

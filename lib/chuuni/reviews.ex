@@ -71,6 +71,16 @@ defmodule Chuuni.Reviews do
     end
   end
 
+  def get_rating_breakdown(rated_id) do
+    Repo.all(
+      from r in Review,
+      where: [anime_id: ^rated_id],
+      group_by: :rating,
+      select: {r.rating, count()}
+    )
+    |> Map.new()
+  end
+
   def reviews_for_shelf(%Shelf{} = shelf) do
     Repo.all(
       from r in Review,

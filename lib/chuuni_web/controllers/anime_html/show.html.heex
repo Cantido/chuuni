@@ -48,19 +48,40 @@
               Rating
             </p>
           </header>
-          <div class="card-content has-text-centered">
-            <%= if is_nil(@rating_summary) or @rating_summary.count == 0 do %>
-              <p class="is-size-3">
-                ?
-                <span class="fa-solid fa-star" />
-              </p>
-            <% else %>
+          <%= if is_nil(@rating_summary) or @rating_summary.count == 0 do %>
+            <div class="card-content has-text-centered">
+                <p class="is-size-3">
+                  ?
+                  <span class="fa-solid fa-star" />
+                </p>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">
+                No ratings
+              </div>
+            </div>
+          <% else %>
+            <div class="card-content has-text-centered">
               <p class="is-size-3">
                 <%= Decimal.round(@rating_summary.rating, 2) %>
                 <span class="fa-solid fa-star" />
               </p>
-            <% end %>
-          </div>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">
+                <a
+                  hx-get={~p"/anime/#{@anime}/rating-breakdown"}
+                  hx-target="#extra-info-pane"
+                  data-script="on click toggle .tall on #extra-info-pane"
+                >
+                  <%= ngettext "with 1 rating", "with %{count} ratings", @rating_summary.count %>
+                  <span class="icon">
+                    <span class="fa-solid fa-angle-down" />
+                  </span>
+                </a>
+              </div>
+            </div>
+          <% end %>
         </div>
       </div>
 
@@ -77,6 +98,11 @@
             <% else %>
               <p class="is-size-3">#<%= @rating_rank %></p>
             <% end %>
+          </div>
+          <div class="card-footer">
+            <div class="card-footer-item">
+              out of <%= @anime_count %> shows
+            </div>
           </div>
         </div>
       </div>
@@ -95,6 +121,11 @@
               <p class="is-size-3">#<%= @popularity_rank %></p>
             <% end %>
           </div>
+          <div class="card-footer">
+            <div class="card-footer-item">
+              out of <%= @anime_count %> shows
+            </div>
+          </div>
         </div>
       </div>
 
@@ -111,9 +142,20 @@
               <span class="fa-solid fa-user" />
             </p>
           </div>
+          <div class="card-footer">
+            <div class="card-footer-item">
+              <%= ngettext "on 1 instance", "across %{count} instances", 1 %>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <div
+      id="extra-info-pane"
+      class="block"
+      style="transition: max-height 0.5s ease-in; overflow: hidden;"
+    />
 
     <div class="box content">
       <%= raw Earmark.as_html!(@anime.description) %>
