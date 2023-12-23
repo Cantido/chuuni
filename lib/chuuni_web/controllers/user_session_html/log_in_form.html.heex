@@ -3,8 +3,8 @@
   <div :if={@error_message} class="notification is-danger"><%= @error_message %></div>
   <.simple_form :let={f} for={%{}} as="user" hx-post={~p"/login"} hx-target="closest #login-form" hx-swap="outerHTML">
     <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
-    <.input field={f[:email]} type="email" label="Email" required />
-    <.input field={f[:password]} type="password" label="Password" required />
+    <.input field={f[:email]} type="email" label="Email" autocomplete="email" required />
+    <.input field={f[:password]} type="password" label="Password" autocomplete="current-password" required />
     <.input field={f[:remember_me]} type="checkbox" label="Keep me logged in" />
 
     <div class="field">

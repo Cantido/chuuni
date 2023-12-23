@@ -6,10 +6,10 @@
 >
   <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
 
-  <.input field={f[:display_name]} type="text" label="Display name" required />
-  <.input field={f[:name]} type="text" label="Username" required />
-  <.input field={f[:email]} type="email" label="Email" required />
-  <.input field={f[:password]} type="password" label="Password" required />
+  <.input field={f[:display_name]} type="text" label="Display name" autocomplete="name" required />
+  <.input field={f[:name]} type="text" label="Username" autocomplete="username" required />
+  <.input field={f[:email]} type="email" label="Email" autocomplete="email" required />
+  <.input field={f[:password]} type="password" label="Password" autocomplete="new-password" required />
 
   <:actions>
     <.button>Create an account</.button>
