@@ -1,42 +1,38 @@
 <div class="card">
   <div class="card-content">
-    <article class="media">
-      <figure class="media-left">
+    <article class="media" aria-label={@review.author.display_name}>
+      <div class="media-left">
         <a href={~p"/@#{@review.author.name}"}>
-          <p class="image is-64x64">
+          <div class="image is-64x64">
             <.gravatar email={@review.author.email} size={128} />
-          </p>
+          </div>
         </a>
         <div class="is-size-4 has-text-centered mt-5">
           <%= @review.rating %>
-          <span class="fa-solid fa-star" />
+          <span class="fa-solid fa-star" aria-hidden="true" />
+          <span class="is-sr-only">rating</span>
         </div>
-      </figure>
+      </div>
       <div class="media-content">
-        <div class="columns">
-          <div class="column">
-            <div class="content">
-              <p>
-                <a href={~p"/@#{@review.author.name}"}>
-                  <strong><%= @review.author.display_name %></strong>
-                  <br />
-                  <small>@<%= @review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small>
-                </a>
-                <br />
-                <small><%= @review.inserted_at %></small>
-              </p>
-            </div>
+        <header class="block">
+          <div>
+            <a href={~p"/@#{@review.author.name}"}>
+              <h3 class="has-text-weight-bold mb-0"><%= @review.author.display_name %></h3>
+              <span class="is-size-7">@<%= @review.author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></span>
+            </a>
+            <br />
+            <span class="is-size-7"><%= @review.inserted_at %></span>
           </div>
-        </div>
-        <%= if @review.body do %>
-          <div class="content">
+        </header>
+        <div class="content">
+          <%= if @review.body do %>
             <%= raw Earmark.as_html!(@review.body) %>
-          </div>
-        <% else %>
-          <p class="is-italic has-text-grey-light">
-            This user did not write a review.
-          </p>
-        <% end %>
+          <% else %>
+            <p class="is-italic has-text-grey-light">
+              This user did not write a review.
+            </p>
+          <% end %>
+        </div>
       </div>
     </article>
   </div>

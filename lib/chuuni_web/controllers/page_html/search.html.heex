@@ -1,18 +1,19 @@
 <title>Search · Chuuni</title>
 
-<div id="search-controls" class="block">
+<search id="search-controls" class="block">
   <.header>
     Find anime to review
   </.header>
   <form action={~p"/search"} method="POST" hx-post={~p"/search"} hx-target="#search-controls" hx-swap="outerHTML">
     <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+    <label class="label" for="search-input">Title search</label>
     <div class="field has-addons">
       <div class="control is-expanded has-icons-left">
         <input
+          id="search-input"
           class="input"
           type="search"
           name="query"
-          placeholder="Search"
           hx-get={~p"/search/results"}
           hx-trigger="keyup changed delay:500ms"
           hx-target="#search-results"
@@ -32,7 +33,7 @@
       </div>
     </div>
   </form>
-</div>
+</search>
 
 <ChuuniWeb.AnimeHTML.search_results
   local_results={@local_results}

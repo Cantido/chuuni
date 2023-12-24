@@ -1,20 +1,20 @@
 <title>Home · Chuuni</title>
 
-<div class="block" hx-boost="true">
-  <div class="title">New Anime</div>
+<section class="block" hx-boost="true">
+  <h2 class="title">New Anime</h2>
   <div class="columns">
     <div class="column is-2" :for={summary <- @new_anime} >
       <.anime_card summary={summary} />
     </div>
   </div>
-</div>
+</section>
 
-<div class="block" hx-boost="true">
-  <div class="title">Recently Popular</div>
+<section class="block" hx-boost="true">
+  <h2 class="title">Recently Popular</h2>
 
   <div class="columns">
     <div class="column is-2" :for={review <- @trending}>
       <.anime_card summary={review} />
     </div>
   </div>
-</div>
+</section>

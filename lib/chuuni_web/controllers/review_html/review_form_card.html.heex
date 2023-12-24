@@ -4,26 +4,26 @@
 
   <div class="card">
     <div class="card-content">
-      <article class="media">
-        <figure class="media-left">
-          <p class="image is-64x64">
+      <div class="media">
+        <div class="media-left">
+          <div class="image is-64x64">
             <.gravatar email={@author.email} size={128} />
-          </p>
-        </figure>
-        <div class="media-content">
-          <div class="content">
-            <p>
-              <strong><%= @author.display_name %></strong> <small>@<%= @author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></small>
-              <br>
-              <.input field={f[:rating]} type="select" prompt="Select your rating" options={10..1} required="true" />
-              <.input field={f[:body]} type="textarea" placeholder="I thought it was..." />
-            </p>
           </div>
         </div>
-      </article>
+        <div class="media-content">
+          <p class="mb-4">
+            <span class="has-text-weight-bold" translate="no"><%= @author.display_name %></span>
+            <br />
+            <span class="is-size-7" translate="no">@<%= @author.name %>@<%= ChuuniWeb.Endpoint.struct_url().host %></span>
+          </p>
+
+          <.input field={f[:rating]} label="Rating" type="select" prompt="Select your rating" options={10..1} required="true" />
+          <.input field={f[:body]} label="Review" type="textarea" />
+        </div>
+      </div>
     </div>
-    <footer class="card-footer">
+    <div class="card-footer">
       <.button class="is-primary card-footer-item" type="submit">Post Review</.button>
-    </footer>
+    </div>
   </div>
 </.form>

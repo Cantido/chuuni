@@ -478,17 +478,23 @@ defmodule ChuuniWeb.CoreComponents do
   def header(assigns) do
     ~H"""
     <header class="level">
-      <div class="level-left">
-        <div>
-        <h1 class="title">
-          <%= render_slot(@inner_block) %>
-        </h1>
-        <p :if={@subtitle != []} class="subtitle">
-          <%= render_slot(@subtitle) %>
-        </p>
+      <div class="level-left" style="max-width: 100%;">
+        <div class="level-item" style="max-width: 100%">
+          <div>
+            <h1 class="title" style="overflow-wrap: break-word;">
+              <%= render_slot(@inner_block) %>
+            </h1>
+            <p :if={@subtitle != []} class="subtitle mt-0">
+              <%= render_slot(@subtitle) %>
+            </p>
+          </div>
         </div>
       </div>
-      <div class="level-right"><%= render_slot(@actions) %></div>
+      <div class="level-right">
+        <div class="level-item">
+          <%= render_slot(@actions) %>
+        </div>
+      </div>
     </header>
     """
   end

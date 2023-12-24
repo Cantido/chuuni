@@ -13,34 +13,46 @@ defmodule ChuuniWeb.PageHTML do
 
   def anime_card(assigns) do
     ~H"""
-      <div class="card">
+      <article class="card" aria-labelledby={"anime-card-#{@summary.anime.id}"}>
         <a href={~p"/anime/#{@summary.anime}"}>
           <div class="card-image">
             <div class="image is-2by3">
-              <img src={~p"/artwork/anime/#{@summary.anime}/cover.png"} />
+              <img
+                src={~p"/artwork/anime/#{@summary.anime}/cover.png"}
+                alt={@summary.anime.title.english}
+              />
             </div>
           </div>
 
           <div class="is-size-7 is-flex is-flex-direction-column is-justify-content-space-between" style="height: 7rem; padding: 0.75rem;">
-            <p style="overflow: hidden; max-height: 100%"><%= @summary.anime.title.english %></p>
+            <header id={"anime-card-#{@summary.anime.id}"} style="overflow: hidden; max-height: 100%">
+              <%= @summary.anime.title.english %>
+            </header>
             <div :if={@summary.count}>
-              <p class="has-text-grey-light">
-                <small>
+              <footer class="has-text-grey-light">
+                <span>
                   <%= if @summary.rating do %>
                     <%= Decimal.round(@summary.rating, 2) %>
                   <% else %>
-                    ??
+                    <span aria-hidden="true">
+                      ??
+                    </span>
+                    <span class="is-sr-only">
+                      unknown
+                    </span>
                   <% end %>
-                  <span class="fa-solid fa-star" />
+                  <span class="fa-solid fa-star" aria-hidden="true" />
+                  <span class="is-sr-only">rating</span>
                   &nbsp;
                   <%= @summary.count %>
-                  <span class="fa-solid fa-user" />
-                </small>
-              </p>
+                  <span class="fa-solid fa-user" aria-hidden="true" />
+                  <span class="is-sr-only">reviews</span>
+                </span>
+              </footer>
             </div>
           </div>
         </a>
-      </div>
+      </article>
     """
   end
 end

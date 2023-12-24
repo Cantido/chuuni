@@ -20,28 +20,28 @@ defmodule ChuuniWeb.AnimeHTML do
 
   def search_result(assigns) do
     ~H"""
-    <div class="media" {@rest}>
-      <figure class="media-left">
-        <p class="image is-128x128 is-2by3">
-          <img src={@image} />
-        </p>
-      </figure>
+    <article class="media box" aria-label={@title || @subtitle} {@rest}>
+      <div class="media-left">
+        <div class="image is-128x128 is-2by3">
+          <img src={@image} alt={@title} />
+        </div>
+      </div>
       <div class="media-content">
         <div class="block">
-          <div class="title is-5"><.link href={@href} target={@target} rel="nofollow noopener noreferrer"><%= (@title) %></.link></div>
+          <div class="title is-5"><.link href={@href} target={@target} rel="nofollow noopener noreferrer"><%= (@title || @subtitle) %></.link></div>
           <div class="subtitle is-7"><%= (@subtitle) %></div>
         </div>
 
         <div class="block">
-          <p><strong>Aired:</strong> <.fuzzy_date_range start_date={@start_date} stop_date={@stop_date} /></p>
-          <p><strong>Studios:</strong> <%= (@studios) %></p>
+          <p><span class="has-text-weight-bold">Aired:</span> <.fuzzy_date_range start_date={@start_date} stop_date={@stop_date} /></p>
+          <p><span class="has-text-weight-bold">Studios:</span> <%= (@studios) %></p>
         </div>
 
         <div class="block">
-          <div><%= render_slot(@actions) %></div>
+          <%= render_slot(@actions) %>
         </div>
       </div>
-    </div>
+    </article>
     """
   end
 

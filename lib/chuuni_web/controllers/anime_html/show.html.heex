@@ -1,187 +1,215 @@
-<title><%= @anime.title.english %> · Chuuni</title>
+<title translate="no"><%= @anime.title.english %> · Chuuni</title>
 
 <div class="columns">
   <div class="column is-one-quarter">
     <div class="image is-256x256 is-2by3 block">
-      <img src={~p"/artwork/anime/#{@anime}/cover.png"} />
+      <img
+        src={~p"/artwork/anime/#{@anime}/cover.png"}
+        alt={@anime.title.english}
+      />
     </div>
 
     <%= if(@current_user) do %>
       <div id="shelf-select" hx-get={~p"/anime/#{@anime}/shelf"} hx-trigger="load" class="block"/>
     <% end %>
 
-    <div class="panel">
+    <aside class="panel">
       <div class="panel-block">
-        <p><strong>Type:</strong> TV</p>
+        <p><span class="has-text-weight-bold">Type:</span> TV</p>
       </div>
       <div class="panel-block">
-        <p><strong>Start date:</strong> <.fuzzy_date date={@anime.start_date} /></p>
+        <p><span class="has-text-weight-bold">Start date:</span> <.fuzzy_date date={@anime.start_date} /></p>
       </div>
       <div class="panel-block">
-        <p><strong>End date:</strong> <.fuzzy_date date={@anime.stop_date} /></p>
+        <p><span class="has-text-weight-bold">End date:</span> <.fuzzy_date date={@anime.stop_date} /></p>
       </div>
       <div class="panel-block">
-        <p><strong>Episodes:</strong> some</p>
+        <p><span class="has-text-weight-bold">Episodes:</span> some</p>
       </div>
       <div class="panel-block">
-        <p><strong>AniList ID:</strong> <.link href={"https://anilist.co/anime/#{@anime.external_ids.anilist}"}><%= @anime.external_ids.anilist %></.link></p>
+        <p><span class="has-text-weight-bold">AniList ID:</span> <.link href={"https://anilist.co/anime/#{@anime.external_ids.anilist}"}><%= @anime.external_ids.anilist %></.link></p>
       </div>
-    </div>
+    </aside>
   </div>
 
   <div class="column">
-    <.header>
-      <%= @anime.title.english || @anime.title.native %>
-      <:subtitle>
-      <%= @anime.title.romaji %>
-      </:subtitle>
-      <:actions>
-        <.link href={~p"/anime/#{@anime}/edit"} class="button">Edit</.link>
-      </:actions>
-    </.header>
-
-    <div class="columns">
-      <div class="column">
-        <div class="card">
-          <header class="card-header">
-            <p class="card-header-title is-centered">
-              Rating
+    <header class="level">
+      <div class="level-left" style="max-width: 85%;">
+        <div class="level-item" style="max-width: 100%">
+          <div>
+            <h1 class="title" translate="no" style="overflow-wrap: break-word;">
+              <%= @anime.title.english || @anime.title.native %>
+            </h1>
+            <p translate="no" class="subtitle mt-0">
+              <%= @anime.title.romaji %>
             </p>
-          </header>
-          <%= if is_nil(@rating_summary) or @rating_summary.count == 0 do %>
-            <div class="card-content has-text-centered">
+          </div>
+        </div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">
+          <.link href={~p"/anime/#{@anime}/edit"} class="button">Edit</.link>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <h2 class="is-sr-only">Statistics</h2>
+      <div class="columns">
+        <div class="column">
+          <section class="card">
+            <header class="card-header">
+              <p class="card-header-title is-centered">
+                Rating
+              </p>
+            </header>
+            <%= if is_nil(@rating_summary) or @rating_summary.count == 0 do %>
+              <div class="card-content has-text-centered">
+                  <p class="is-size-3">
+                    ?
+                    <span class="fa-solid fa-star" />
+                  </p>
+              </div>
+              <div class="card-footer">
+                <div class="card-footer-item">
+                  No ratings
+                </div>
+              </div>
+            <% else %>
+              <div class="card-content has-text-centered">
                 <p class="is-size-3">
-                  ?
+                  <%= Decimal.round(@rating_summary.rating, 2) %>
                   <span class="fa-solid fa-star" />
                 </p>
+              </div>
+              <div class="card-footer">
+                <div class="card-footer-item">
+                  <a
+                    hx-get={~p"/anime/#{@anime}/rating-breakdown"}
+                    hx-target="#extra-info-pane"
+                    data-script="on click toggle .tall on #extra-info-pane"
+                  >
+                    <%= ngettext "with 1 rating", "with %{count} ratings", @rating_summary.count %>
+                    <span class="icon">
+                      <span class="fa-solid fa-angle-down" />
+                    </span>
+                  </a>
+                </div>
+              </div>
+            <% end %>
+          </section>
+        </div>
+
+        <div class="column">
+          <div class="card">
+            <header class="card-header">
+              <p class="card-header-title is-centered">
+                Ranking
+              </p>
+            </header>
+            <div class="card-content has-text-centered">
+              <%= if is_nil(@rating_rank) do %>
+                <p class="is-size-3">#?</p>
+              <% else %>
+                <p class="is-size-3">#<%= @rating_rank %></p>
+              <% end %>
             </div>
             <div class="card-footer">
               <div class="card-footer-item">
-                No ratings
+                out of <%= @anime_count %> shows
               </div>
             </div>
-          <% else %>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="card">
+            <header class="card-header">
+              <p class="card-header-title is-centered">
+                Popularity
+              </p>
+            </header>
+            <div class="card-content has-text-centered">
+              <%= if is_nil(@popularity_rank) do %>
+                <p class="is-size-3">#?</p>
+              <% else %>
+                <p class="is-size-3">#<%= @popularity_rank %></p>
+              <% end %>
+            </div>
+            <div class="card-footer">
+              <div class="card-footer-item">
+                out of <%= @anime_count %> shows
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="card">
+            <header class="card-header">
+              <p class="card-header-title is-centered">
+                Reviews
+              </p>
+            </header>
             <div class="card-content has-text-centered">
               <p class="is-size-3">
-                <%= Decimal.round(@rating_summary.rating, 2) %>
-                <span class="fa-solid fa-star" />
+                <%= if is_nil(@rating_summary), do: 0, else: @rating_summary.count %>
+                <span class="fa-solid fa-user" />
               </p>
             </div>
             <div class="card-footer">
               <div class="card-footer-item">
-                <a
-                  hx-get={~p"/anime/#{@anime}/rating-breakdown"}
-                  hx-target="#extra-info-pane"
-                  data-script="on click toggle .tall on #extra-info-pane"
-                >
-                  <%= ngettext "with 1 rating", "with %{count} ratings", @rating_summary.count %>
-                  <span class="icon">
-                    <span class="fa-solid fa-angle-down" />
-                  </span>
-                </a>
+                <%= ngettext "on 1 instance", "across %{count} instances", 1 %>
               </div>
             </div>
-          <% end %>
-        </div>
-      </div>
-
-      <div class="column">
-        <div class="card">
-          <header class="card-header">
-            <p class="card-header-title is-centered">
-              Ranking
-            </p>
-          </header>
-          <div class="card-content has-text-centered">
-            <%= if is_nil(@rating_rank) do %>
-              <p class="is-size-3">#?</p>
-            <% else %>
-              <p class="is-size-3">#<%= @rating_rank %></p>
-            <% end %>
-          </div>
-          <div class="card-footer">
-            <div class="card-footer-item">
-              out of <%= @anime_count %> shows
-            </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="column">
-        <div class="card">
-          <header class="card-header">
-            <p class="card-header-title is-centered">
-              Popularity
-            </p>
-          </header>
-          <div class="card-content has-text-centered">
-            <%= if is_nil(@popularity_rank) do %>
-              <p class="is-size-3">#?</p>
-            <% else %>
-              <p class="is-size-3">#<%= @popularity_rank %></p>
-            <% end %>
-          </div>
-          <div class="card-footer">
-            <div class="card-footer-item">
-              out of <%= @anime_count %> shows
-            </div>
-          </div>
-        </div>
-      </div>
+    <style>
+    @media (prefers-reduced-motion) {
+      #extra-info-pane {
+        transition: none;
+      }
+    }
+    #extra-info-pane {
+      transition: max-height 0.5s ease-in;
+      overflow: hidden;
+      max-height: 0;
+    }
 
-      <div class="column">
-        <div class="card">
-          <header class="card-header">
-            <p class="card-header-title is-centered">
-              Reviews
-            </p>
-          </header>
-          <div class="card-content has-text-centered">
-            <p class="is-size-3">
-              <%= if is_nil(@rating_summary), do: 0, else: @rating_summary.count %>
-              <span class="fa-solid fa-user" />
-            </p>
-          </div>
-          <div class="card-footer">
-            <div class="card-footer-item">
-              <%= ngettext "on 1 instance", "across %{count} instances", 1 %>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    #extra-info-pane.tall {
+      max-height: 500px;
+    }
+    </style>
 
-    <div
+    <section
       id="extra-info-pane"
       class="block"
-      style="transition: max-height 0.5s ease-in; overflow: hidden;"
     />
 
-    <div class="box content">
-      <%= raw Earmark.as_html!(@anime.description) %>
-    </div>
+    <section class="box">
+      <h2 class="title is-size-5">Description</h2>
+      <article class="content">
+        <%= raw Earmark.as_html!(@anime.description) %>
+      </article>
+    </section>
 
     <%= if @current_user do %>
+      <section class="block">
+        <h2 class="title is-4">Your review</h2>
 
-      <%= if @user_review do %>
-
-        <div class="block">
-          <p class="title is-4">Your review</p>
-
+        <%= if @user_review do %>
           <ChuuniWeb.ReviewHTML.review_card review={@user_review} />
-        </div>
-      <% else %>
-        <div class="block">
-          <p class="title is-4">Your review</p>
-
-
+        <% else %>
           <ChuuniWeb.ReviewHTML.review_form_card author={@current_user} changeset={@review_changeset} action={~p"/anime/#{@anime}/reviews"} />
-        </div>
-      <% end %>
+        <% end %>
+      </section>
     <% end %>
 
-    <div class="block">
-      <p class="title is-4">Reviews</p>
+    <section class="block">
+      <h2 class="title is-4">Reviews</h2>
 
       <%= if Enum.count(@reviews) == 0 do %>
         <p>This anime has not been reviewed yet.</p>
@@ -190,7 +218,7 @@
       <div :for={review <- @reviews} class="block">
         <ChuuniWeb.ReviewHTML.review_card review={review} />
       </div>
-    </div>
+    </section>
 
   </div>
 </div>
