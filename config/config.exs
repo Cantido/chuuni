@@ -79,6 +79,11 @@ config :activity_pub,
     ]
   ]
 
+config :hammer,
+  backend: {Hammer.Backend.ETS,
+            [expiry_ms: 60_000 * 60 * 4,
+             cleanup_interval_ms: 60_000 * 10]}
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",

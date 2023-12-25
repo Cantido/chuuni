@@ -23,6 +23,10 @@ defmodule ChuuniWeb.HTMXPlug do
     end
   end
 
+  def encode_hx_location(location) do
+    Jason.encode!(%{path: location})
+  end
+
   def encode_hx_location(location, target) do
     Jason.encode!(%{path: location, target: target})
   end

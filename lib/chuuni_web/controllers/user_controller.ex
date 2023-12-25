@@ -8,6 +8,10 @@ defmodule ChuuniWeb.UserController do
 
   plug :redirect_if_user_is_authenticated
 
+  plug Hammer.Plug, [
+    rate_limit: {"user:create", 60_000, 5}
+  ] when action == :create
+
   def new(conn, _params) do
     changeset = Accounts.change_user_registration(%User{})
     render(conn, :register, changeset: changeset)

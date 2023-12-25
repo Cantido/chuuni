@@ -4,6 +4,10 @@ defmodule ChuuniWeb.UserSessionController do
   alias Chuuni.Accounts
   alias ChuuniWeb.UserAuth
 
+  plug Hammer.Plug, [
+    rate_limit: {"login", 60_000, 10}
+  ] when action == :create
+
   def new(conn, _params) do
     if conn.assigns[:current_user] do
       conn
@@ -31,7 +35,7 @@ defmodule ChuuniWeb.UserSessionController do
 
         conn
         |> put_resp_header("hx-trigger", "login")
-        |> put_resp_header("hx-location", ChuuniWeb.HTMXPlug.encode_hx_location(user_return_to || ~p"/", "#main-container"))
+        |> put_resp_header("hx-location", ChuuniWeb.HTMXPlug.encode_hx_location(user_return_to || ~p"/"))
         |> UserAuth.log_in_user(user, user_params)
         |> put_view(ChuuniWeb.UserSettingsHTML)
         |> render(:success_message, message: "Welcome back!")
@@ -46,7 +50,7 @@ defmodule ChuuniWeb.UserSessionController do
   def delete(conn, _params) do
     conn
     |> put_resp_header("hx-trigger", "logout")
-    |> put_resp_header("hx-location", ChuuniWeb.HTMXPlug.encode_hx_location(~p"/", "#main-container"))
+    |> put_resp_header("hx-location", ChuuniWeb.HTMXPlug.encode_hx_location(~p"/"))
     |> UserAuth.log_out_user()
     |> render(:success_message, message: "Logged out successfully")
   end
