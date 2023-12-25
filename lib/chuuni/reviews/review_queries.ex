@@ -75,7 +75,7 @@ defmodule Chuuni.Reviews.ReviewQueries do
       select: avg(r.rating)
   end
 
-  def similarity(%User{id: ua_id} = user_a, %User{id: ub_id} = user_b) do
+  def similarity(%User{id: ua_id}, %User{id: ub_id}) do
     average_ratings =
       from r in Review,
       group_by: :author_id,

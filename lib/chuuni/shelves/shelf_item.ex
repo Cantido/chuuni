@@ -3,7 +3,6 @@ defmodule Chuuni.Shelves.ShelfItem do
   alias Chuuni.Shelves.Shelf
   alias Chuuni.Media.Anime
   alias Chuuni.Accounts.User
-  alias Chuuni.Reviews.Review
 
   @primary_key false
   schema "shelf_items" do

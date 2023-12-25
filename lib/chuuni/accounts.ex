@@ -40,7 +40,7 @@ defmodule Chuuni.Accounts do
         {:ok, object} = ChuuniWeb.ActivityPub.Adapter.user_to_actor(following)
 
         {:ok, follow_object} = ActivityPub.follow(%{actor: actor, object: object})
-        {:ok, accept_object} = ActivityPub.accept(follow_object)
+        {:ok, _accept_object} = ActivityPub.accept(follow_object)
         {:ok, follow}
       {:error, changeset} ->
         {:error, changeset}

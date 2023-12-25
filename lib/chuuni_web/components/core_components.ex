@@ -264,9 +264,12 @@ defmodule ChuuniWeb.CoreComponents do
   attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
   attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
 
+
   attr :rest, :global,
     include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
                 multiple pattern placeholder readonly required rows size step)
+
+  slot :inner_block, required: false
 
   def input(%{type: "fuzzy-date", field: _field} = assigns) do
     ~H"""
@@ -383,7 +386,7 @@ defmodule ChuuniWeb.CoreComponents do
 
   def input(%{type: "file"} = assigns) do
     ~H"""
-    <div phx-feedback-for={@name} class="field file has-name">
+    <div class="field file has-name">
       <label for={@id} class="file-label">
         <input id={@id} name={@name} class="file-input" type="file" {@rest} />
         <span class="file-cta">

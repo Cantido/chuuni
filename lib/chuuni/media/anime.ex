@@ -4,7 +4,6 @@ defmodule Chuuni.Media.Anime do
   alias Chuuni.Media.AnimeTitles
   alias Chuuni.Media.AnimeMetadataServices
   alias Chuuni.Media.FuzzyDate
-  alias Chuuni.Reviews.Review
   alias Chuuni.Shelves.ShelfItem
   alias Chuuni.Shelves.Shelf
 

@@ -85,7 +85,7 @@ defmodule ChuuniWeb.UserSettingsController do
     user = conn.assigns.current_user
 
     case Accounts.update_user_display_name(user, user_params) do
-      {:ok, user} ->
+      {:ok, _user} ->
         conn
         |> render(:success_message,
           message: "You successfully changed your display name.",

@@ -4,7 +4,6 @@ defmodule ChuuniWeb.ShelfController do
   alias Chuuni.Accounts
   alias Chuuni.Shelves
   alias Chuuni.Shelves.Shelf
-  alias Chuuni.Reviews
 
   import ChuuniWeb.UserAuth, only: [require_authenticated_user: 2]
 
@@ -49,23 +48,15 @@ defmodule ChuuniWeb.ShelfController do
 
   def update(conn, %{"id" => id, "shelf" => shelf_params}) do
     shelf = Shelves.get_shelf!(id)
+    user = Chuuni.Repo.one(Ecto.assoc(shelf, :author))
 
     case Shelves.update_shelf(shelf, shelf_params) do
       {:ok, shelf} ->
         conn
-        |> redirect(to: ~p"/shelves/#{shelf}")
+        |> redirect(to: ~p"/@#{user}/shelves/#{shelf}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :edit, shelf: shelf, changeset: changeset)
     end
-  end
-
-  def delete(conn, %{"id" => id}) do
-    shelf = Shelves.get_shelf!(id)
-    {:ok, _shelf} = Shelves.delete_shelf(shelf)
-
-    conn
-    |> put_flash(:info, "Shelf deleted successfully.")
-    |> redirect(to: ~p"/shelves")
   end
 end
