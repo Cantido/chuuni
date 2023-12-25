@@ -4,7 +4,7 @@
 
 <div class="block">
   <div class="columns">
-    <div class="column">
+    <div class="column is-5">
       <div class="media block">
 
         <div class="media-left">
@@ -30,6 +30,38 @@
           <% end %>
         </div>
       </div>
+    </div>
+
+    <div class="column is-3">
+      <table class="table is-fullwidth">
+        <tbody>
+          <tr>
+            <th>Average Rating</th>
+            <td>
+              <%= if @average_rating do %>
+                <%= Decimal.round(@average_rating, 2) %>
+                <span class="fa-solid fa-star" />
+              <% else %>
+                ?
+              <% end %>
+            </td>
+          </tr>
+          <tr>
+            <th>Rating count</th>
+            <td><%= @rating_count %></td>
+          </tr>
+          <tr>
+            <th>Similarity with you</th>
+            <td>
+              <%= if @similarity do %>
+                <%= trunc(@similarity * 100) %>%
+              <% else %>
+                ?
+              <% end %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="column is-4">

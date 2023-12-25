@@ -92,6 +92,11 @@ defmodule Chuuni.Reviews do
     |> Map.new()
   end
 
+  def get_user_review_count(%User{} = user) do
+    Ecto.assoc(user, :reviews)
+    |> Repo.aggregate(:count)
+  end
+
   @doc """
   Returns the list of reviews.
 

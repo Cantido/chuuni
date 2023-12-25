@@ -21,10 +21,17 @@ defmodule ChuuniWeb.UserProfileController do
 
       is_following? = Accounts.following?(conn.assigns.current_user, user)
 
+      average_rating = Reviews.average_rating(user)
+      similarity = Reviews.similarity(conn.assigns.current_user, user)
+      rating_count = Reviews.get_user_review_count(user)
+
       conn
       |> render(
         :profile,
         user: user,
+        average_rating: average_rating,
+        similarity: similarity,
+        rating_count: rating_count,
         recent: recent_reviews,
         follower_count: follower_count,
         following_count: following_count,
@@ -73,28 +80,6 @@ defmodule ChuuniWeb.UserProfileController do
         :all_time,
         user: user,
         top_ten: top_ten
-      )
-    end
-  end
-
-  def statistics(conn, %{"username" => name}) do
-    user = Accounts.get_user_by_name(name)
-
-    if is_nil(user) do
-      conn
-      |> put_status(:not_found)
-      |> put_view(ChuuniWeb.ErrorHTML)
-      |> render(:"404")
-    else
-      average_rating = Reviews.average_rating(user)
-      similarity = Reviews.similarity(conn.assigns.current_user, user)
-
-      conn
-      |> render(
-        :statistics,
-        user: user,
-        average_rating: average_rating,
-        similarity: similarity
       )
     end
   end
