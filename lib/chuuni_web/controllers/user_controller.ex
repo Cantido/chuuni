@@ -17,7 +17,7 @@ defmodule ChuuniWeb.UserController do
     render(conn, :register, changeset: changeset)
   end
 
-  def create(conn, %{"user" => user_params, "h-captcha-response" => captcha_response}) do
+  def create(conn, %{"user" => user_params} = params) do
     if hcaptcha_success?(params["h-captcha-response"], :inet.ntoa(conn.remote_ip)) do
       case Accounts.register_user(user_params) do
         {:ok, user} ->
@@ -36,7 +36,7 @@ defmodule ChuuniWeb.UserController do
     else
       conn
       |> put_view(ChuuniWeb.UserSessionHTML)
-      |> render(:log_in_form, error_message: List.first(body["error-codes"]))
+      |> render(:log_in_form, error_message: "Captcha failed")
     end
   end
 
