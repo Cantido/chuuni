@@ -19,6 +19,15 @@ defmodule ChuuniWeb do
 
   def static_paths, do: ~w(assets fonts fontawesome images webfonts favicon.ico robots.txt)
 
+  def captcha_enabled? do
+    if hcaptcha_config = Application.get_env(:chuuni, :hcaptcha) do
+      Keyword.has_key?(hcaptcha_config, :sitekey) &&
+        Keyword.has_key?(hcaptcha_config, :secret)
+    else
+      false
+    end
+  end
+
   def router do
     quote do
       use Phoenix.Router, helpers: false

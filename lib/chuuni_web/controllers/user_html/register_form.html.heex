@@ -6,10 +6,20 @@
 >
   <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
 
-  <.input field={f[:display_name]} type="text" label="Display name" autocomplete="name" required />
-  <.input field={f[:name]} type="text" label="Username" autocomplete="username" required />
-  <.input field={f[:email]} type="email" label="Email" autocomplete="email" required />
-  <.input field={f[:password]} type="password" label="Password" autocomplete="new-password" required />
+  <div class="block">
+    <.input field={f[:display_name]} type="text" label="Display name" autocomplete="name" required />
+    <.input field={f[:name]} type="text" label="Username" autocomplete="username" required />
+    <.input field={f[:email]} type="email" label="Email" autocomplete="email" required />
+    <.input field={f[:password]} type="password" label="Password" autocomplete="new-password" required />
+  </div>
+
+
+  <%= if ChuuniWeb.captcha_enabled?() do %>
+  <div class="block">
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <div class="h-captcha" data-sitekey={Application.fetch_env!(:chuuni, :hcaptcha) |> Keyword.fetch!(:sitekey)}></div>
+  </div>
+  <% end %>
 
   <:actions>
     <.button>Create an account</.button>

@@ -28,6 +28,11 @@ config :chuuni, Chuuni.Vault,
     default: {Cloak.Ciphers.AES.GCM, tag: "AES.GCM.V1", key: Base.decode64!(vault_key)}
   ]
 
+
+config :chuuni, :hcaptcha,
+  sitekey: System.get_env("CHUUNI_HCAPTCHA_SITEKEY"),
+  secret: System.get_env("CHUUNI_HCAPTCHA_SECRET")
+
 # ## Using releases
 #
 # If you use `mix release`, you need to explicitly enable the server
