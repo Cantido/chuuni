@@ -17,7 +17,7 @@ defmodule ChuuniWeb do
   those modules here.
   """
 
-  def static_paths, do: ~w(assets fonts fontawesome images webfonts favicon.ico robots.txt)
+  def static_paths, do: ~w(assets css fonts fontawesome images js webfonts favicon.ico robots.txt)
 
   def captcha_enabled? do
     if hcaptcha_config = Application.get_env(:chuuni, :hcaptcha) do
