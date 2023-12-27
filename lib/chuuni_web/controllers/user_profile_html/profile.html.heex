@@ -40,7 +40,7 @@
             <td>
               <%= if @average_rating do %>
                 <%= Decimal.round(@average_rating, 2) %>
-                <span class="fa-solid fa-star" />
+                <img src={~p"/images/bootstrap/star-fill.svg"} alt="rating" />
               <% else %>
                 ?
               <% end %>

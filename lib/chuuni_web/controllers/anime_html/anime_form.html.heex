@@ -30,7 +30,9 @@
           <div class="media-content">
             <.input field={f[:cover]} label="Cover" type="file" accept=".png,.jpg" value="cover.png">
               <span class="file-icon">
-                <.icon name="fa-solid fa-upload" />
+                <span class="icon">
+                  <img src={~p"/images/bootstrap/upload.svg"} />
+                </span>
               </span>
               <span class="file-label">
                 Upload cover...

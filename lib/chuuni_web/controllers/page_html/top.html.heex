@@ -30,9 +30,9 @@
       </a>
     </td>
     <td>
-      <p class="is-size-4">
+      <p class="is-size-4 icon-text">
         <%= Decimal.round(review.summary.rating, 2) %>
-        <span class="fa-solid fa-star" />
+        <img src={~p"/images/bootstrap/star-fill.svg"} alt="rating" />
       </p>
     </td>
   </tr>

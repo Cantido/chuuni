@@ -30,7 +30,7 @@ defmodule ChuuniWeb.PageHTML do
             </header>
             <div :if={@summary.count}>
               <footer class="has-text-grey-light">
-                <span>
+                <span class="icon-text">
                   <%= if @summary.rating do %>
                     <%= Decimal.round(@summary.rating, 2) %>
                   <% else %>
@@ -41,12 +41,14 @@ defmodule ChuuniWeb.PageHTML do
                       unknown
                     </span>
                   <% end %>
-                  <span class="fa-solid fa-star" aria-hidden="true" />
-                  <span class="is-sr-only">rating</span>
+                  <span class="icon">
+                    <img src={~p"/images/bootstrap/star-fill.svg"} alt="rating" />
+                  </span>
                   &nbsp;
                   <%= @summary.count %>
-                  <span class="fa-solid fa-user" aria-hidden="true" />
-                  <span class="is-sr-only">reviews</span>
+                  <span class="icon ml-0">
+                    <img src={~p"/images/bootstrap/person-fill.svg"} alt="reviews" />
+                  </span>
                 </span>
               </footer>
             </div>

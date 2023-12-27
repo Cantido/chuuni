@@ -66,8 +66,12 @@
             <%= if is_nil(@rating_summary) or @rating_summary.count == 0 do %>
               <div class="card-content has-text-centered">
                   <p class="is-size-3">
-                    ?
-                    <span class="fa-solid fa-star" />
+                    <span class="icon-text" style="vertical-align: baseline;">
+                      <span>?</span>
+                      <span class="icon">
+                        <img src={~p"/images/bootstrap/star-fill.svg"} height="24" width="24" alt="rating" />
+                      </span>
+                    </span>
                   </p>
               </div>
               <div class="card-footer">
@@ -78,8 +82,14 @@
             <% else %>
               <div class="card-content has-text-centered">
                 <p class="is-size-3">
-                  <%= Decimal.round(@rating_summary.rating, 2) %>
-                  <span class="fa-solid fa-star" />
+                  <span class="icon-text" style="vertical-align: baseline;">
+                    <span>
+                      <%= Decimal.round(@rating_summary.rating, 2) %>
+                    </span>
+                    <span class="icon">
+                      <img src={~p"/images/bootstrap/star-fill.svg"} height="24" width="24" alt="rating" />
+                    </span>
+                  </span>
                 </p>
               </div>
               <div class="card-footer">
@@ -89,9 +99,13 @@
                     hx-target="#extra-info-pane"
                     data-script="on click toggle .tall on #extra-info-pane"
                   >
-                    <%= ngettext "with 1 rating", "with %{count} ratings", @rating_summary.count %>
-                    <span class="icon">
-                      <span class="fa-solid fa-angle-down" />
+                    <span class="icon-text" style="vertical-align: baseline;">
+                      <span>
+                        <%= ngettext "with 1 rating", "with %{count} ratings", @rating_summary.count %>
+                      </span>
+                      <span class="icon">
+                        <img src={~p"/images/bootstrap/caret-down-fill.svg"} alt="open rating summary" />
+                      </span>
                     </span>
                   </a>
                 </div>
@@ -153,8 +167,14 @@
             </header>
             <div class="card-content has-text-centered">
               <p class="is-size-3">
-                <%= if is_nil(@rating_summary), do: 0, else: @rating_summary.count %>
-                <span class="fa-solid fa-user" />
+                <span class="icon-text" style="vertical-align: baseline;">
+                  <span>
+                    <%= if is_nil(@rating_summary), do: 0, else: @rating_summary.count %>
+                  </span>
+                  <span class="icon">
+                    <img src={~p"/images/bootstrap/person-fill.svg"} height="24" width="24" alt="users" />
+                  </span>
+                </span>
               </p>
             </div>
             <div class="card-footer">
