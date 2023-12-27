@@ -28,7 +28,11 @@ defmodule ChuuniWeb.CoreComponents do
 
   def gravatar(assigns) do
     ~H"""
-      <img src={"https://gravatar.com/avatar/#{md5(@email)}?s=#{@size}&d=identicon"} style="object-fit: contain;" />
+    <img
+      src={"https://gravatar.com/avatar/#{md5(@email)}?s=#{@size}&d=identicon"}
+      height={@size}
+      width={@size}
+      style="object-fit: contain;" />
     """
   end
 
