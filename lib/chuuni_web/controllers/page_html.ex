@@ -16,7 +16,7 @@ defmodule ChuuniWeb.PageHTML do
       <article class="card" aria-labelledby={"anime-card-#{@summary.anime.id}"}>
         <a href={~p"/anime/#{@summary.anime}"}>
           <div class="card-image">
-            <div class="image is-2by3">
+            <div class="image">
               <img
                 src={~p"/artwork/anime/#{@summary.anime}/cover.png"}
                 alt={@summary.anime.title.english}
@@ -29,7 +29,7 @@ defmodule ChuuniWeb.PageHTML do
               <%= @summary.anime.title.english %>
             </header>
             <div :if={@summary.count}>
-              <footer class="has-text-grey-light">
+              <footer>
                 <span class="icon-text">
                   <%= if @summary.rating do %>
                     <%= Decimal.round(@summary.rating, 2) %>

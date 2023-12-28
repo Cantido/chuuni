@@ -22,7 +22,7 @@ defmodule ChuuniWeb.AnimeHTML do
     ~H"""
     <article class="media box" aria-label={@title || @subtitle} {@rest}>
       <div class="media-left">
-        <div class="image is-128x128 is-2by3">
+        <div class="image" style="max-width: 8em;">
           <img src={@image} alt={@title} />
         </div>
       </div>

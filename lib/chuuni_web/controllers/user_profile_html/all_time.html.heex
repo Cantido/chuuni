@@ -10,7 +10,7 @@
             <td hx-get={~p"/reviews/#{review}"} hx-target="#main-container" hx-push-url="true">
               <div class="media">
                 <div class="media-left">
-                  <div class="image is-64x64 is-2by3 block">
+                  <div class="image block" style="max-width: 4em;">
                     <img src={~p"/artwork/anime/#{review.anime}/cover.png"} />
                   </div>
                 </div>
