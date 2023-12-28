@@ -39,7 +39,7 @@ defmodule ChuuniWeb.PageController do
 
     conn
     |> put_layout(html: false)
-    |> render(:search, query: query, local_results: local_results, anilist_results: anilist_results)
+    |> render(:search, query: query, local_results: local_results, anilist_results: anilist_results, current_user: conn.assigns[:current_user])
   end
 
   def search_results(conn, %{"query" => query}) do
