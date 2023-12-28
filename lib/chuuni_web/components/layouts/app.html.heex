@@ -13,7 +13,9 @@
     <a href="/top" class="navbar-item">Top Anime</a>
   </div>
 
-  <div class="navbar-end" hx-get="/users/menu" hx-trigger="load, logout from:body, login from:body"></div>
+  <div class="navbar-end" hx-get="/users/menu" hx-trigger="logout from:body, login from:body">
+    <ChuuniWeb.UserSessionHTML.nav_menu current_user={@current_user} />
+  </div>
 </nav>
 
 <main id="main-container" class="section container">
