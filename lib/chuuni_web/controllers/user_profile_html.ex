@@ -9,4 +9,10 @@ defmodule ChuuniWeb.UserProfileHTML do
   attr :rest, :global
 
   def profile_tabs(assigns)
+
+  attr :review, Chuuni.Reviews.Review
+
+  attr :rest, :global
+
+  def activity_card(assigns)
 end

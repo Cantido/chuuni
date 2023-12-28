@@ -1,30 +1,6 @@
 <div id="profile-body">
   <.profile_tabs active_tab={:all_time} user={@user} hx-target="#profile-body" />
 
-  <div class="columns block">
-    <div class="column is-4">
-      <p class="title is-size-4 has-text-centered">Highest Rated</p>
-      <table class="table is-hoverable">
-        <tbody>
-          <tr :for={review <- @top_ten}>
-            <td hx-get={~p"/reviews/#{review}"} hx-target="#main-container" hx-push-url="true">
-              <div class="media">
-                <div class="media-left">
-                  <div class="image block" style="max-width: 4em;">
-                    <img src={~p"/artwork/anime/#{review.anime}/cover.png"} />
-                  </div>
-                </div>
-                <div class="media-content">
-                  <p><%= review.anime.title.english %></p>
-                </div>
-                <div class="media-right">
-                  <p><span class="is-size-3"><%= review.rating %></span></p>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <p class="title is-size-4 has-text-centered">Highest Rated</p>
+  <.activity_card :for={review <- @top_ten} review={review} />
 </div>

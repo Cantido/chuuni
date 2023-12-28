@@ -2,7 +2,5 @@
   <.profile_tabs active_tab={:activity} user={@user} hx-target="#profile-body" />
 
   <p class="title is-size-4 has-text-centered">Recent Activity</p>
-  <div class="block" :for={review <- @recent}>
-    <.activity_card review={review} />
-  </div>
+  <.activity_card :for={review <- @recent} review={review} />
 </div>

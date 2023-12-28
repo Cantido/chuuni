@@ -1,6 +1,6 @@
 <div class="tabs" {@rest} hx-target="#profile-body">
   <ul>
-    <li class={if @active_tab == :activity, do: "is-active", else: ""}><a hx-get={~p"/@#{@user.name}/activity"}>Activity</a></li>
-    <li class={if @active_tab == :all_time, do: "is-active", else: ""}><a hx-get={~p"/@#{@user.name}/alltime"}>All Time</a></li>
+    <li class={if @active_tab == :activity, do: "is-active", else: ""}><a hx-get={~p"/@#{@user.name}/activity"}>Recent Activity</a></li>
+    <li class={if @active_tab == :all_time, do: "is-active", else: ""}><a hx-get={~p"/@#{@user.name}/alltime"}>Highest Rated</a></li>
   </ul>
 </div>
