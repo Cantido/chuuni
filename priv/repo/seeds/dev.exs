@@ -95,21 +95,26 @@ IO.puts("Imported #{anime_count} trending shows.")
 IO.puts("Writing #{review_count} reviews...")
 
 review_params =
-  Stream.zip([
-    Stream.cycle(users),
-    Stream.cycle(anime)
-  ])
-  |> Stream.take(review_count)
-  |> Enum.map(fn {user, show} ->
-    %{
-      rating: Enum.random(1..10),
-      body: Enum.join(Faker.Lorem.paragraphs(), "\n\n"),
-      anime_id: show.id,
-      author_id: user.id,
-      inserted_at: DateTime.utc_now(),
-      updated_at: DateTime.utc_now()
-    }
+  Stream.cycle(users)
+  |> Stream.unfold(fn users_stream ->
+    chunk_size = Enum.random(0..500)
+    {Stream.take(users_stream, chunk_size), Stream.drop(users_stream, chunk_size)}
   end)
+  |> Stream.zip(Stream.cycle(anime))
+  |> Stream.flat_map(fn {users, show} ->
+    Enum.map(users, fn user ->
+      %{
+        rating: Enum.random(1..10),
+        body: Enum.join(Faker.Lorem.paragraphs(), "\n\n"),
+        anime_id: show.id,
+        author_id: user.id,
+        inserted_at: DateTime.utc_now(),
+        updated_at: DateTime.utc_now()
+      }
+    end)
+  end)
+  |> Enum.take(review_count)
+
 
 {^review_count, _} = Chuuni.Repo.insert_all_chunked(Chuuni.Reviews.Review, review_params)
 
