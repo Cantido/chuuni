@@ -31,7 +31,7 @@
     </td>
     <td>
       <p class="is-size-4 icon-text">
-        <%= Decimal.round(review.summary.rating, 2) %>
+        <%= Float.round(review.summary.rating, 2) %>
         <img src={~p"/images/bootstrap/star-fill.svg"} alt="rating" />
       </p>
     </td>

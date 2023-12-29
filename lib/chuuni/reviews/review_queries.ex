@@ -6,7 +6,7 @@ defmodule Chuuni.Reviews.ReviewQueries do
 
   import Ecto.Query
 
-  def review_summary() do
+  def review_summary do
     from r in Review,
       group_by: r.anime_id,
       where: not is_nil(r.rating),
@@ -20,6 +20,23 @@ defmodule Chuuni.Reviews.ReviewQueries do
       select: %ReviewSummary{anime_id: r.anime_id, count: count(r.author_id, :distinct), rating: avg(r.rating)}
   end
 
+  def bayesian_review_summary(query \\ Review) do
+    overall_rating_average =
+      from r in subquery(query), select: avg(r.rating)
+
+    lower_quartile_review_count =
+      from r in Review,
+        join: rs in subquery(review_summary()), on: r.anime_id == rs.anime_id,
+        select: fragment("percentile_cont(0.25) within group (order by ? asc)", rs.count)
+
+    from rs in subquery(review_summary()),
+      select: %ReviewSummary{
+        anime_id: rs.anime_id,
+        count: rs.count,
+        rating: (rs.rating * rs.count + subquery(overall_rating_average) * subquery(lower_quartile_review_count)) / (rs.count + subquery(lower_quartile_review_count))
+      }
+  end
+
   def top(query, count) do
     from r in subquery(query),
       order_by: [desc: :rating],
@@ -31,7 +48,7 @@ defmodule Chuuni.Reviews.ReviewQueries do
       from r in Review,
         where: r.inserted_at >= ago(1, "week")
 
-    from rs in subquery(review_summary(recent)),
+    from rs in subquery(bayesian_review_summary(recent)),
       order_by: [desc: rs.rating, desc: rs.count],
       limit: ^count
   end
@@ -49,7 +66,7 @@ defmodule Chuuni.Reviews.ReviewQueries do
   end
 
   def rating_rank do
-    from r in subquery(review_summary()),
+    from r in subquery(bayesian_review_summary()),
       select: %{anime_id: r.anime_id, rank: over(rank(), :anime)},
       windows: [anime: [order_by: [desc_nulls_last: r.rating]]]
   end

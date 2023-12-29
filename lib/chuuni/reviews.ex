@@ -13,7 +13,7 @@ defmodule Chuuni.Reviews do
 
   def top_rated(limit \\ 10) do
     top_rated =
-      ReviewQueries.review_summary()
+      ReviewQueries.bayesian_review_summary()
       |> ReviewQueries.top(limit)
       |> join(:left, [r], rating_rank in subquery(ReviewQueries.rating_rank()), on: rating_rank.anime_id == r.anime_id)
       |> preload(:anime)
@@ -54,7 +54,7 @@ defmodule Chuuni.Reviews do
   end
 
   def get_rating_summary(rated_id) do
-    Chuuni.Reviews.ReviewQueries.review_summary()
+    Chuuni.Reviews.ReviewQueries.bayesian_review_summary()
     |> where(anime_id: ^rated_id)
     |> Repo.one()
   end

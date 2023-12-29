@@ -84,7 +84,7 @@
                 <p class="is-size-3">
                   <span class="icon-text" style="vertical-align: baseline;">
                     <span>
-                      <%= Decimal.round(@rating_summary.rating, 2) %>
+                      <%= Float.round(@rating_summary.rating, 2) %>
                     </span>
                     <span class="icon">
                       <img src={~p"/images/bootstrap/star-fill.svg"} height="24" width="24" alt="rating" />

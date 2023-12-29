@@ -32,7 +32,7 @@ defmodule ChuuniWeb.PageHTML do
               <footer>
                 <span class="icon-text">
                   <%= if @summary.rating do %>
-                    <%= Decimal.round(@summary.rating, 2) %>
+                    <%= Float.round(@summary.rating, 2) %>
                   <% else %>
                     <span aria-hidden="true">
                       ??

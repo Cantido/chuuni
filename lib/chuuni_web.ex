@@ -21,8 +21,8 @@ defmodule ChuuniWeb do
 
   def captcha_enabled? do
     if hcaptcha_config = Application.get_env(:chuuni, :hcaptcha) do
-      Keyword.has_key?(hcaptcha_config, :sitekey) &&
-        Keyword.has_key?(hcaptcha_config, :secret)
+      not is_nil(hcaptcha_config[:sitekey]) &&
+        not is_nil(hcaptcha_config[:secret])
     else
       false
     end
