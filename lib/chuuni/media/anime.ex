@@ -6,6 +6,7 @@ defmodule Chuuni.Media.Anime do
   alias Chuuni.Media.FuzzyDate
   alias Chuuni.Shelves.ShelfItem
   alias Chuuni.Shelves.Shelf
+  alias Chuuni.Reviews.Review
 
   schema "anime" do
     field :cover, :binary, virtual: true
