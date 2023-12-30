@@ -13,7 +13,7 @@ defmodule ChuuniWeb.PageHTML do
 
   def anime_card(assigns) do
     ~H"""
-      <article class="card is-flex is-flex-direction-column" aria-labelledby={"anime-card-#{@summary.anime.id}"} style="height: 21em;">
+      <article class="card is-flex is-flex-direction-column" aria-labelledby={"anime-card-#{@summary.anime.id}"} style="height: 25em;">
         <div class="card-image">
           <a href={~p"/anime/#{@summary.anime}"}>
             <div class="image">
