@@ -17,6 +17,7 @@
       <div class="box">
         <.input field={f[:description]} type="textarea" label="Description" />
       </div>
+
     </div>
 
     <div class="column">
@@ -40,6 +41,13 @@
             </.input>
           </div>
         </div>
+      </div>
+
+      <div class="box">
+        <.inputs_for :let={external_ids} field={f[:external_ids]}>
+          <.input field={external_ids[:anilist]} type="text" inputmode="numeric" label="AniList ID" />
+          <.input field={external_ids[:myanimelist]} type="text" inputmode="numeric" label="MyAnimeList ID" />
+        </.inputs_for>
       </div>
     </div>
   </div>
