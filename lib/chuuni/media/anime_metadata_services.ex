@@ -12,6 +12,6 @@ defmodule Chuuni.Media.AnimeMetadataServices do
     anime_metadata_services
     |> cast(attrs, [:anilist, :myanimelist])
     |> validate_format(:anilist, ~r/\d{1,9}/)
-    |> validate_format(:myanimelist, ~r/\d{1,9}/)
+    |> validate_format(:myanimelist, ~r/\d{1,16}/)
   end
 end

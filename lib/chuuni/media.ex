@@ -145,6 +145,7 @@ defmodule Chuuni.Media do
       query ($id: Int) {
         Media (id: $id, type: ANIME) {
           id
+          idMal
           title {
             romaji
             english
@@ -190,7 +191,8 @@ defmodule Chuuni.Media do
         day: media["endDate"]["day"]
       },
       external_ids: %{
-        anilist: anilist_id
+        anilist: anilist_id,
+        myanimelist: media["idMal"]
       }
     }
 

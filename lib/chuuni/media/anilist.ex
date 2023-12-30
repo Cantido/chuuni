@@ -13,6 +13,7 @@ defmodule Chuuni.Media.Anilist do
           }
           media(type: ANIME, sort: TRENDING_DESC) {
             id
+            idMal
             description
             title {
               romaji
@@ -83,8 +84,12 @@ defmodule Chuuni.Media.Anilist do
         day: response["endDate"]["day"]
       },
       external_ids: %{
-        anilist: Integer.to_string(response["id"])
+        anilist: id_to_string(response["id"]),
+        myanimelist: id_to_string(response["idMal"])
       }
     }
   end
+
+  defp id_to_string(nil), do: nil
+  defp id_to_string(i), do: Integer.to_string(i)
 end
