@@ -102,9 +102,18 @@ review_params =
   end)
   |> Stream.zip(Stream.cycle(anime))
   |> Stream.flat_map(fn {users, show} ->
+    mean_rating = Enum.random(1..10)
+
     Enum.map(users, fn user ->
+      rating =
+        :rand.normal(mean_rating, 2)
+        |> max(1.0)
+        |> min(10.0)
+        |> Float.round()
+        |> trunc()
+
       %{
-        rating: Enum.random(1..10),
+        rating: rating,
         body: Enum.join(Faker.Lorem.paragraphs(), "\n\n"),
         anime_id: show.id,
         author_id: user.id,
