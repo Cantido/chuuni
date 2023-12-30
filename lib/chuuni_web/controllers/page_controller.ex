@@ -53,7 +53,7 @@ defmodule ChuuniWeb.PageController do
   end
 
   def top(conn, _params) do
-    reviews = Reviews.top_rated()
+    reviews = Reviews.top_rated(50)
 
     conn
     |> render(:top, reviews: reviews)

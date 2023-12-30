@@ -19,7 +19,6 @@ defmodule ChuuniWeb.AnimeController do
     rating_rank = Reviews.get_rating_rank(id)
     popularity_rank = Reviews.get_popularity_rank(id)
 
-    reviews = Reviews.latest_reviews_for_item(id)
 
     anime_count = Media.count_anime()
 
@@ -39,12 +38,17 @@ defmodule ChuuniWeb.AnimeController do
       anime: anime,
       anime_count: anime_count,
       rating_summary: rating_summary,
-      reviews: reviews,
       rating_rank: rating_rank,
       popularity_rank: popularity_rank,
       user_review: user_review,
       user_shelf_item: user_shelf_item,
       review_changeset: review_changeset)
+  end
+
+  def reviews(conn, %{"anime_id" => id}) do
+    reviews = Reviews.latest_reviews_for_item(id)
+
+    render(conn, :reviews, reviews: reviews)
   end
 
   def rating_breakdown(conn, %{"anime_id" => id}) do

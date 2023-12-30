@@ -4,35 +4,37 @@
   Top Anime
 </.header>
 
-<table class="table is-fullwidth">
+<table class="table is-fullwidth is-hoverable">
   <tr>
     <th>Rank</th>
     <th>Title</th>
     <th>Rating</th>
   </tr>
 
-  <tr :for={review <- @reviews}>
-    <td><p class="is-size-1 has-text-centered" style="padding-top: 3.75rem"><%= review.rating_rank.rank %></p></td>
+  <tr :for={review <- @reviews} hx-get={~p"/anime/#{review.summary.anime}"} hx-target="#main-container" hx-push-url="true" class="is-clickable">
+    <td><p class="is-size-1 has-text-centered" style="padding-top: calc(50% - 0.15em)"><%= review.rating_rank.rank %></p></td>
     <td>
-      <a href={~p"/anime/#{review.summary.anime}"}>
-        <div class="media">
-          <div class="media-left">
-            <p class="image" style="max-width: 8em;">
-              <img src={~p"/artwork/anime/#{review.summary.anime}/cover.png"} />
-            </p>
-          </div>
-          <div class="media-content">
-            <p class="title is-4"><%= review.summary.anime.title.english %></p>
-            <p class="subtitle is-6"><%= review.summary.anime.title.romaji %></p>
-            <p><strong>Aired: </strong><ChuuniWeb.AnimeHTML.fuzzy_date_range start_date={review.summary.anime.start_date} stop_date={review.summary.anime.stop_date} /></p>
-          </div>
+      <div class="media">
+        <div class="media-left">
+          <p class="image" style="max-width: 6em;">
+            <img src={~p"/artwork/anime/#{review.summary.anime}/cover.png"} />
+          </p>
         </div>
-      </a>
+        <div class="media-content">
+          <p class="title is-4"><%= review.summary.anime.title.english %></p>
+          <p class="subtitle is-6"><%= review.summary.anime.title.romaji %></p>
+          <p><strong>Aired: </strong><ChuuniWeb.AnimeHTML.fuzzy_date_range start_date={review.summary.anime.start_date} stop_date={review.summary.anime.stop_date} /></p>
+        </div>
+      </div>
     </td>
     <td>
-      <p class="is-size-4 icon-text">
-        <%= Float.round(review.summary.rating, 2) %>
-        <img src={~p"/images/bootstrap/star-fill.svg"} alt="rating" />
+      <p class="is-size-4 icon-text has-text-centered pt-1" >
+        <span>
+          <%= Float.round(review.summary.rating, 2) %>
+        </span>
+        <span class="icon">
+          <img src={~p"/images/bootstrap/star-fill.svg"} height="24" width="24" alt="rating" />
+        </span>
       </p>
     </td>
   </tr>

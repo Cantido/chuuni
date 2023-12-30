@@ -228,17 +228,8 @@
       </section>
     <% end %>
 
-    <section class="block">
-      <h2 class="title is-4">Reviews</h2>
-
-      <%= if Enum.count(@reviews) == 0 do %>
-        <p>This anime has not been reviewed yet.</p>
-      <% end %>
-
-      <div :for={review <- @reviews} class="block">
-        <ChuuniWeb.ReviewHTML.review_card review={review} />
-      </div>
-    </section>
-
+    <div class="block has-text-centered" hx-get={~p"/anime/#{@anime}/reviews"} hx-trigger="intersect once" hx-swap="outerHTML">
+        <img class="htmx-indicator" src={~p"/images/three-dots.svg"} width="48"/>
+    </div>
   </div>
 </div>
