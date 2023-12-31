@@ -5,8 +5,12 @@ defmodule Chuuni.Accounts do
 
   import Ecto.Query, warn: false
   alias Chuuni.Repo
+  alias Chuuni.Media.Anime
+  alias Chuuni.Media.Anilist
 
   alias Chuuni.Accounts.{Follow, User, UserToken, UserNotifier, UserQueries}
+
+  require Logger
 
   def get_followers(%User{} = user) do
     Repo.all(
@@ -426,5 +430,83 @@ defmodule Chuuni.Accounts do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
+  end
+
+  def import_mal_profile(%User{} = user, username) when is_binary(username) do
+    unless username =~ ~r/^[a-zA-Z0-9]{2,16}$/ do
+      raise "Not a valid MAL username: #{inspect username}."
+    end
+
+    user_shelves = Chuuni.Shelves.list_shelves_for_user(user)
+    client_id =
+      Application.fetch_env!(:chuuni, :myanimelist)
+      |> Keyword.fetch!(:client_id)
+
+    {:ok, resp} = HTTPoison.get("https://api.myanimelist.net/v2/users/#{username}/animelist?fields=list_status{status,score,comments}&limit=1000", [{"X-MAL-CLIENT-ID", client_id}])
+
+    Jason.decode!(resp.body)
+    |> Map.fetch!("data")
+    |> tap(fn data ->
+      Logger.debug("Importing #{Enum.count(data)} list entries from MyAnimeList...")
+    end)
+    |> Enum.map(fn list_node ->
+      anime_mal_id = list_node["node"]["id"]
+
+      mal_list_name = list_node["list_status"]["status"]
+
+      target_list_name =
+        case mal_list_name do
+          "watching" -> "Watching"
+          "completed" -> "Completed"
+          "on_hold" -> "On Hold"
+          "dropped" -> "Dropped"
+          "plan_to_watch" -> "Plan to Watch"
+          nil -> nil
+        end
+
+      target_shelf = Enum.find(user_shelves, &(&1.title == target_list_name))
+
+      rating = list_node["list_status"]["score"]
+      review_comment = list_node["list_status"]["comments"]
+
+      {anime_mal_id, target_shelf, rating, review_comment}
+    end)
+    |> then(fn nodes ->
+      mal_ids = Enum.map(nodes, &elem(&1, 0))
+
+      local_anime = Repo.all(from a in Anime, where: a.external_ids["myanimelist"] in ^mal_ids, select: {a.external_ids["myanimelist"], a}) |> Map.new()
+      have_ids = Map.keys(local_anime)
+
+      anime_to_import =
+        Enum.reject(mal_ids, fn mal_id ->
+          Enum.member?(have_ids, mal_id)
+        end)
+
+      rest_anime =
+        Enum.chunk_every(anime_to_import, 50)
+        |> Enum.with_index()
+        |> Enum.flat_map(fn {chunk, page_number} ->
+          {:ok, rest_anime} = Anilist.import_mal_anime(chunk, page_number + 1, 50)
+          rest_anime
+        end)
+
+      all_anime = Map.merge(local_anime, Map.new(rest_anime, fn anime -> {String.to_integer(anime.external_ids.myanimelist), anime} end))
+
+      Enum.map(nodes, fn {mal_id, shelf, rating, comment} ->
+        if anime = Map.get(all_anime, mal_id) do
+          {anime, shelf, rating, comment}
+        else
+          nil
+        end
+      end)
+    end)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.map(fn {anime, target_shelf, rating, review_comment} ->
+      {:ok, _shelf_item} = Chuuni.Shelves.create_shelf_item(%{anime_id: anime.id, shelf_id: target_shelf.id}, user)
+
+      if rating in 1..10 do
+        {:ok, _review} = Chuuni.Reviews.create_review(%{rating: rating, body: review_comment, author_id: user.id, anime_id: anime.id})
+      end
+    end)
   end
 end

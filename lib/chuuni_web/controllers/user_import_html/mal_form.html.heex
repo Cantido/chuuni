@@ -1,0 +1,39 @@
+<form hx-post={~p"/users/import-mal"}>
+  <div :if={@success_message} class="notification is-success">
+    <%= @success_message %>
+  </div>
+  <div :if={@danger_message} class="notification is-danger">
+    <%= @danger_message %>
+  </div>
+
+  <input name="_csrf_token" type="hidden" value={get_csrf_token()} />
+
+  <label class="label" for="mal_username_input">MyAnimeList username</label>
+  <div class="field has-addons">
+    <div class="control">
+      <div class="button is-static">
+        https://myanimelist.net/profile/
+      </div>
+    </div>
+    <div class="control">
+      <input
+        id="mal_username_input"
+        name="mal_username"
+        type="text"
+        autocomplete="username"
+        maxlength="12"
+        minlength="2"
+        pattern="^[a-zA-Z0-9]{2,16}$"
+        class="input"
+        title="between 2 and 16 characters long, alphanumeric characters only, no spaces"
+        required
+      />
+    </div>
+    <div class="control">
+      <button class="button is-primary">Import my reviews</button>
+    </div>
+  </div>
+  <p class="help">
+    Username must be between 2 and 16 characters, alphanumeric characters only, no spaces.
+  </p>
+</form>

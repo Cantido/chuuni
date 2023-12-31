@@ -33,6 +33,9 @@ config :chuuni, :hcaptcha,
   sitekey: System.get_env("CHUUNI_HCAPTCHA_SITEKEY"),
   secret: System.get_env("CHUUNI_HCAPTCHA_SECRET")
 
+config :chuuni, :myanimelist,
+  client_id: System.get_env("CHUUNI_MAL_CLIENT_ID")
+
 # ## Using releases
 #
 # If you use `mix release`, you need to explicitly enable the server

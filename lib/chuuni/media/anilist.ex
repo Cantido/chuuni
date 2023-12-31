@@ -1,6 +1,84 @@
 defmodule Chuuni.Media.Anilist do
   alias Chuuni.Media
 
+  def import_mal_anime(mal_ids, page, page_size) when is_list(mal_ids) do
+    Neuron.Config.set(url: "https://graphql.anilist.co")
+
+    {:ok, resp} = Neuron.query("""
+      query ($idMal_in: [Int], $page: Int, $perPage: Int) {
+        Page(page: $page, perPage: $perPage) {
+          media (idMal_in: $idMal_in, type: ANIME, sort: ID) {
+            id
+            idMal
+            title {
+              romaji
+              english
+              native
+            }
+            coverImage {
+              extraLarge
+            }
+            description(asHtml: false)
+            startDate {
+              year
+              month
+              day
+            }
+            endDate {
+              year
+              month
+              day
+            }
+          }
+        }
+      }
+      """,
+    %{idMal_in: mal_ids, perPage: page_size, page: page}
+    )
+
+    Enum.map(resp.body["data"]["Page"]["media"], fn media ->
+      {:ok, anime} = import_anime_response(media)
+      anime
+    end)
+    |> then(fn anime -> {:ok, anime} end)
+  end
+
+  def import_mal_anime(mal_id) when is_integer(mal_id) do
+    Neuron.Config.set(url: "https://graphql.anilist.co")
+
+    {:ok, resp} = Neuron.query("""
+      query ($idMal: Int) {
+        Media (idMal: $idMal, type: ANIME) {
+          id
+          idMal
+          title {
+            romaji
+            english
+            native
+          }
+          coverImage {
+            extraLarge
+          }
+          description(asHtml: false)
+          startDate {
+            year
+            month
+            day
+          }
+          endDate {
+            year
+            month
+            day
+          }
+        }
+      }
+      """,
+    %{idMal: mal_id}
+    )
+
+    import_anime_response(resp.body["data"]["Media"])
+  end
+
   def trending_anime(limit) do
     Neuron.Config.set(url: "https://graphql.anilist.co")
 

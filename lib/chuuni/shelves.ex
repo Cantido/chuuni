@@ -73,8 +73,9 @@ defmodule Chuuni.Shelves do
 
   def create_shelf_item(attrs, current_user) do
     %ShelfItem{}
-    |> ShelfItem.changeset(attrs)
+    |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_assoc(:author, current_user)
+    |> ShelfItem.changeset(attrs)
     |> Repo.insert()
   end
 

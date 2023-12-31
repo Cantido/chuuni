@@ -120,6 +120,9 @@ defmodule ChuuniWeb.Router do
 
     scope "/users" do
       get "/menu", UserSessionController, :menu
+
+      get "/import", UserImportController, :index
+      post "/import-mal", UserImportController, :import_mal
     end
   end
 

@@ -20,7 +20,6 @@ defmodule Chuuni.Shelves.ShelfItem do
   def changeset(shelf_item, attrs) do
     shelf_item
     |> cast(attrs, [:shelf_id, :anime_id, :author_id, :started_at, :finished_at])
-    |> validate_required([:shelf_id, :anime_id, :author_id])
     |> assoc_constraint(:shelf)
     |> assoc_constraint(:author)
     |> assoc_constraint(:anime)
