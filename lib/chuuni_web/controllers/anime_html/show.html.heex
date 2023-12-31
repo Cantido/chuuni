@@ -56,7 +56,7 @@
       </div>
     </header>
 
-    <section>
+    <section class="block">
       <h2 class="is-sr-only">Statistics</h2>
       <div class="columns">
         <div class="column">
@@ -97,20 +97,11 @@
               </div>
               <div class="card-footer">
                 <div class="card-footer-item">
-                  <a
-                    hx-get={~p"/anime/#{@anime}/rating-breakdown"}
-                    hx-target="#extra-info-pane"
-                    data-script="on click toggle .tall on #extra-info-pane"
-                  >
-                    <span class="icon-text" style="vertical-align: baseline;">
-                      <span>
-                        <%= ngettext "with 1 rating", "with %{count} ratings", @rating_summary.count %>
-                      </span>
-                      <span class="icon">
-                        <img src={~p"/images/bootstrap/caret-down-fill.svg"} alt="open rating summary" />
-                      </span>
+                  <span class="icon-text" style="vertical-align: baseline;">
+                    <span>
+                      <%= ngettext "with 1 rating", "with %{count} ratings", @rating_summary.count %>
                     </span>
-                  </a>
+                  </span>
                 </div>
               </div>
             <% end %>
@@ -190,27 +181,23 @@
       </div>
     </section>
 
-    <style>
-    @media (prefers-reduced-motion) {
-      #extra-info-pane {
-        transition: none;
-      }
-    }
-    #extra-info-pane {
-      transition: max-height 0.5s ease-in;
-      overflow: hidden;
-      max-height: 0;
-    }
+    <section class="card block">
+      <div class="card-header">
+        <h2 class="card-header-title">Review statistics</h2>
+        <button class="card-header-icon"
+          hx-get={~p"/anime/#{@anime}/rating-breakdown"}
+          hx-target="closest .card-header"
+          hx-swap="afterend"
+          hx-trigger="click once"
+          data-script="on click toggle .is-hidden on #rating-breakdown"
+        >
+          <span class="icon">
+            <img src={~p"/images/bootstrap/caret-down-fill.svg"} alt="open rating summary" />
+          </span>
+        </button>
+      </div>
 
-    #extra-info-pane.tall {
-      max-height: 50em;
-    }
-    </style>
-
-    <section
-      id="extra-info-pane"
-      class="block"
-    />
+    </section>
 
     <section class="box">
       <h2 class="title is-size-5">Description</h2>

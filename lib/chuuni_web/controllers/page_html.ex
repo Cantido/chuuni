@@ -33,7 +33,9 @@ defmodule ChuuniWeb.PageHTML do
             <footer>
               <span class="icon-text">
                 <%= if @summary.rating do %>
-                  <%= Float.round(@summary.rating, 2) %>
+                  <span>
+                    <%= Float.round(@summary.rating, 2) %>
+                  </span>
                 <% else %>
                   <span aria-hidden="true">
                     ??
@@ -45,8 +47,10 @@ defmodule ChuuniWeb.PageHTML do
                 <span class="icon">
                   <img src={~p"/images/bootstrap/star-fill.svg"} alt="rating" />
                 </span>
-                &nbsp;
-                <%= @summary.count %>
+
+                <span>
+                  <%= @summary.count %>
+                </span>
                 <span class="icon ml-0">
                   <img src={~p"/images/bootstrap/person-fill.svg"} alt="reviews" />
                 </span>
