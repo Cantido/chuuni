@@ -3,6 +3,8 @@
 #
 # This script generates a lot of fake website data for testing purposes.
 
+import Ecto.Query
+
 Application.ensure_started(:faker)
 
 # Keep these numbers prime so that when we cycle & zip lists together,
@@ -81,13 +83,23 @@ IO.puts("Importing top #{anime_count} trending shows from AniList...")
 
 anime =
   Chuuni.Media.Anilist.trending_anime(anime_count)
-  |> Enum.reverse()
-  |> Enum.map(fn resp ->
-    if existing_anime = Chuuni.Media.get_anime_by_anilist_id(Integer.to_string(resp["id"])) do
-      Chuuni.Media.delete_anime(existing_anime)
-    end
-    {:ok, anime} = Chuuni.Media.Anilist.import_anime_response(resp)
-    anime
+  |> then(fn resp ->
+    mal_ids =
+      Enum.map(resp, fn resp -> resp["id"] end)
+
+    existing_ids =
+      Chuuni.Repo.all(from a in Chuuni.Media.Anime, where: a.external_ids["myanimelist"] in ^mal_ids, select: a.external_ids["myanimelist"])
+      |> Enum.map(&String.to_integer/1)
+
+    ids_to_import = MapSet.difference(MapSet.new(mal_ids), MapSet.new(existing_ids))
+
+    Enum.filter(resp, fn resp_item ->
+      resp_item["id"] in ids_to_import
+    end)
+    |> Enum.map(fn resp_item ->
+      {:ok, anime} = Chuuni.Media.Anilist.import_anime_response(resp_item)
+      anime
+    end)
   end)
 
 IO.puts("Imported #{anime_count} trending shows.")
