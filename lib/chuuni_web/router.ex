@@ -124,6 +124,10 @@ defmodule ChuuniWeb.Router do
       get "/import", UserImportController, :index
       post "/import-mal", UserImportController, :import_mal
     end
+
+    scope "/about" do
+      get "/reviews", AboutController, :reviews
+    end
   end
 
   # Other scopes may use custom stacks.

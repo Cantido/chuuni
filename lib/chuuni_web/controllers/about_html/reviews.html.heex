@@ -1,0 +1,92 @@
+<title translate="no">About · Chuuni</title>
+
+<article class="content">
+<h1 class="title">How ratings are averaged</h1>
+
+  <p>
+    Chuuni uses the <a href="https://en.wikipedia.org/wiki/Bayesian_average">Bayesian average</a>
+    of ratings, instead of the mean rating. A Bayesian average scales the resulting average for a single anime
+    closer towards the global rating average when the number of ratings is small, which allows Chuuni instances
+    to have fair ratings at any user count. That way, a single user can't disrupt the average rating,
+    even if they're the only person who has given a rating.
+  </p>
+
+  <h2 class="title is-4">An example</h2>
+
+  <p>
+    We will use this instance's data to show you how the top anime on this instance,
+    <a href={~p"/anime/#{@top_anime.summary.anime}"}><i><%= @top_anime.summary.anime.title.english %></i></a>, received its rating of
+    <%= Float.round(@top_anime.summary.rating, 2) %>
+    <img src={~p"/images/bootstrap/star-fill.svg"} />,
+    instead of the arithmetic mean of its ratings, which is <%= Decimal.round(@top_mean_rating.rating, 2) %>.
+  </p>
+  <p>
+    Before we can calculate the Bayesian average of ratings for <i><%= @top_anime.summary.anime.title.english %></i>, we must calculate two site-wide constants:
+
+    <ul>
+      <li>the average of all ratings on the instance, \(m\)</li>
+      <li>the confidence number, \(C\)</li>
+    </ul>
+
+    The confidence number is the 25th-percentile value of the number of ratings each anime has.
+    That just means if you counted all of the site's ratings for each anime,
+    then put those numbers in a list, and sorted them top-to-bottom, the 25th-percentile value
+    would sit 25% of the way up from the bottom of the list.
+    That means that 25% of the site's anime have a rating count below this value, and the rest are above it.
+  </p>
+
+  <p>
+    This instance has <%= ngettext "1 rating", "%{count} ratings", @global_rating_count %>
+    total, with an average of <%= Decimal.round(@global_rating_average, 2) %>
+    <img src={~p"/images/bootstrap/star-fill.svg"} alt="stars" />,
+    and the rating count that sits 25% of the way up from the bottom of the anime list is
+    <%=  Float.round(@rating_lower_quartile, 2) %>.
+  </p>
+
+  <p>
+    The equation for the Bayesian average looks like this:
+    <span>\[ bayesAvg = {animeRatingAvg * animeRatingCount + C * m \over animeRatingCount + C} \]</span>
+
+    <i><%= @top_anime.summary.anime.title.english %></i> has
+    <%= ngettext "1 rating", "%{count} ratings", @top_mean_rating.count %>, with a mean rating of <%= Decimal.round(@top_mean_rating.rating, 2) %>.
+    Plugging those numbers into the equation, we get:
+
+    <span>
+      \[ bayesAvg =
+      {
+      <%= Decimal.round(@top_mean_rating.rating, 2) %>
+      *
+      <%= @top_mean_rating.count %>
+      +
+      <%= Float.round(@rating_lower_quartile, 2) %>
+      *
+      <%= Decimal.round(@global_rating_average, 2) %>
+      \over
+      <%= @top_mean_rating.count %>
+      +
+      <%= Float.round(@rating_lower_quartile, 2) %>
+      } \]
+    </span>
+
+    Which gives us a final answer of...
+
+    <span>
+      \[ bayesAvg = <%= Float.round(@top_anime.summary.rating, 2) %> \]
+    </span>
+
+    If you go to the <a href={~p"/top"}>top anime page</a>, you will see that
+    <i><%= @top_anime.summary.anime.title.english %></i>
+    indeed has a rating of
+    <%= Float.round(@top_anime.summary.rating, 2) %>
+    <img src={~p"/images/bootstrap/star-fill.svg"} alt="stars" />.
+  </p>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script type="text/javascript">
+    MathJax.typeset()
+  </script>
+</article>
+
+
+
