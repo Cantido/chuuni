@@ -11,15 +11,8 @@ defmodule ChuuniWeb.ShelfHTML do
 
   def shelf_form(assigns)
 
-  attr :href, :string, required: true
-  attr :target, :string, default: ""
-  attr :image, :string, required: true
-  attr :title, :string, required: true
-  attr :subtitle, :string, required: true
-  attr :start_date, :string, default: "unknown"
-  attr :stop_date, :string, default: "unknown"
-  attr :studios, :string, default: "unknown"
-  attr :rating, :integer, default: nil
+  attr :anime, Chuuni.Media.Anime
+  attr :review, Chuuni.Reviews.Review, default: nil
   attr :rest, :global
 
   slot :actions
@@ -34,10 +27,4 @@ defmodule ChuuniWeb.ShelfHTML do
     <%= (@start_date) %>&ndash;<%= (@stop_date) %>
     """
   end
-
-  attr :items, :list, default: []
-
-  attr :rest, :global
-
-  def shelf(assigns)
 end

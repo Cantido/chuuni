@@ -82,7 +82,7 @@ defmodule Chuuni.Media.Anilist do
 
     media = resp.body["data"]["Media"]
 
-    Anilist.import_anime_response(media)
+    import_anime_response(media)
   end
 
   def trending_anime(limit) do

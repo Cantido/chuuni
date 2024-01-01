@@ -1,22 +1,26 @@
-<tr hx-get={@href} hx-target="#main-container" class="is-clickable">
+<tr hx-get={~p"/anime/#{@anime}"} hx-target="#main-container" class="is-clickable">
   <td>
     <figure class="image">
-      <img src={@image} />
+      <img src={~p"/artwork/anime/#{@anime}/cover.png"} />
     </figure>
   </td>
   <td>
-    <div class="title is-5"><%= (@title) %></div>
-    <div class="subtitle is-7"><%= (@subtitle) %></div>
+    <div class="title is-5"><%= @anime.title.english %></div>
+    <div class="subtitle is-7"><%= @anime.title.romaji %></div>
   </td>
   <td>
-    <.fuzzy_date_range start_date={@start_date} stop_date={@stop_date} />
+    <ChuuniWeb.AnimeHTML.fuzzy_date_range start_date={@anime.start_date} stop_date={@anime.stop_date} />
   </td>
   <td>
-    <%= (@studios) %>
   </td>
   <td>
-    <%= if (@rating) do %>
-      <p class="is-size-3"><%= Decimal.round(@rating_summary.rating, 2) %><small class="is-size-5">/10</small></p>
+    <%= if @review do %>
+      <p class="is-size-4 icon-text">
+        <span><%= @review.rating %></span>
+        <span class="icon">
+          <img src={~p"/images/bootstrap/star-fill.svg"} />
+        </span>
+      </p>
     <% else %>
       <p>No rating</p>
     <% end %>
