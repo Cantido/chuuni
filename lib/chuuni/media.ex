@@ -139,43 +139,6 @@ defmodule Chuuni.Media do
   end
 
 
-  def import_anilist_anime(anilist_id) do
-    Neuron.Config.set(url: "https://graphql.anilist.co")
-
-    {:ok, resp} = Neuron.query("""
-      query ($id: Int) {
-        Media (id: $id, type: ANIME) {
-          id
-          idMal
-          title {
-            romaji
-            english
-            native
-          }
-          coverImage {
-            extraLarge
-          }
-          description(asHtml: false)
-          startDate {
-            year
-            month
-            day
-          }
-          endDate {
-            year
-            month
-            day
-          }
-        }
-      }
-      """,
-    %{id: anilist_id}
-    )
-
-    media = resp.body["data"]["Media"]
-
-    Anilist.import_anime_response(media)
-  end
 
   @doc """
   Updates a anime.

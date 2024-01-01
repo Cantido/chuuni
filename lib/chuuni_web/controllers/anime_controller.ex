@@ -6,6 +6,7 @@ defmodule ChuuniWeb.AnimeController do
   alias Chuuni.Shelves.ShelfItem
   alias Chuuni.Media
   alias Chuuni.Media.Anime
+  alias Chuuni.Media.Anilist
 
   require Logger
 
@@ -119,7 +120,7 @@ defmodule ChuuniWeb.AnimeController do
 
   def import(conn, %{"provider" => "anilist", "id" => id}) do
     if conn.assigns[:current_user] do
-      case Media.import_anilist_anime(id) do
+      case Anilist.import_anilist_anime(id) do
         {:ok, anime} ->
           conn
           |> put_flash(:info, "Anime imported successfully.")
