@@ -116,9 +116,10 @@ defmodule Chuuni.Reviews do
     |> Repo.all()
   end
 
-  def latest_reviews_for_item(itemid) do
+  def latest_reviews_for_item(%User{} = for_user, itemid) do
     ReviewQueries.latest(10)
     |> where(anime_id: ^itemid)
+    |> where([r], r.author_id != ^for_user.id)
     |> preload(:author)
     |> Repo.all()
   end
