@@ -8,6 +8,7 @@ defmodule Chuuni.Application do
   @impl true
   def start(_type, _args) do
     test_artwork_path()
+    Chuuni.Media.Anilist.register_fragments()
 
     children = [
       Chuuni.Vault,

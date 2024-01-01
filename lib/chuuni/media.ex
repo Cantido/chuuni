@@ -138,6 +138,7 @@ defmodule Chuuni.Media do
     |> Repo.insert()
   end
 
+
   def import_anilist_anime(anilist_id) do
     Neuron.Config.set(url: "https://graphql.anilist.co")
 
@@ -173,36 +174,7 @@ defmodule Chuuni.Media do
 
     media = resp.body["data"]["Media"]
 
-    anime_params = %{
-      title: %{
-        english: media["title"]["english"],
-        romaji: media["title"]["romaji"],
-        native: media["title"]["native"]
-      },
-      description: media["description"],
-      start_date: %{
-        year: media["startDate"]["year"],
-        month: media["startDate"]["month"],
-        day: media["startDate"]["day"]
-      },
-      stop_date: %{
-        year: media["endDate"]["year"],
-        month: media["endDate"]["month"],
-        day: media["endDate"]["day"]
-      },
-      external_ids: %{
-        anilist: anilist_id,
-        myanimelist: media["idMal"]
-      }
-    }
-
-    with {:ok, anime} <- create_anime(anime_params),
-         {:ok, resp} when resp.status_code == 200 <- HTTPoison.get(media["coverImage"]["extraLarge"]),
-         cover_path = cover_artwork_path(anime),
-         :ok <- File.mkdir_p(Path.dirname(cover_path)),
-         :ok <- File.write(cover_path, resp.body) do
-      {:ok, anime}
-    end
+    Anilist.import_anime_response(media)
   end
 
   @doc """

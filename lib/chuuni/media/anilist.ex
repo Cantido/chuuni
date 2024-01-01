@@ -1,6 +1,34 @@
 defmodule Chuuni.Media.Anilist do
   alias Chuuni.Media
 
+  def register_fragments do
+    Neuron.Fragment.register("""
+      AnimeParts on Media {
+        id
+        idMal
+        title {
+          romaji
+          english
+          native
+        }
+        coverImage {
+          extraLarge
+        }
+        description(asHtml: false)
+        startDate {
+          year
+          month
+          day
+        }
+        endDate {
+          year
+          month
+          day
+        }
+      }
+    """)
+  end
+
   def import_mal_anime(mal_ids, page, page_size) when is_list(mal_ids) do
     Neuron.Config.set(url: "https://graphql.anilist.co")
 
@@ -8,27 +36,7 @@ defmodule Chuuni.Media.Anilist do
       query ($idMal_in: [Int], $page: Int, $perPage: Int) {
         Page(page: $page, perPage: $perPage) {
           media (idMal_in: $idMal_in, type: ANIME, sort: ID) {
-            id
-            idMal
-            title {
-              romaji
-              english
-              native
-            }
-            coverImage {
-              extraLarge
-            }
-            description(asHtml: false)
-            startDate {
-              year
-              month
-              day
-            }
-            endDate {
-              year
-              month
-              day
-            }
+            ...AnimeParts
           }
         }
       }
@@ -49,27 +57,7 @@ defmodule Chuuni.Media.Anilist do
     {:ok, resp} = Neuron.query("""
       query ($idMal: Int) {
         Media (idMal: $idMal, type: ANIME) {
-          id
-          idMal
-          title {
-            romaji
-            english
-            native
-          }
-          coverImage {
-            extraLarge
-          }
-          description(asHtml: false)
-          startDate {
-            year
-            month
-            day
-          }
-          endDate {
-            year
-            month
-            day
-          }
+          ...MediaParts
         }
       }
       """,
@@ -77,6 +65,24 @@ defmodule Chuuni.Media.Anilist do
     )
 
     import_anime_response(resp.body["data"]["Media"])
+  end
+
+  def import_anilist_anime(anilist_id) do
+    Neuron.Config.set(url: "https://graphql.anilist.co")
+
+    {:ok, resp} = Neuron.query("""
+      query ($id: Int) {
+        Media (id: $id, type: ANIME) {
+          ...AnimeParts
+        }
+      }
+      """,
+    %{id: anilist_id}
+    )
+
+    media = resp.body["data"]["Media"]
+
+    Anilist.import_anime_response(media)
   end
 
   def trending_anime(limit) do
@@ -90,31 +96,11 @@ defmodule Chuuni.Media.Anilist do
             perPage
           }
           media(type: ANIME, sort: TRENDING_DESC) {
-            id
-            idMal
-            description
-            title {
-              romaji
-              english
-              native
-            }
-            coverImage {
-              extraLarge
-            }
+            ...AnimeParts
             studios(sort: NAME) {
               nodes {
                 name
               }
-            }
-            startDate {
-              year
-              month
-              day
-            }
-            endDate {
-              year
-              month
-              day
             }
           }
         }
