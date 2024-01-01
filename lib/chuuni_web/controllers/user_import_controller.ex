@@ -4,7 +4,6 @@ defmodule ChuuniWeb.UserImportController do
   alias Chuuni.Accounts
 
   import ChuuniWeb.UserAuth, only: [require_authenticated_user: 2]
-  import Ecto.Query
 
   require Logger
 

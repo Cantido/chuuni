@@ -11,5 +11,4 @@ defmodule ChuuniWeb.UserHTML do
   attr :close_url, :string, default: nil
 
   def error_message(assigns)
-
 end
