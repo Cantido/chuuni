@@ -1,0 +1,9 @@
+<nav class="menu">
+  <div class="menu-label">
+    General
+  </div>
+  <ul class="menu-list" hx-boost="true">
+    <li><a class={if @active == :about, do: "is-active", else: ""} href={~p"/about"}>About Chuuni</a></li>
+    <li><a class={if @active == :ratings, do: "is-active", else: ""} href={~p"/about/ratings"}>Bayesian Ratings</a></li>
+  </ul>
+</nav>

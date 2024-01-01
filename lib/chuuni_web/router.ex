@@ -126,7 +126,8 @@ defmodule ChuuniWeb.Router do
     end
 
     scope "/about" do
-      get "/reviews", AboutController, :reviews
+      get "/", AboutController, :index
+      get "/ratings", AboutController, :averages
     end
   end
 

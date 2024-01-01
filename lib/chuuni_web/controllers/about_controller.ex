@@ -5,7 +5,11 @@ defmodule ChuuniWeb.AboutController do
 
   import Ecto.Query
 
-  def reviews(conn, _params) do
+  def index(conn, _params) do
+    render(conn, :index)
+  end
+
+  def averages(conn, _params) do
     [top] = Reviews.top_rated(1)
 
     top_mean_rating =
@@ -22,7 +26,7 @@ defmodule ChuuniWeb.AboutController do
           select: fragment("percentile_cont(0.25) within group (order by ? asc)", rs.count)
       )
 
-    render(conn, :reviews,
+    render(conn, :averages,
       top_anime: top,
       top_mean_rating: top_mean_rating,
       global_rating_average: global_rating_average,
