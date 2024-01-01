@@ -114,7 +114,7 @@ review_params =
   end)
   |> Stream.zip(Stream.cycle(anime))
   |> Stream.flat_map(fn {users, show} ->
-    mean_rating = Enum.random(1..10)
+    mean_rating = :rand.normal(7.5, 3)
 
     Enum.map(users, fn user ->
       rating =
