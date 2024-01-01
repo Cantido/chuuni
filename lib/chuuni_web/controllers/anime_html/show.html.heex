@@ -2,11 +2,15 @@
 
 <div class="columns">
   <div class="column is-one-quarter">
-    <div class="image block">
-      <img
-        src={~p"/artwork/anime/#{@anime}/cover.png"}
-        alt={@anime.title.english}
-      />
+    <div class="card block">
+      <div class="card-image">
+        <div class="image block">
+          <img
+            src={~p"/artwork/anime/#{@anime}/cover.png"}
+            alt={@anime.title.english}
+          />
+        </div>
+      </div>
     </div>
 
     <%= if(@current_user) do %>
@@ -181,6 +185,13 @@
       </div>
     </section>
 
+    <section class="block">
+      <h2 class="title is-size-4">Description</h2>
+      <article class="content box">
+        <%= raw Earmark.as_html!(@anime.description) %>
+      </article>
+    </section>
+
     <section class="card block">
       <div class="card-header">
         <h2 class="card-header-title">Review statistics</h2>
@@ -197,13 +208,6 @@
         </button>
       </div>
 
-    </section>
-
-    <section class="box">
-      <h2 class="title is-size-5">Description</h2>
-      <article class="content">
-        <%= raw Earmark.as_html!(@anime.description) %>
-      </article>
     </section>
 
     <%= if @current_user do %>
