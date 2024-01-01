@@ -103,4 +103,28 @@ defmodule ChuuniWeb.ActivityPub.Adapter do
         {:error, error}
     end
   end
+
+  def external_followers_for_activity(_, _) do
+    raise "TODO"
+  end
+
+  def get_or_create_service_actor do
+    raise "TODO"
+  end
+
+  def handle_activity(_) do
+    raise "TODO"
+  end
+
+  def maybe_create_remote_actor(_) do
+    raise "TODO"
+  end
+
+  def maybe_publish_object(_) do
+    raise "TODO"
+  end
+
+  def update_remote_actor(_) do
+    raise "TODO"
+  end
 end
