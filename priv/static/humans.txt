@@ -1,0 +1,16 @@
+/* TEAM */
+
+Developer: Rosa Richter
+Site: https://github.com/Cantido
+Matrix: @cosmicrose:matrix.org
+Location: Colorado, USA
+
+/* THANKS */
+
+Alana Godfrey
+
+/* SITE */
+
+Standards: HTML5, CSS3, ActivityPub
+Components: HTMX, Bulma CSS, Elixir Phoenix, PostgreSQL
+Software: vim and tmux all the way babey
