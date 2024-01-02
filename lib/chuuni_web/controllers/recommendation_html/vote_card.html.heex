@@ -1,0 +1,44 @@
+<div class="card-footer">
+    <a
+      class="card-footer-item"
+      hx-post={~p"/anime/#{@anime}/recommendations/#{@recommended}/like"}
+      hx-vals={Jason.encode!(%{"_csrf_token": get_csrf_token(), style: :card})}
+      hx-target="closest .card-footer"
+      hx-swap="outerHTML"
+    >
+      <div class="icon-text">
+        <span>
+          <%= @upvote_count %>
+        </span>
+        <span class="icon">
+          <%= if @current_vote == :up do %>
+            <img src={~p"/images/bootstrap/hand-thumbs-up-fill.svg"} />
+          <% else %>
+            <img src={~p"/images/bootstrap/hand-thumbs-up.svg"} />
+          <% end %>
+        </span>
+      </div>
+    </a>
+
+    <a
+      class="card-footer-item"
+      hx-post={~p"/anime/#{@anime}/recommendations/#{@recommended}/dislike"}
+      hx-vals={Jason.encode!(%{"_csrf_token": get_csrf_token(), style: :card})}
+      hx-target="closest .card-footer"
+      hx-swap="outerHTML"
+    >
+      <div class="icon-text">
+        <span>
+          <%= @downvote_count %>
+        </span>
+        <span class="icon">
+          <%= if @current_vote == :down do %>
+            <img src={~p"/images/bootstrap/hand-thumbs-down-fill.svg"} />
+          <% else %>
+            <img src={~p"/images/bootstrap/hand-thumbs-down.svg"} />
+          <% end %>
+        </span>
+      </div>
+    </a>
+
+</div>

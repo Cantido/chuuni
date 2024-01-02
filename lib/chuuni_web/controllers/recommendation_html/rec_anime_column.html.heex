@@ -1,0 +1,9 @@
+<.anime_column id="recommended-anime"
+  anime={@recommended_anime}
+  rating_summary={@recommended_rating_summary}>
+  <:header>
+    &hellip;then you might like <%= @recommended_anime.title.english %>
+  </:header>
+
+  <div hx-get={~p"/anime/#{@anime}/recommendations/#{@recommended_anime}/votes"} hx-trigger="load" class="mb-5" style="height: 3em;" />
+</.anime_column>

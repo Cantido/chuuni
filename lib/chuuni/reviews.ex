@@ -8,6 +8,8 @@ defmodule Chuuni.Reviews do
   alias Chuuni.Repo
 
   alias Chuuni.Accounts.User
+  alias Chuuni.Media.Anime
+  alias Chuuni.Reviews.Recommendation
   alias Chuuni.Reviews.Review
   alias Chuuni.Shelves.Shelf
 
@@ -211,5 +213,27 @@ defmodule Chuuni.Reviews do
   """
   def change_review(%Review{} = review, attrs \\ %{}) do
     Review.changeset(review, attrs)
+  end
+
+  def get_user_recommendation(%User{} = user, %Anime{} = anime, %Anime{} = rec_anime) do
+      Repo.one(
+        from r in Recommendation,
+          where: [
+            anime_id: ^anime.id,
+            recommended_id: ^rec_anime.id,
+            user_id: ^user.id
+          ]
+      )
+
+  end
+
+  def get_recommendation_summary(%Anime{} = anime, %Anime{} = rec_anime) do
+    Repo.all(
+      from r in Recommendation,
+        where: [anime_id: ^anime.id, recommended_id: ^rec_anime.id],
+        group_by: :vote,
+        select: {r.vote, count()}
+    )
+    |> Map.new()
   end
 end

@@ -1,0 +1,50 @@
+<div class="media box">
+  <div class="media-left" style="max-width: 10em;">
+    <div class="card">
+      <div class="card-image">
+        <figure class="image">
+          <img
+            hx-get={~p"/anime/#{@anime}"}
+            hx-target="#main-container"
+            hx-push-url="true"
+            class="is-clickable"
+            src={~p"/artwork/anime/#{@anime}/cover.png"}
+            alt={@anime.title.english}
+          />
+        </figure>
+      </div>
+    </div>
+  </div>
+  <div class="media-content">
+
+    <h3 class="title is-5"><%= @anime.title.english %></h3>
+
+    <div class="level">
+      <div class="level-item">
+        <p class="is-size-5 mr-6 icon-text">
+          <span>
+            <%= if @rating_summary.rating do %>
+              <%= Float.round(@rating_summary.rating, 2) %>
+            <% else %>
+              ?
+            <% end %>
+          </span>
+          <span class="icon">
+            <img src={~p"/images/bootstrap/star-fill.svg"} height="20" width="20" />
+          </span>
+        </p>
+        <p class="is-size-5 icon-text">
+          <span>
+            <%= @rating_summary.count %>
+          </span>
+          <span class="icon">
+            <img src={~p"/images/bootstrap/person-fill.svg"} height="20" width="20" />
+          </span>
+        </p>
+      </div>
+    </div>
+    <div class="content">
+      <%= raw Earmark.as_html!(@anime.description) %>
+    </div>
+  </div>
+</div>

@@ -2,11 +2,16 @@ defmodule ChuuniWeb.AnimeController do
   use ChuuniWeb, :controller
 
   alias Chuuni.Reviews
+  alias Chuuni.Reviews.Recommendation
   alias Chuuni.Shelves
   alias Chuuni.Shelves.ShelfItem
   alias Chuuni.Media
   alias Chuuni.Media.Anime
   alias Chuuni.Media.Anilist
+
+  alias Chuuni.Repo
+
+  import Ecto.Query
 
   require Logger
 
@@ -35,15 +40,38 @@ defmodule ChuuniWeb.AnimeController do
 
     review_changeset = Reviews.change_review(%Chuuni.Reviews.Review{}, %{anime_id: id})
 
+    rec_summary =
+      from r in Recommendation,
+        where: [anime_id: ^id],
+        group_by: [:anime_id, :recommended_id],
+        select: %{recommended_id: r.recommended_id, upvote_count: filter(count(), r.vote == :up), downvote_count: filter(count(), r.vote == :down)}
+
+    vote_sums =
+      from r in subquery(rec_summary),
+        select: %{recommended_id: r.recommended_id, diff: r.upvote_count - r.downvote_count}
+
+    recommended_ids =
+      from r in subquery(vote_sums),
+        order_by: [desc: r.diff],
+        select: r.recommended_id
+
+    recommended =
+      Repo.all(
+        from a in Anime,
+        where: a.id in subquery(recommended_ids)
+      )
+
     render(conn, :show,
       anime: anime,
       anime_count: anime_count,
       rating_summary: rating_summary,
       rating_rank: rating_rank,
+      recommended: recommended,
       popularity_rank: popularity_rank,
       user_review: user_review,
       user_shelf_item: user_shelf_item,
-      review_changeset: review_changeset)
+      review_changeset: review_changeset
+    )
   end
 
   def reviews(conn, %{"anime_id" => id}) do

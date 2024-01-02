@@ -1,0 +1,39 @@
+<div id="rec-vote-buttons" class="level" hx-target="#rec-vote-buttons" hx-swap="outerHTML">
+  <div class="level-item">
+    <form hx-post={~p"/anime/#{@anime.id}/recommendations/#{@recommended.id}/like"}>
+      <input name="_csrf_token" value={get_csrf_token()} type="hidden" />
+      <button class="button mr-5 is-success" type="submit" style="width: 10em;">
+        <div class="icon-text">
+          <span>
+            <%= @upvote_count %>
+          </span>
+          <span class="icon">
+            <%= if @current_vote == :up do %>
+              <img src={~p"/images/bootstrap/hand-thumbs-up-fill-white.svg"} />
+            <% else %>
+              <img src={~p"/images/bootstrap/hand-thumbs-up-white.svg"} />
+            <% end %>
+          </span>
+        </div>
+      </button>
+    </form>
+
+    <form hx-post={~p"/anime/#{@anime.id}/recommendations/#{@recommended.id}/dislike"}>
+      <input name="_csrf_token" value={get_csrf_token()} type="hidden" />
+      <button class="button is-danger" type="submit" style="width: 10em;">
+        <div class="icon-text">
+          <span>
+            <%= @downvote_count %>
+          </span>
+          <span class="icon">
+            <%= if @current_vote == :down do %>
+              <img src={~p"/images/bootstrap/hand-thumbs-down-fill-white.svg"} />
+            <% else %>
+              <img src={~p"/images/bootstrap/hand-thumbs-down-white.svg"} />
+            <% end %>
+          </span>
+        </div>
+      </button>
+    </form>
+  </div>
+</div>

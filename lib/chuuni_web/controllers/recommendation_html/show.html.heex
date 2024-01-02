@@ -1,0 +1,21 @@
+<title translate="no"><%= @anime.title.english%> recommendation for <%= @recommended_anime.title.english %> · Chuuni</title>
+
+<div class="columns">
+  <div class="column is-6">
+    <.anime_column
+      anime={@anime}
+      rating_summary={@rating_summary}>
+      <:header>
+        If you like <%= @anime.title.english %>&hellip;
+      </:header>
+    </.anime_column>
+  </div>
+  <div class="column is-6">
+    <.rec_anime_column
+      anime={@anime}
+      recommended_anime={@recommended_anime}
+      recommended_rating_summary={@recommended_rating_summary}
+    />
+  </div>
+</div>
+

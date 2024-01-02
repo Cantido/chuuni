@@ -1,0 +1,49 @@
+<div class="columns">
+  <div class="column is-6">
+    <h2 class="title is-4 has-text-centered" style="height: 6em;">If you like <%= @anime.title.english %>&hellip;</h2>
+
+    <.anime anime={@anime} rating_summary={@rating_summary} />
+  </div>
+  <div class="column is-6">
+    <div id="recommended-anime">
+      <h2 class="title is-4 has-text-centered">...then you might like...</h2>
+
+      <div class="block">
+        <form
+          hx-get={~p"/anime/#{@anime}/recommendations/search"}
+          hx-trigger="keyup changed delay:500ms from:#rec-search-query"
+          hx-target="#rec-search-results"
+        >
+          <label class="label" for="rec-search-query">Search for your recommendation</label>
+          <div class="field has-addons">
+            <div class="control is-expanded has-icons-left">
+              <input
+                id="rec-search-query"
+                name="q"
+                type="search"
+                class="input"
+                required="true"
+                minlength="3"
+                value={@query}
+              />
+
+              <span class="icon is-left">
+                <img src={~p"/images/bootstrap/search.svg"} alt="search" />
+              </span>
+            </div>
+            <div class="control">
+              <button class="button is-info" type="submit">
+                Search
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div id="rec-search-results" class="block">
+        <.search_results anime={@anime} local_results={@local_results} anilist_results={@anilist_results} />
+      </div>
+    </div>
+  </div>
+</div>
+

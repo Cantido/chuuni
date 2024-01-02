@@ -210,6 +210,47 @@
 
     </section>
 
+    <section class="block">
+      <div class="level">
+        <div class="level-left">
+          <div class="level-item">
+            <h2 class="title is-4">Recommendations</h2>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <p><a href={~p"/anime/#{@anime}/recommendations/new"} hx-boost="true">Add a recommendation</a></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns block">
+
+        <div :for={rec <- @recommended} class="column is-3">
+          <div class="card">
+            <div class="card-image">
+              <div class="image">
+                <img
+                  src={~p"/artwork/anime/#{rec}/cover.png"}
+                  alt={@anime.title.english}
+                />
+              </div>
+            </div>
+
+            <div class="card-content p-2 is-size-7" style="height: 5em;">
+               <p><%= rec.title.english %></p>
+            </div>
+
+            <div hx-get={~p"/anime/#{@anime}/recommendations/#{rec}/votes"} hx-trigger="load" hx-vals={Jason.encode!(%{style: "card"})} />
+          </div>
+        </div>
+      </div>
+
+
+    </section>
+
+
+
     <%= if @current_user do %>
       <section class="block">
         <h2 class="title is-4">Your review</h2>

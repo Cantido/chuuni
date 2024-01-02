@@ -1,5 +1,6 @@
 defmodule Chuuni.Accounts.User do
   use Chuuni.Schema
+  alias Chuuni.Reviews.Recommendation
   alias Chuuni.Reviews.Review
   alias Chuuni.Shelves.Shelf
   alias Chuuni.Accounts.User
@@ -18,6 +19,8 @@ defmodule Chuuni.Accounts.User do
 
     many_to_many :followers, User, join_through: Follow, join_keys: [following_id: :id, follower_id: :id]
     many_to_many :following, User, join_through: Follow, join_keys: [follower_id: :id, following_id: :id]
+
+    has_many :recommendations, Recommendation
 
     field :keys, Chuuni.Accounts.Key, redact: true
 

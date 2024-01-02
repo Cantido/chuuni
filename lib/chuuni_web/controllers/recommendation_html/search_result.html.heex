@@ -1,0 +1,28 @@
+<div class="card">
+  <div class="card-content">
+    <div class="media" style="max-height: 100%;">
+
+      <div class="media-left" style="max-width: 5em;">
+        <div class="image">
+          <img src={@image} />
+        </div>
+      </div>
+
+      <div class="media-content" >
+        <div class="content" >
+          <h4 lass="title is-6"><%= @title %></h4>
+          <div class="fade">
+          <%= raw Earmark.as_html!(@description) %>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <%= if @actions != [] do %>
+    <div class="card-footer">
+      <%= render_slot(@actions) %>
+    </div>
+  <% end %>
+</div>

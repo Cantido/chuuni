@@ -71,6 +71,19 @@ defmodule ChuuniWeb.Router do
         put "/shelf", AnimeController, :select_shelf
         get "/rating-breakdown", AnimeController, :rating_breakdown
         resources "/reviews", ReviewController, only: [:new, :create]
+
+        scope "/recommendations" do
+          get "/new", RecommendationController, :new
+          get "/search", RecommendationController, :search
+          post "/", RecommendationController, :create
+
+          scope "/:recommended_anime_id" do
+            get "/", RecommendationController, :show
+            get "/votes", RecommendationController, :votes
+            post "/like", RecommendationController, :like
+            post "/dislike", RecommendationController, :dislike
+          end
+        end
       end
     end
 

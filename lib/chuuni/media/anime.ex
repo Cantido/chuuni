@@ -5,6 +5,7 @@ defmodule Chuuni.Media.Anime do
   alias Chuuni.Media.AnimeMetadataServices
   alias Chuuni.Media.FuzzyDate
   alias Chuuni.Shelves.ShelfItem
+  alias Chuuni.Reviews.Recommendation
   alias Chuuni.Reviews.Review
 
   schema "anime" do
@@ -19,6 +20,8 @@ defmodule Chuuni.Media.Anime do
     has_many :reviews, Review
     has_many :shelf_items, ShelfItem
     has_many :shelves, through: [:shelf_items, :shelf]
+
+    has_many :recommendations, Recommendation
 
     timestamps()
   end

@@ -1,5 +1,6 @@
 defmodule Chuuni.Media.Anilist do
   alias Chuuni.Media
+  alias Chuuni.Media.Anime
 
   def register_fragments do
     Neuron.Fragment.register("""
@@ -12,6 +13,8 @@ defmodule Chuuni.Media.Anilist do
           native
         }
         coverImage {
+          medium
+          large
           extraLarge
         }
         description(asHtml: false)
@@ -85,6 +88,41 @@ defmodule Chuuni.Media.Anilist do
     import_anime_response(media)
   end
 
+  def search(query, opts \\ [])
+
+  def search(query, _opts) when byte_size(query) <= 3, do: []
+
+  def search(query, opts) do
+    page = Keyword.get(opts, :page, 1)
+    per_page = Keyword.get(opts, :per_page, 10)
+    id_not_in = Keyword.get(opts, :id_not_in, [])
+
+    Neuron.Config.set(url: "https://graphql.anilist.co")
+
+    {:ok, resp} = Neuron.query("""
+      query ($search: String, $perPage: Int, $page: Int, $id_not_in: [Int]) {
+        Page(page: $page, perPage: $perPage) {
+          pageInfo {
+            total
+            perPage
+          }
+          media(search: $search, id_not_in: $id_not_in, type: ANIME, sort: FAVOURITES_DESC) {
+            ...AnimeParts
+            studios(sort: NAME) {
+              nodes {
+                name
+              }
+            }
+          }
+        }
+      }
+    """,
+    %{search: query, perPage: per_page, page: page, id_not_in: id_not_in}
+    )
+
+    resp.body["data"]["Page"]["media"]
+  end
+
   def trending_anime(limit) do
     Neuron.Config.set(url: "https://graphql.anilist.co")
 
@@ -152,6 +190,10 @@ defmodule Chuuni.Media.Anilist do
         myanimelist: id_to_string(response["idMal"])
       }
     }
+  end
+
+  def response_to_anime_struct(response) do
+    struct!(Anime, response_to_anime_params(response))
   end
 
   defp id_to_string(nil), do: nil

@@ -1,0 +1,11 @@
+<div {@rest}>
+  <h2 class="title is-4 has-text-centered" style="height: 3em;">
+    <%= render_slot @header %>
+  </h2>
+
+  <div class="mb-5" style="height: 3em;">
+    <%= render_slot @inner_block %>
+  </div>
+
+  <.anime anime={@anime} rating_summary={@rating_summary} />
+</div>
