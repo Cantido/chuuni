@@ -75,7 +75,9 @@ defmodule ChuuniWeb.Router do
         scope "/recommendations" do
           get "/new", RecommendationController, :new
           get "/search", RecommendationController, :search
+          post "/import", RecommendationController, :import
           post "/", RecommendationController, :create
+
 
           scope "/:recommended_anime_id" do
             get "/", RecommendationController, :show

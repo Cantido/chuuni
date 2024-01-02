@@ -23,7 +23,7 @@
       <div class="level-item">
         <p class="is-size-5 mr-6 icon-text">
           <span>
-            <%= if @rating_summary.rating do %>
+            <%= if @rating_summary do %>
               <%= Float.round(@rating_summary.rating, 2) %>
             <% else %>
               ?
@@ -35,7 +35,11 @@
         </p>
         <p class="is-size-5 icon-text">
           <span>
-            <%= @rating_summary.count %>
+            <%= if @rating_summary do %>
+              <%= @rating_summary.count %>
+            <% else %>
+              0
+            <% end %>
           </span>
           <span class="icon">
             <img src={~p"/images/bootstrap/person-fill.svg"} height="20" width="20" />

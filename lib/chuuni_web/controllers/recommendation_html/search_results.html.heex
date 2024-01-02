@@ -33,7 +33,12 @@
       description={result["description"]}
     >
       <:actions>
-        <a class="card-footer-item button is-primary">
+        <a
+          hx-post={~p"/anime/#{@anime}/recommendations/import"}
+          hx-vals={Jason.encode!(%{recommended_anilist_id: result["id"], vote: "up", "_csrf_token": get_csrf_token()})}
+          hx-target="#recommended-anime"
+          class="card-footer-item button is-primary"
+        >
           Import &amp; recommend
         </a>
       </:actions>

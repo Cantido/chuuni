@@ -90,7 +90,21 @@ defmodule ChuuniWeb.RecommendationController do
 
     rec_rating_summary = Reviews.get_rating_summary(rec_anime_id)
 
-    render(conn, :rec_anime_column, anime: anime, recommended_anime: rec_anime, recommended_rating_summary: rec_rating_summary)
+    conn
+    |> render(:rec_anime_column, anime: anime, recommended_anime: rec_anime, recommended_rating_summary: rec_rating_summary)
+  end
+
+  def import(conn, %{"anime_id" => anime_id, "recommended_anilist_id" => rec_anilist_id, "vote" => vote}) do
+    anime = Media.get_anime!(anime_id)
+    {:ok, rec_anime} = Chuuni.Media.Anilist.import_anilist_anime(String.to_integer(rec_anilist_id))
+
+    rec = save_vote(anime_id, rec_anime.id, conn.assigns.current_user.id, :up)
+
+    rec_rating_summary = Reviews.get_rating_summary(rec_anime.id)
+
+    conn
+    |> put_req_header("hx-location", ~p"/anime/#{anime}/recommendations/#{rec_anime}")
+    |> render(:rec_anime_column, anime: anime, recommended_anime: rec_anime, recommended_rating_summary: rec_rating_summary)
   end
 
   def like(conn, %{"anime_id" => anime_id, "recommended_anime_id" => rec_anime_id} = params) do
