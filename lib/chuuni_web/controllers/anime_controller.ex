@@ -44,21 +44,19 @@ defmodule ChuuniWeb.AnimeController do
       from r in Recommendation,
         where: [anime_id: ^id],
         group_by: [:anime_id, :recommended_id],
-        select: %{recommended_id: r.recommended_id, upvote_count: filter(count(), r.vote == :up), downvote_count: filter(count(), r.vote == :down)}
-
-    vote_sums =
-      from r in subquery(rec_summary),
-        select: %{recommended_id: r.recommended_id, diff: r.upvote_count - r.downvote_count}
-
-    recommended_ids =
-      from r in subquery(vote_sums),
-        order_by: [desc: r.diff],
-        select: r.recommended_id
+        select: %{
+          recommended_id: r.recommended_id,
+          diff: filter(count(), r.vote == :up) - filter(count(), r.vote == :down),
+          upvote_count: filter(count(), r.vote == :up)
+        }
 
     recommended =
       Repo.all(
-        from a in Anime,
-        where: a.id in subquery(recommended_ids)
+        from r in subquery(rec_summary),
+          join: a in Anime, on: a.id == r.recommended_id,
+          order_by: [desc: r.diff, desc: r.upvote_count, asc: a.inserted_at],
+          select: a,
+          limit: 4
       )
 
     render(conn, :show,

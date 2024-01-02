@@ -1,29 +1,31 @@
-<h3 class="title is-5">Local results</h3>
+<section class="block" :if={Enum.any?(@local_results)}>
+  <h3 class="title is-5">Local results</h3>
 
-<div class="block">
-  <div :for={result <- @local_results} class="block">
-    <.search_result
-      title={result.title.english}
-      image={~p"/artwork/anime/#{result}/cover.png"}
-      description={result.description}
-    >
-      <:actions>
-        <a
-          hx-post={~p"/anime/#{@anime}/recommendations"}
-          hx-vals={Jason.encode!(%{recommended_anime_id: result.id, vote: "up", "_csrf_token": get_csrf_token()})}
-          hx-target="#recommended-anime"
-          hx-push-url={~p"/anime/#{@anime}/recommendations/#{result.id}"}
-          class="card-footer-item button is-primary"
-        >
-          Recommend
-        </a>
-      </:actions>
-    </.search_result>
+  <div class="block">
+    <div :for={result <- @local_results} class="block">
+      <.search_result
+        title={result.title.english}
+        image={~p"/artwork/anime/#{result}/cover.png"}
+        description={result.description}
+      >
+        <:actions>
+          <a
+            hx-post={~p"/anime/#{@anime}/recommendations"}
+            hx-vals={Jason.encode!(%{recommended_anime_id: result.id, vote: "up", "_csrf_token": get_csrf_token()})}
+            hx-target="#recommended-anime"
+            hx-push-url={~p"/anime/#{@anime}/recommendations/#{result.id}"}
+            class="card-footer-item button is-primary"
+          >
+            Recommend
+          </a>
+        </:actions>
+      </.search_result>
+    </div>
   </div>
-</div>
+</section>
 
-<div class="block">
-<h3 class="title is-5">AniList results</h3>
+<section class="block" :if={Enum.any?(@anilist_results)}>
+  <h3 class="title is-5">AniList results</h3>
   <div :for={result <- @anilist_results} class="block">
     <.search_result
       title={result["title"]["english"] || result["title"]["romaji"]}
@@ -37,4 +39,4 @@
       </:actions>
     </.search_result>
   </div>
-</div>
+</section>
