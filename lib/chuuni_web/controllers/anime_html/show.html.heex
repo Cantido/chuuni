@@ -72,14 +72,7 @@
             </header>
             <%= if is_nil(@rating_summary) or @rating_summary.count == 0 do %>
               <div class="card-content has-text-centered">
-                  <p class="is-size-3">
-                    <span class="icon-text" style="vertical-align: baseline;">
-                      <span>?</span>
-                      <span class="icon">
-                        <img src={~p"/images/bootstrap/star-fill.svg"} height="24" width="24" alt="rating" />
-                      </span>
-                    </span>
-                  </p>
+                <p class="is-size-3">&mdash;</p>
               </div>
               <div class="card-footer">
                 <div class="card-footer-item">
@@ -120,11 +113,13 @@
               </p>
             </header>
             <div class="card-content has-text-centered">
-              <%= if is_nil(@rating_rank) do %>
-                <p class="is-size-3">#?</p>
-              <% else %>
-                <p class="is-size-3">#<%= @rating_rank %></p>
-              <% end %>
+              <p class="is-size-3">
+                <%= if is_nil(@rating_rank) do %>
+                  &mdash;
+                <% else %>
+                  <%= @rating_rank %>
+                <% end %>
+              </p>
             </div>
             <div class="card-footer">
               <div class="card-footer-item">
@@ -142,11 +137,13 @@
               </p>
             </header>
             <div class="card-content has-text-centered">
-              <%= if is_nil(@popularity_rank) do %>
-                <p class="is-size-3">#?</p>
-              <% else %>
-                <p class="is-size-3">#<%= @popularity_rank %></p>
-              <% end %>
+              <p class="is-size-3">
+                <%= if is_nil(@popularity_rank) do %>
+                  &mdash;
+                <% else %>
+                  <%= @popularity_rank %>
+                <% end %>
+              </p>
             </div>
             <div class="card-footer">
               <div class="card-footer-item">
