@@ -1,4 +1,8 @@
-<form hx-post={~p"/users/import-mal"}>
+<form
+  hx-post={~p"/users/import-mal"}
+  data-script="on htmx:xhr:loadstart add .is-loading to #mal-import-submit
+               on htmx:xhr:loadend remove .is-loading from #mal-import-submit"
+>
   <div :if={@success_message} class="notification is-success">
     <%= @success_message %>
   </div>
@@ -30,7 +34,7 @@
       />
     </div>
     <div class="control">
-      <button class="button is-primary">Import my reviews</button>
+      <button id="mal-import-submit" class="button is-primary">Import my reviews</button>
     </div>
   </div>
   <p class="help">
