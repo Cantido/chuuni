@@ -13,7 +13,11 @@
           style="width: 80%;"
         />
         <p class="level-item" style="width: 3em;">
-          <%= trunc(Map.get(@ratings, rating, 0) / @rating_count * 100) %>%
+          <%= if @rating_count > 0 do %>
+            <%= trunc(Map.get(@ratings, rating, 0) / @rating_count * 100) %>%
+          <% else %>
+            0%
+          <% end %>
         </p>
       </div>
     </div>
