@@ -1,7 +1,7 @@
 defmodule ChuuniWeb.UserImportController do
   use ChuuniWeb, :controller
 
-  alias Chuuni.Accounts
+  alias Chuuni.Accounts.MyanimelistImportWorker
 
   import ChuuniWeb.UserAuth, only: [require_authenticated_user: 2]
 
@@ -15,12 +15,12 @@ defmodule ChuuniWeb.UserImportController do
 
   def import_mal(conn, %{"mal_username" => username}) do
     if username =~ ~r/^[a-zA-Z0-9]{2,16}$/ do
-
-      Accounts.import_mal_profile(conn.assigns[:current_user], username)
+      MyanimelistImportWorker.new(%{user_id: conn.assigns.current_user.id, mal_username: username})
+      |> Oban.insert()
 
       render(conn, :mal_form, success_message: "Your lists are now being imported!")
     else
-      render(conn, :mal_form, danger_message: "Something went wrong!")
+      render(conn, :mal_form, danger_message: "Invalid username!")
     end
   end
 end

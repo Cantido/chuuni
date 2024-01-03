@@ -501,7 +501,7 @@ defmodule Chuuni.Accounts do
       end)
     end)
     |> Enum.reject(&is_nil/1)
-    |> Enum.map(fn {anime, target_shelf, rating, review_comment} ->
+    |> Enum.each(fn {anime, target_shelf, rating, review_comment} ->
       {:ok, _shelf_item} = Chuuni.Shelves.create_shelf_item(%{anime_id: anime.id, shelf_id: target_shelf.id}, user)
 
       if rating in 1..10 do
