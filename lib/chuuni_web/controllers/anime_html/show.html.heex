@@ -223,24 +223,34 @@
 
       <div class="columns block">
 
-        <div :for={rec <- @recommended} class="column is-3">
-          <div class="card">
-            <div class="card-image">
-              <div class="image">
-                <img
-                  src={~p"/artwork/anime/#{rec}/cover.png"}
-                  alt={@anime.title.english}
-                />
+        <%= if Enum.any?(@recommended) do %>
+          <div :for={rec <- @recommended} class="column is-3">
+            <div class="card">
+              <div class="card-image is-clickable" hx-get={~p"/anime/#{rec}"} hx-target="#main-container" hx-push-url="true">
+                <div class="image">
+                  <img
+                    src={~p"/artwork/anime/#{rec}/cover.png"}
+                    alt={@anime.title.english}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div class="card-content p-2 is-size-7" style="height: 5em;">
-               <p><%= rec.title.english %></p>
-            </div>
+              <div class="card-content p-2 is-size-7" style="height: 5em;">
+                 <p><%= rec.title.english %></p>
+              </div>
 
-            <div hx-get={~p"/anime/#{@anime}/recommendations/#{rec}/votes"} hx-trigger="load" hx-vals={Jason.encode!(%{style: "card"})} />
+              <div hx-get={~p"/anime/#{@anime}/recommendations/#{rec}/votes"} hx-trigger="load" hx-vals={Jason.encode!(%{style: "card"})} />
+            </div>
           </div>
-        </div>
+
+        <% else %>
+
+          <div class="column is-12">
+            <p>No anime has been recommended yet.</p>
+          </div>
+
+        <% end %>
+
       </div>
 
 
