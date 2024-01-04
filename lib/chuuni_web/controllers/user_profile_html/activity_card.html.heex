@@ -1,9 +1,4 @@
 <div class="card block">
-  <div class="card-header">
-    <div class="card-header-title">
-      <%= @review.anime.title.english %>
-    </div>
-  </div>
   <div class="card-content">
     <article class="media">
       <figure class="media-left">
@@ -14,18 +9,15 @@
         </a>
       </figure>
       <div class="media-content">
-        <div class="columns">
-          <div class="column is-1 has-text-centered is-size-5">
-            <%= @review.rating %>
-            <img src={~p"/images/bootstrap/star-fill.svg"} alt="rating" />
-          </div>
-          <div class="column">
-            <div class="content">
-              <%= if @review.body do %>
-                <%= raw Earmark.as_html!(@review.body) %>
-              <% end %>
-            </div>
-          </div>
+        <h3 class="title is-5 mb-3"><%= @review.anime.title.english %></h3>
+        <div class="mb-3">
+          Rating: <%= @review.rating %>
+          <img src={~p"/images/bootstrap/star-fill.svg"} alt="rating" />
+        </div>
+        <div class="content">
+          <%= if @review.body do %>
+            <%= raw Earmark.as_html!(@review.body) %>
+          <% end %>
         </div>
       </div>
     </article>

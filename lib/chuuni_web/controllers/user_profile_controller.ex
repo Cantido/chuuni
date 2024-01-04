@@ -19,11 +19,12 @@ defmodule ChuuniWeb.UserProfileController do
       follower_count = Accounts.get_follower_count(user)
       following_count = Accounts.get_following_count(user)
 
-      is_following? = Accounts.following?(conn.assigns.current_user, user)
 
       average_rating = Reviews.average_rating(user)
-      similarity = Reviews.similarity(conn.assigns.current_user, user)
       rating_count = Reviews.get_user_review_count(user)
+
+      is_following? = if conn.assigns[:current_user], do: Accounts.following?(conn.assigns.current_user, user)
+      similarity = if conn.assigns[:current_user], do: Reviews.similarity(conn.assigns.current_user, user)
 
       conn
       |> render(
