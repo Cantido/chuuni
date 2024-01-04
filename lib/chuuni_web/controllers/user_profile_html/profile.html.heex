@@ -58,7 +58,7 @@
             <th>Similarity with you</th>
             <td>
               <%= if @similarity do %>
-                <%= trunc(@similarity * 100) %>%
+                <%= trunc(Float.round(@similarity * 100, 0)) %>%
               <% else %>
                 ?
               <% end %>
