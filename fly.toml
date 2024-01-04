@@ -14,6 +14,7 @@ kill_signal = "SIGTERM"
 
 [env]
   CHUUNI_ARTWORK_PATH = "/artwork"
+  MAILGUN_HOST = "mail.cosmicrose.dev"
   PHX_HOST = "chuuni.fly.dev"
   PORT = "8080"
 
