@@ -73,7 +73,13 @@ defmodule ChuuniWeb.AnimeController do
   end
 
   def reviews(conn, %{"anime_id" => id}) do
-    reviews = Reviews.latest_reviews_for_item(conn.assigns.current_user, id)
+    reviews =
+
+    if user = conn.assigns[:current_user] do
+      Reviews.latest_reviews_for_item(id, user)
+    else
+      Reviews.latest_reviews_for_item(id)
+    end
 
     render(conn, :reviews, reviews: reviews)
   end
