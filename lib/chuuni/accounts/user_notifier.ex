@@ -8,7 +8,7 @@ defmodule Chuuni.Accounts.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"Chuuni", "contact@example.com"})
+      |> from({"Chuuni", "chuuni@cosmicrose.dev"})
       |> subject(subject)
       |> text_body(body)
 
