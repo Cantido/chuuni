@@ -15,8 +15,12 @@ defmodule ChuuniWeb.RecommendationController do
     anime = Media.get_anime!(anime_id)
     rec_anime = Media.get_anime!(rec_anime_id)
 
-    upvote_count = 420
-    downvote_count = 69
+    {upvote_count, downvote_count} =
+      Repo.one(
+        from r in Recommendation,
+        where: [anime_id: ^anime_id, recommended_id: ^rec_anime_id],
+        select: {filter(count(), r.vote == :up), filter(count(), r.vote == :down)}
+      )
 
     rating_summary = Reviews.get_rating_summary(anime.id)
     rec_rating_summary = Reviews.get_rating_summary(rec_anime_id)
@@ -129,16 +133,11 @@ defmodule ChuuniWeb.RecommendationController do
     anime = Media.get_anime!(rec.anime_id)
     rec_anime = Media.get_anime!(rec.recommended_id)
 
-    upvote_count =
-      Repo.aggregate(
-        from(r in Recommendation, where: [anime_id: ^rec.anime_id, recommended_id: ^rec.recommended_id, vote: :up]),
-        :count
-      )
-
-    downvote_count =
-      Repo.aggregate(
-        from(r in Recommendation, where: [anime_id: ^rec.anime_id, recommended_id: ^rec.recommended_id, vote: :down]),
-        :count
+    {upvote_count, downvote_count} =
+      Repo.one(
+        from r in Recommendation,
+        where: [anime_id: ^rec.anime_id, recommended_id: ^rec.recommended_id],
+        select: {filter(count(), r.vote == :up), filter(count(), r.vote == :down)}
       )
 
     template =
