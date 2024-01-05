@@ -19,6 +19,7 @@ config :chuuni, Chuuni.Repo,
 
 # Configures the endpoint
 config :chuuni, ChuuniWeb.Endpoint,
+  adapter: Bandit.PhoenixAdapter,
   url: [host: "localhost"],
   render_errors: [
     formats: [html: ChuuniWeb.ErrorHTML, json: ChuuniWeb.ErrorJSON],
