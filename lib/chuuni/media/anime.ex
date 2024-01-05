@@ -36,5 +36,6 @@ defmodule Chuuni.Media.Anime do
     |> cast_embed(:stop_date)
     |> validate_required([:title])
     |> unique_constraint(:external_ids, name: "anime__external_ids____anilist_index")
+    |> unique_constraint(:external_ids, name: "anime__external_ids____myanimelist_index")
   end
 end
