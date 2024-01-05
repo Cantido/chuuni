@@ -1,4 +1,4 @@
-<nav id="main-nav" class="navbar block" role="navigation" aria-label="main navigation">
+<nav id="main-nav" class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a href="/" hx-boost="true" class="navbar-item"><strong>Chuuni</strong></a>
     <a role="button" class="navbar-burger" data-target="main-nav-menu" aria-label="menu" aria-expanded="false">
@@ -9,14 +9,17 @@
   </div>
 
   <div id="main-nav-menu" class="navbar-menu" hx-boost="true" hx-push-url="true">
-    <a href="/search"  class="navbar-item">Search</a>
-    <a href="/top" class="navbar-item">Top Anime</a>
-    <a href="/about" class="navbar-item">About</a>
+    <div class="navbar-start">
+      <a href="/search" class="navbar-item">Search</a>
+      <a href="/top" class="navbar-item">Top Anime</a>
+      <a href="/about" class="navbar-item">About</a>
+    </div>
+
+    <div class="navbar-end" hx-get="/users/menu" hx-trigger="logout from:body, login from:body">
+      <ChuuniWeb.UserSessionHTML.nav_menu current_user={@current_user} />
+    </div>
   </div>
 
-  <div class="navbar-end" hx-get="/users/menu" hx-trigger="logout from:body, login from:body">
-    <ChuuniWeb.UserSessionHTML.nav_menu current_user={@current_user} />
-  </div>
 </nav>
 
 <main id="main-container" class="section container">
