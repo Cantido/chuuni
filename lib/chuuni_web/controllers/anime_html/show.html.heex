@@ -189,24 +189,6 @@
       </article>
     </section>
 
-    <section class="card block">
-      <div class="card-header">
-        <h2 class="card-header-title">Review statistics</h2>
-        <button class="card-header-icon"
-          hx-get={~p"/anime/#{@anime}/rating-breakdown"}
-          hx-target="closest .card-header"
-          hx-swap="afterend"
-          hx-trigger="click once"
-          data-script="on click toggle .is-hidden on #rating-breakdown"
-        >
-          <span class="icon">
-            <img src={~p"/images/bootstrap/caret-down-fill.svg"} alt="open rating summary" />
-          </span>
-        </button>
-      </div>
-
-    </section>
-
     <section class="block">
       <div class="level">
         <div class="level-left">
@@ -253,10 +235,7 @@
 
       </div>
 
-
     </section>
-
-
 
     <%= if @current_user do %>
       <section class="block">

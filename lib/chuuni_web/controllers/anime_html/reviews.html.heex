@@ -1,11 +1,30 @@
 <section class="block">
   <h2 class="title is-4">Reviews</h2>
 
-  <%= if Enum.count(@reviews) == 0 do %>
+
+
+  <%= if Enum.any?(@reviews) do %>
+    <div class="card block">
+      <div class="card-header">
+        <h2 class="card-header-title">Review statistics</h2>
+        <button class="card-header-icon"
+          hx-get={~p"/anime/#{@anime}/rating-breakdown"}
+          hx-target="closest .card-header"
+          hx-swap="afterend"
+          hx-trigger="click once"
+          data-script="on click toggle .is-hidden on #rating-breakdown"
+        >
+          <span class="icon">
+            <img src={~p"/images/bootstrap/caret-down-fill.svg"} alt="open rating summary" />
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div :for={review <- @reviews} class="block">
+      <ChuuniWeb.ReviewHTML.review_card review={review} />
+    </div>
+  <% else %>
     <p>This anime has not been reviewed yet.</p>
   <% end %>
-
-  <div :for={review <- @reviews} class="block">
-    <ChuuniWeb.ReviewHTML.review_card review={review} />
-  </div>
 </section>
