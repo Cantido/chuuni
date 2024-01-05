@@ -71,10 +71,23 @@ defmodule Chuuni.Media do
   def get_anime!(id), do: Repo.get!(Anime, id)
 
   def get_anime_by_anilist_id(anilist_id) do
+    anilist_id = to_string(anilist_id)
     Repo.one(
       from a in Anime,
       where: a.external_ids["anilist"] == ^anilist_id
     )
+  end
+
+  def fetch_anime_by_anilist_id(anilist_id) do
+    anilist_id = to_string(anilist_id)
+    Repo.one(
+      from a in Anime,
+      where: a.external_ids["anilist"] == ^anilist_id
+    )
+    |> case do
+      nil -> {:error, :not_found}
+      anime -> {:ok, anime}
+    end
   end
 
   @doc """
@@ -94,8 +107,6 @@ defmodule Chuuni.Media do
     |> Anime.changeset(attrs)
     |> Repo.insert()
   end
-
-
 
   @doc """
   Updates a anime.

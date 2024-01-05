@@ -153,7 +153,7 @@ defmodule Chuuni.Media.Anilist do
   def import_anime_response(resp) do
     params = response_to_anime_params(resp)
 
-    with {:ok, anime} <- Media.create_anime(params),
+    with {:ok, anime} <- init_anime(params, resp["id"]),
          {:ok, img_resp} when img_resp.status_code == 200 <- HTTPoison.get(resp["coverImage"]["extraLarge"]),
          cover_path = Media.cover_artwork_path(anime),
          :ok <- File.mkdir_p(Path.dirname(cover_path)),
@@ -164,6 +164,20 @@ defmodule Chuuni.Media.Anilist do
         {:error, {resp, err}}
       err ->
         {:error, {resp, err}}
+    end
+  end
+
+  defp init_anime(params, anilist_id) do
+    case Media.create_anime(params) do
+      {:ok, anime} ->
+        {:ok, anime}
+
+      {:error, changeset} ->
+        if Keyword.has_key?(changeset.errors, :external_ids) do
+          Media.fetch_anime_by_anilist_id(anilist_id)
+        else
+          {:error, changeset}
+        end
     end
   end
 
