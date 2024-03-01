@@ -38,7 +38,7 @@ defmodule Chuuni.MixProject do
       {:httpoison, "~> 2.1"},
       {:neuron, "~> 5.1.0"},
       {:earmark, "~> 1.4"},
-      {:faker, "~> 0.17.0", only: :dev},
+      {:faker, "~> 0.18.0", only: :dev},
       {:argon2_elixir, "~> 4.0"},
       {:phoenix, "~> 1.7.7", override: true},
       {:phoenix_ecto, "~> 4.4"},
