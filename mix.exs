@@ -32,7 +32,7 @@ defmodule Chuuni.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:cloak_ecto, "~> 1.2.0"},
+      {:cloak_ecto, "~> 1.3.0"},
       {:activity_pub, git: "https://github.com/bonfire-networks/activity_pub.git", branch: "develop"},
       {:oban, "~> 2.16", override: true},
       {:httpoison, "~> 2.1"},
